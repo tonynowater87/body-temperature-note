@@ -39,15 +39,16 @@ dependencies:
   bloc_test: ^9.0.3
   connectivity_plus: ^2.3.0
   mockito: ^5.1.0
-  build_runner: ^2.1.10
-  auto_route_generator: ^3.2.3
   hive: ^2.1.0
   flutter_native_splash: ^2.1.5
   flushbar: ^1.10.4
+  auto_route: 3.2.3
+  build_runner: ^2.1.10
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  auto_route_generator: ^3.2.3
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
