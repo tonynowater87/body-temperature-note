@@ -5,8 +5,13 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('SettingsPage'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('SettingsPage'),
+      ),
+      body: Container(
+        child: Text('Body'),
+      ),
     );
   }
 }
