@@ -46,6 +46,7 @@ dependencies:
   build_runner: ^2.1.10
   scrollable_positioned_list: ^0.2.3
   date_format: ^2.0.6
+  equatable: ^2.0.3
 
 dev_dependencies:
   flutter_test:
