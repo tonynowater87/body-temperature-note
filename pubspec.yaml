@@ -47,6 +47,7 @@ dependencies:
   scrollable_positioned_list: ^0.2.3
   date_format: ^2.0.6
   equatable: ^2.0.3
+  hive_generator: ^1.1.2
 
 dev_dependencies:
   flutter_test:
