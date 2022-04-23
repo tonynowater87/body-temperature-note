@@ -48,6 +48,7 @@ dependencies:
   date_format: ^2.0.6
   equatable: ^2.0.3
   hive_generator: ^1.1.2
+  firebase_core: ^1.15.0
 
 dev_dependencies:
   flutter_test:
