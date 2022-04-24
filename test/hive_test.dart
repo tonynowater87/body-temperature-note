@@ -1,14 +1,14 @@
-import 'package:body_temperature_note/data/model/record.dart';
+import 'package:body_temperature_note/data/model/hive_record.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 
 void main() {
   Hive.init("UnitTest");
-  Hive.registerAdapter(RecordAdapter());
+  Hive.registerAdapter(HiveRecordAdapter());
   print('[Tony] test start');
 
   group('hive playground', () {
-    Box<Record>? box;
+    Box<HiveRecord>? box;
 
     setUp(() async {
       box = await Hive.openBox("UnitTest");
@@ -24,18 +24,15 @@ void main() {
 
     test('test inserted', () {
       // cool syntax
-      box?.add(Record()
-        ..id = 1
+      box?.add(HiveRecord()
         ..temperature = 36.2
         ..dateTime = DateTime.now());
 
-      box?.add(Record()
-        ..id = 1
+      box?.add(HiveRecord()
         ..temperature = 36.2
         ..dateTime = DateTime.now());
 
-      box?.add(Record()
-        ..id = 1
+      box?.add(HiveRecord()
         ..temperature = 36.2
         ..dateTime = DateTime.now());
 
@@ -51,7 +48,7 @@ void main() {
     });
 
     test('test deleted', () {
-      box!.delete(box!.values.first.key);
+      //box!.delete(box!.values.first.key);
     });
 
     test('test query and filter', () {
@@ -61,7 +58,7 @@ void main() {
               .isBefore(DateTime.parse("2022-04-19 23:45:31.312")) &&
           element.dateTime.isAfter(DateTime.parse("2022-04-19 23:45:31.301")));*/
 
-      values?.forEach((Record element) {
+      values?.forEach((HiveRecord element) {
         print('[Tony] $element ${element.hashCode}');
       });
       print('[Tony] t2');
