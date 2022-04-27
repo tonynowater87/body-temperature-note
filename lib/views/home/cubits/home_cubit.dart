@@ -6,21 +6,34 @@ class HomeCubit extends Cubit<HomeState> {
   static DateTime currentDatePosition = DateTime.now();
 
   HomeCubit()
-      : super(HomeDateState(
-            currentYear: currentDatePosition.year,
-            currentMonth: currentDatePosition.month,
-            currentDay: 1,
-            currentDaysOfMonth: DateUtils.getDaysInMonth(
-                currentDatePosition.year, currentDatePosition.month)));
+      : super(HomeInitState(
+          DateUtils.getDaysInMonth(
+              currentDatePosition.year, currentDatePosition.month),
+          currentDatePosition.year,
+          currentDatePosition.month,
+          currentDatePosition.day,
+        ));
+
+  void changeToInitState() {
+    currentDatePosition = DateTime.now();
+    emit(HomeInitState(
+      DateUtils.getDaysInMonth(
+          currentDatePosition.year, currentDatePosition.month),
+      currentDatePosition.year,
+      currentDatePosition.month,
+      currentDatePosition.day,
+    ));
+  }
 
   void changeToToday() {
     currentDatePosition = DateTime.now();
-    emit(HomeDateState(
-        currentYear: currentDatePosition.year,
-        currentMonth: currentDatePosition.month,
-        currentDay: currentDatePosition.day,
-        currentDaysOfMonth: DateUtils.getDaysInMonth(
-            currentDatePosition.year, currentDatePosition.month)));
+    emit(HomeTodayState(
+      DateUtils.getDaysInMonth(
+          currentDatePosition.year, currentDatePosition.month),
+      currentDatePosition.year,
+      currentDatePosition.month,
+      currentDatePosition.day,
+    ));
   }
 
   void nextMonth() {
@@ -29,20 +42,20 @@ class HomeCubit extends Cubit<HomeState> {
       currentDatePosition = DateTime(
           currentDatePosition.year, month + 1, currentDatePosition.day);
       emit(HomeDateState(
-          currentYear: currentDatePosition.year,
-          currentMonth: currentDatePosition.month,
-          currentDay: null,
-          currentDaysOfMonth: DateUtils.getDaysInMonth(
-              currentDatePosition.year, currentDatePosition.month)));
+          DateUtils.getDaysInMonth(
+              currentDatePosition.year, currentDatePosition.month),
+          currentDatePosition.year,
+          currentDatePosition.month,
+          null));
     } else {
       currentDatePosition = DateTime(currentDatePosition.year + 1,
           DateTime.january, currentDatePosition.day);
       emit(HomeDateState(
-          currentYear: currentDatePosition.year,
-          currentMonth: currentDatePosition.month,
-          currentDay: null,
-          currentDaysOfMonth: DateUtils.getDaysInMonth(
-              currentDatePosition.year, currentDatePosition.month)));
+          DateUtils.getDaysInMonth(
+              currentDatePosition.year, currentDatePosition.month),
+          currentDatePosition.year,
+          currentDatePosition.month,
+          null));
     }
   }
 
@@ -52,20 +65,20 @@ class HomeCubit extends Cubit<HomeState> {
       currentDatePosition = DateTime(
           currentDatePosition.year, month - 1, currentDatePosition.day);
       emit(HomeDateState(
-          currentYear: currentDatePosition.year,
-          currentMonth: currentDatePosition.month,
-          currentDay: null,
-          currentDaysOfMonth: DateUtils.getDaysInMonth(
-              currentDatePosition.year, currentDatePosition.month)));
+          DateUtils.getDaysInMonth(
+              currentDatePosition.year, currentDatePosition.month),
+          currentDatePosition.year,
+          currentDatePosition.month,
+          null));
     } else {
       currentDatePosition = DateTime(currentDatePosition.year - 1,
           DateTime.december, currentDatePosition.day);
       emit(HomeDateState(
-          currentYear: currentDatePosition.year,
-          currentMonth: currentDatePosition.month,
-          currentDay: null,
-          currentDaysOfMonth: DateUtils.getDaysInMonth(
-              currentDatePosition.year, currentDatePosition.month)));
+          DateUtils.getDaysInMonth(
+              currentDatePosition.year, currentDatePosition.month),
+          currentDatePosition.year,
+          currentDatePosition.month,
+          null));
     }
   }
 }

@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 
 class InputPage extends StatelessWidget {
 
-  final String? dateString; //yyyy-mm-dd hh:mm:ss
+  final String? dateString; //yyyy-mm-dd hh:nn:ss
   final logger = getIt.get<Logger>();
 
   InputPage({@PathParam("argument") this.dateString})
