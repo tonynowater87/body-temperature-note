@@ -4,14 +4,18 @@ import 'package:body_temperature_note/data/provider/hive_record_provider.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/firebase_options.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
-import 'package:body_temperature_note/views/home/home_cubit.dart';
-import 'package:body_temperature_note/views/utils/app_bloc_observer.dart';
+import 'package:body_temperature_note/utils/app_bloc_observer.dart';
+import 'package:body_temperature_note/views/home/cubits/home_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:logger/logger.dart';
+
+// This is our global ServiceLocator
+GetIt getIt = GetIt.instance;
 
 Future<void> main() async {
   const appName = "BodyTemperatureNote";
@@ -31,10 +35,14 @@ Future<void> main() async {
   final fireStore = FirebaseFirestore.instanceFor(app: Firebase.app(appName));
   final fireStoreRecordProvider = FirebaseCloudStoreRecordProvider(fireStore);
 
+  getIt.registerLazySingleton<Logger>(
+      () => Logger(printer: SimplePrinter(printTime: true, colors: false)));
+
   //0:00:00.100910
   //0:00:00.060453
   //0:00:00.059683
   //print('[Tony] ${costTimeForLaunch.difference(DateTime.now())})');
+
   BlocOverrides.runZoned(() {
     runApp(MyApp(
       hiveRecordProvider: hiveRecordProvider,

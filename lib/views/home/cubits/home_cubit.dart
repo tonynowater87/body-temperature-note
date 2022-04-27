@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:body_temperature_note/views/home/cubits/home_state.dart';
 import 'package:flutter/material.dart';
-
-part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   static DateTime currentDatePosition = DateTime.now();
@@ -11,15 +9,9 @@ class HomeCubit extends Cubit<HomeState> {
       : super(HomeDateState(
             currentYear: currentDatePosition.year,
             currentMonth: currentDatePosition.month,
-            currentDay: currentDatePosition.day,
+            currentDay: 1,
             currentDaysOfMonth: DateUtils.getDaysInMonth(
                 currentDatePosition.year, currentDatePosition.month)));
-
-  @override
-  void onChange(Change<HomeState> change) {
-    print('[Cubit] current = $state, change = $change');
-    super.onChange(change);
-  }
 
   void changeToToday() {
     currentDatePosition = DateTime.now();

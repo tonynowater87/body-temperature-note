@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
+import 'package:body_temperature_note/views/home/cubits/home_cubit.dart';
+import 'package:body_temperature_note/views/home/cubits/home_state.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-import 'home_cubit.dart';
 
 class DateSelectorWidget extends StatefulWidget {
   const DateSelectorWidget({Key? key}) : super(key: key);
@@ -19,6 +22,14 @@ class DateSelectorWidget extends StatefulWidget {
 class _DateSelectorWidgetState extends State<DateSelectorWidget> {
   final itemScrollController = ItemScrollController();
   final itemPositionsListener = ItemPositionsListener.create();
+  final _logger = getIt.get<Logger>();
+
+  @override
+  void initState() {
+    super.initState();
+    final homeCubit = BlocProvider.of<HomeCubit>(context);
+    homeCubit.changeToToday();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +37,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
       listener: (context, state) {
         if (state is HomeDateState) {
           if (state.currentDay != null) {
-            print('[Tony] SCROLLING!!');
+            _logger.d('[Tony] SCROLLING!!');
             itemScrollController.scrollTo(
                 index: DateTime.now().day -
                     1, // offset from the position scrolled to , 0..1
@@ -102,7 +113,8 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                   itemBuilder: (_, index) {
                     return ListTile(
                       onTap: () async {
-                        final currentState = context.read<HomeCubit>().state as HomeDateState;
+                        final currentState =
+                            context.read<HomeCubit>().state as HomeDateState;
                         final now = DateTime.now();
                         final dateString = formatDate(
                             DateTime(
