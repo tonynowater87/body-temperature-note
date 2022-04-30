@@ -5,7 +5,8 @@ import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/firebase_options.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
 import 'package:body_temperature_note/utils/app_bloc_observer.dart';
-import 'package:body_temperature_note/views/home/cubits/home_cubit.dart';
+import 'package:body_temperature_note/views/home/cubit/home_cubit.dart';
+import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,12 @@ class MyApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<HomeCubit>(create: (BuildContext context) => HomeCubit())
+          BlocProvider<HomeCubit>(
+              create: (BuildContext context) =>
+                  HomeCubit(repository: RepositoryProvider.of(context))),
+          BlocProvider<InputCubit>(
+              create: (BuildContext context) =>
+                  InputCubit(repository: RepositoryProvider.of(context))),
         ],
         child: MaterialApp.router(
           routerDelegate: _appRouter.delegate(),
