@@ -23,8 +23,8 @@ class RecordRepository extends Repository {
   }
 
   @override
-  List<HiveRecord> queryTodayRecords(DateTime today) {
-    return hiveRecordProvider.queryTodayRecords(today);
+  List<HiveRecord> queryDayRecords(DateTime today) {
+    return hiveRecordProvider.queryDayRecords(today);
   }
 
   @override

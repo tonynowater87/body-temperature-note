@@ -116,7 +116,9 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                               now.minute,
                               now.second),
                           [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss]);
-                      context.pushRoute(InputPageRoute(dateString: dateString));
+                      final saved = await context.router.push<bool>(InputPageRoute(dateString: dateString));
+                      // TODO refresh list if saved == true
+                      _logger.d("isSaved = $saved");
                     },
                     title: Text(
                       (index + 1).toString(),

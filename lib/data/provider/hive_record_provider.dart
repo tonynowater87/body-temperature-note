@@ -30,10 +30,9 @@ class HiveRecordProvider {
         .delete();
   }
 
-  List<HiveRecord> queryTodayRecords(DateTime today) {
-    final now = DateTime.now();
-    final tomorrow = DateTime.now();
-    final todayBeginPoint = DateTime(now.year, now.month, now.day, 0, 0, 0);
+  List<HiveRecord> queryDayRecords(DateTime day) {
+    final tomorrow = day.add(const Duration(days: 1));
+    final todayBeginPoint = DateTime(day.year, day.month, day.day, 0, 0, 0);
     final todayEndPoint =
         DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 0, 0, 0);
     return _box.values

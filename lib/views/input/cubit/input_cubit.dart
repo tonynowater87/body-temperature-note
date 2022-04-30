@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:body_temperature_note/data/model/hive_record.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
@@ -11,20 +13,25 @@ class InputCubit extends Cubit<InputState> {
   final RecordRepository repository;
   final _logger = getIt<Logger>();
 
+  late DateTime dateTime;
+
   InputCubit({required this.repository}) : super(InputInitial()) {
     _logger.d("repo in input = ${repository.hashCode}");
   }
 
   void initState(String dateString) {
-    final dateTime = DateTime.parse(dateString);
+    dateTime = DateTime.parse(dateString);
 
     emit(InputLoading());
-    final records = repository.queryTodayRecords(dateTime);
+    final records = repository.queryDayRecords(dateTime);
     _logger.d("$dateTime, records = $records");
     emit(InputLoaded(records));
   }
 
   void saveRecord() {
-    //TODO
+    final addedId = repository.addRecord(HiveRecord()
+      ..dateTime = dateTime
+      ..temperature = Random().nextDouble() * 100.0);
+    _logger.d("addedId = $addedId");
   }
 }

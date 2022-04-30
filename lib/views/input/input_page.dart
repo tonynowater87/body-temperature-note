@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class _InputPageState extends State<InputPage> {
           } else if (state is InputLoading) {
             return const CircularProgressIndicator();
           } else if (state is InputLoaded) {
-            return const InputContainer();
+            return InputContainer();
           } else {
             throw Error();
           }
@@ -54,13 +55,32 @@ class _InputPageState extends State<InputPage> {
 }
 
 class InputContainer extends StatelessWidget {
-  const InputContainer({Key? key}) : super(key: key);
+
+  final _logger = getIt<Logger>();
+
+  InputContainer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<InputCubit, InputState>(
       builder: (context, state) {
-        return Container();
+        final _state = state as InputLoaded;
+        return Center(
+          child: Column(
+            children: [
+              Center(child: Text('Records = ${_state.record.length}')),
+              Center(
+                child: MaterialButton(
+                    child: Text('Save'),
+                    onPressed: () {
+                      context.read<InputCubit>().saveRecord();
+                      _logger.d("navigateBack");
+                      context.router.pop<bool>(true);
+                    }),
+              ),
+            ],
+          ),
+        );
       },
     );
   }

@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
           IconButton(
               constraints: const BoxConstraints(),
               onPressed: () {
-                context.pushRoute(const SettingsPageRoute());
+                context.router.push(const SettingsPageRoute());
               },
               padding: EdgeInsets.zero,
               icon: const Icon(Icons.settings_outlined))
@@ -80,7 +80,7 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          context.pushRoute(InputPageRoute(
+          context.router.push(InputPageRoute(
               dateString: formatDate(DateTime.now(),
                   [yyyy, '-', mm, '-', dd, ' ', HH, ':', mm, ':', dd])));
         },

@@ -5,7 +5,7 @@ abstract class Repository {
 
   Future<void> updateRecord(HiveRecord record);
 
-  List<HiveRecord> queryTodayRecords(DateTime today);
+  List<HiveRecord> queryDayRecords(DateTime today);
 
   List<HiveRecord> queryMonthRecords(DateTime month);
 }
