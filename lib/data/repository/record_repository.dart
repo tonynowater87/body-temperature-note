@@ -17,8 +17,13 @@ class RecordRepository extends Repository {
   });
 
   @override
-  Future<void> addRecord(HiveRecord record) {
-    return hiveRecordProvider.addRecord(record);
+  Future<void> addOrUpdateRecord(HiveRecord record) {
+    return hiveRecordProvider.addOrUpdateRecord(record);
+  }
+
+  @override
+  HiveRecord? queryRecordByDate(DateTime now) {
+    return hiveRecordProvider.queryRecordByDateTime(now);
   }
 
   @override
@@ -37,7 +42,7 @@ class RecordRepository extends Repository {
   }
 
   @override
-  Future<void> addMemo(HiveMemo hiveMemo) async {
+  Future<void> addOrUpdateMemo(HiveMemo hiveMemo) async {
     await hiveMemoProvider.addOrUpdateMemo(hiveMemo);
   }
 

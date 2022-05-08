@@ -29,7 +29,7 @@ class InputCubit extends Cubit<InputState> {
   }
 
   void saveRecord() {
-    final addedId = repository.addRecord(HiveRecord()
+    final addedId = repository.addOrUpdateRecord(HiveRecord()
       ..dateTime = dateTime
       ..temperature = Random().nextDouble() * 100.0);
     _logger.d("addedId = $addedId");
