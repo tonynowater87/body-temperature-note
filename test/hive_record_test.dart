@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 
 void main() {
-  Hive.init("UnitTest");
+  var path = "HiveRecordTest";
+  Hive.init(path);
   Hive.registerAdapter(HiveRecordAdapter());
   print('[Tony] test start');
 
@@ -11,7 +12,7 @@ void main() {
     Box<HiveRecord>? box;
 
     setUp(() async {
-      box = await Hive.openBox("UnitTest");
+      box = await Hive.openBox(path);
       print('[Tony] setup');
     });
 
