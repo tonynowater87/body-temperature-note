@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
@@ -35,7 +34,7 @@ class _InputPageState extends State<InputPage> {
     logger.d('[Tony] InputPage arg: ${widget.dateString}');
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.dateString),
+        title: const Text('記錄目前的體溫'),
       ),
       body: BlocBuilder<InputCubit, InputState>(
         builder: (context, state) {
@@ -44,7 +43,7 @@ class _InputPageState extends State<InputPage> {
           } else if (state is InputLoading) {
             return const CircularProgressIndicator();
           } else if (state is InputLoaded) {
-            return InputContainer();
+            return InputContainer(widget.dateString);
           } else {
             throw Error();
           }
@@ -55,31 +54,68 @@ class _InputPageState extends State<InputPage> {
 }
 
 class InputContainer extends StatelessWidget {
-
   final _logger = getIt<Logger>();
 
-  InputContainer({Key? key}) : super(key: key);
+  final String _dateString;
+
+  InputContainer(this._dateString, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<InputCubit, InputState>(
       builder: (context, state) {
         final _state = state as InputLoaded;
-        return Center(
-          child: Column(
-            children: [
-              Center(child: Text('Records = ${_state.record.length}')),
-              Center(
+        return Column(
+          children: [
+            Container(
+              color: Colors.green,
+              width: double.infinity,
+              padding: const EdgeInsets.all(4.0),
+              child: Wrap(children: [Text(_dateString)]),
+            ),
+            Center(child: Text('Records = ${_state.record.length}')),
+            Expanded(
+              child: Center(
                 child: MaterialButton(
-                    child: Text('Save'),
+                    child: const Text('Save'),
                     onPressed: () {
                       context.read<InputCubit>().saveRecord();
                       _logger.d("navigateBack");
                       context.router.pop<bool>(true);
                     }),
               ),
-            ],
-          ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero)),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          // remove the button build-in padding bottom
+                          padding: MaterialStateProperty.all(EdgeInsets.zero)),
+                      onPressed: () {},
+                      child: const Text('Save')),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red.shade400),
+                          shape: MaterialStateProperty.all(
+                              const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero)),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          padding: MaterialStateProperty.all(EdgeInsets.zero)),
+                      onPressed: () {},
+                      child: const Text('Delete')),
+                )
+              ],
+            )
+          ],
         );
       },
     );
