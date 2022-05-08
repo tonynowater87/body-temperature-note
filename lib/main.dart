@@ -1,5 +1,7 @@
+import 'package:body_temperature_note/data/model/hive_memo.dart';
 import 'package:body_temperature_note/data/model/hive_record.dart';
 import 'package:body_temperature_note/data/provider/firebase_cloud_store_record_provider.dart';
+import 'package:body_temperature_note/data/provider/hive_memo_provider.dart';
 import 'package:body_temperature_note/data/provider/hive_record_provider.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/firebase_options.dart';
@@ -29,8 +31,11 @@ Future<void> main() async {
   // init hive & hive_data_provider
   await Hive.initFlutter("RecordDB");
   Hive.registerAdapter(HiveRecordAdapter());
-  final box = await Hive.openBox<HiveRecord>("RecordDB");
-  final hiveRecordProvider = HiveRecordProvider(box);
+  Hive.registerAdapter(HiveMemoAdapter());
+  final hiveRecordBox = await Hive.openBox<HiveRecord>("RecordDB");
+  final hiveRecordProvider = HiveRecordProvider(hiveRecordBox);
+  final hiveMemoBox = await Hive.openBox<HiveMemo>("MemoDB");
+  final hiveMemoProvider = HiveMemoProvider(hiveMemoBox);
 
   // init fireStore
   final fireStore = FirebaseFirestore.instanceFor(app: Firebase.app(appName));
@@ -47,6 +52,7 @@ Future<void> main() async {
   BlocOverrides.runZoned(() {
     runApp(MyApp(
       hiveRecordProvider: hiveRecordProvider,
+      hiveMemoProvider: hiveMemoProvider,
       firebaseCloudStoreRecordProvider: fireStoreRecordProvider,
     ));
   }, blocObserver: AppBlocObserver());
@@ -54,14 +60,16 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   final _appRouter = AppRouter();
-  final HiveRecordProvider _hiveRecordProvider;
-  final FirebaseCloudStoreRecordProvider _firebaseCloudStoreRecordProvider;
+  HiveRecordProvider hiveRecordProvider;
+  HiveMemoProvider hiveMemoProvider;
+  FirebaseCloudStoreRecordProvider firebaseCloudStoreRecordProvider;
 
   MyApp({
-    required HiveRecordProvider hiveRecordProvider,
-    required FirebaseCloudStoreRecordProvider firebaseCloudStoreRecordProvider,
-  })  : _hiveRecordProvider = hiveRecordProvider,
-        _firebaseCloudStoreRecordProvider = firebaseCloudStoreRecordProvider;
+    Key? key,
+    required this.hiveRecordProvider,
+    required this.hiveMemoProvider,
+    required this.firebaseCloudStoreRecordProvider,
+  }) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -70,9 +78,10 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider<RecordRepository>(
             create: (BuildContext context) => RecordRepository(
-                hiveRecordProvider: _hiveRecordProvider,
+                hiveRecordProvider: hiveRecordProvider,
+                hiveMemoProvider: hiveMemoProvider,
                 firebaseCloudStoreRecordProvider:
-                    _firebaseCloudStoreRecordProvider))
+                    firebaseCloudStoreRecordProvider))
       ],
       child: MultiBlocProvider(
         providers: [

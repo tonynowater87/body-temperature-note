@@ -1,16 +1,20 @@
+import 'package:body_temperature_note/data/model/hive_memo.dart';
 import 'package:body_temperature_note/data/model/hive_record.dart';
 import 'package:body_temperature_note/data/provider/firebase_cloud_store_record_provider.dart';
+import 'package:body_temperature_note/data/provider/hive_memo_provider.dart';
 import 'package:body_temperature_note/data/provider/hive_record_provider.dart';
 import 'package:body_temperature_note/data/repository/repository.dart';
 
 class RecordRepository extends Repository {
-  final HiveRecordProvider hiveRecordProvider;
-  final FirebaseCloudStoreRecordProvider _firebaseCloudStoreRecordProvider;
+  HiveRecordProvider hiveRecordProvider;
+  HiveMemoProvider hiveMemoProvider;
+  FirebaseCloudStoreRecordProvider firebaseCloudStoreRecordProvider;
 
   RecordRepository({
     required this.hiveRecordProvider,
-    required FirebaseCloudStoreRecordProvider firebaseCloudStoreRecordProvider,
-  }) : _firebaseCloudStoreRecordProvider = firebaseCloudStoreRecordProvider;
+    required this.hiveMemoProvider,
+    required this.firebaseCloudStoreRecordProvider,
+  });
 
   @override
   Future<void> addRecord(HiveRecord record) {
@@ -30,5 +34,15 @@ class RecordRepository extends Repository {
   @override
   Future<void> updateRecord(HiveRecord record) {
     return hiveRecordProvider.updateRecord(record);
+  }
+
+  @override
+  Future<void> addMemo(HiveMemo hiveMemo) async {
+    await hiveMemoProvider.addOrUpdateMemo(hiveMemo);
+  }
+
+  @override
+  Future<void> deleteMemo(DateTime datetime) async {
+    await hiveMemoProvider.deleteMemo(datetime);
   }
 }
