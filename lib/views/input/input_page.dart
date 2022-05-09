@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
+import 'package:body_temperature_note/views/input/view/temperature_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -64,7 +65,6 @@ class InputContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<InputCubit, InputState>(
       builder: (context, state) {
-        final _state = state as InputLoaded;
         return Column(
           children: [
             Container(
@@ -73,16 +73,9 @@ class InputContainer extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: Wrap(children: [Text(_dateString)]),
             ),
-            Center(child: Text('Records = ${_state.record.length}')),
-            Expanded(
+            const Expanded(
               child: Center(
-                child: MaterialButton(
-                    child: const Text('Save'),
-                    onPressed: () {
-                      context.read<InputCubit>().saveRecord();
-                      _logger.d("navigateBack");
-                      context.router.pop<bool>(true);
-                    }),
+                child: TemperaturePicker(),
               ),
             ),
             Row(

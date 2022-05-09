@@ -15,19 +15,27 @@ class InputLoading extends InputState {
 }
 
 class InputLoaded extends InputState {
-  final List<HiveRecord> record;
+  final HiveRecord record;
+  late final int decimalDigit;
+  late final int floatOneDigit;
+  late final int floatTwoDigit;
 
-  const InputLoaded(this.record);
+  InputLoaded(this.record) {
+    String temperatureString = '%.2f'.format([record.temperature.toString()]);
+    decimalDigit = temperatureString.substring(0, 2) as int;
+    floatOneDigit = temperatureString.substring(3, 4) as int;
+    floatTwoDigit = temperatureString.substring(4, 5) as int;
+  }
 
   @override
   List<Object?> get props => [record];
 }
 
 class InputSaved extends InputState {
-  final double temperature;
+  final HiveRecord record;
 
-  const InputSaved(this.temperature);
+  const InputSaved(this.record);
 
   @override
-  List<Object?> get props => [temperature];
+  List<Object?> get props => [record];
 }
