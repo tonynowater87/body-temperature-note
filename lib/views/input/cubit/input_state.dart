@@ -21,14 +21,14 @@ class InputLoaded extends InputState {
   late final int floatTwoDigit;
 
   InputLoaded(this.record) {
-    String temperatureString = '%.2f'.format([record.temperature.toString()]);
-    decimalDigit = temperatureString.substring(0, 2) as int;
-    floatOneDigit = temperatureString.substring(3, 4) as int;
-    floatTwoDigit = temperatureString.substring(4, 5) as int;
+    String temperatureString = '%.2f'.format([record.temperature]);
+    decimalDigit = int.parse(temperatureString.substring(0, 2));
+    floatOneDigit = int.parse(temperatureString.substring(3, 4));
+    floatTwoDigit = int.parse(temperatureString.substring(4, 5));
   }
 
   @override
-  List<Object?> get props => [record];
+  List<Object?> get props => [record, decimalDigit, floatOneDigit, floatTwoDigit];
 }
 
 class InputSaved extends InputState {

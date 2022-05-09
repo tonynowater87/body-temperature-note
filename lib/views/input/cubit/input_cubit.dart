@@ -33,14 +33,35 @@ class InputCubit extends Cubit<InputState> {
     emit(InputLoaded(currentRecord));
   }
 
-  // TODO 個別更新int, double, double
-  void temperatureUpdated(double temperature) {
-    currentRecord.temperature = temperature;
+  void updateTensDigit(int tensDigit) {
+    _logger.d("updateTensDigit $tensDigit");
+    final temperatureString = "%.2f".format([currentRecord.temperature]);
+    currentRecord.temperature = double.parse(
+        "%d.%s".format([tensDigit, temperatureString.substring(3, 5)]));
     emit(InputLoaded(currentRecord));
   }
 
-  void saveRecord() {
-    final addedId = repository.addOrUpdateRecord(currentRecord);
-    _logger.d("addedId = $addedId");
+  void updateFloatOneDigit(int floatOneDigit) {
+    final temperatureString = "%.2f".format([currentRecord.temperature]);
+    currentRecord.temperature = double.parse("%s.%d%s".format([
+      temperatureString.substring(0, 2),
+      floatOneDigit,
+      temperatureString.substring(4, 5)
+    ]));
+    emit(InputLoaded(currentRecord));
+  }
+
+  void updateFloatTwoDigit(int floatTwoDigit) {
+    final temperatureString = "%.2f".format([currentRecord.temperature]);
+    currentRecord.temperature = double.parse("%s.%s%d".format([
+      temperatureString.substring(0, 2),
+      temperatureString.substring(3, 4),
+      floatTwoDigit,
+    ]));
+    emit(InputLoaded(currentRecord));
+  }
+
+  Future<void> saveRecord() async {
+    await repository.addOrUpdateRecord(currentRecord);
   }
 }

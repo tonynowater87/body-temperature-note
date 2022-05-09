@@ -1,6 +1,8 @@
+import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class TemperaturePicker extends StatefulWidget {
@@ -11,9 +13,8 @@ class TemperaturePicker extends StatefulWidget {
 }
 
 class _TemperaturePickerState extends State<TemperaturePicker> {
-  int _currentDecimal = 36;
-  int _currentFloatOne = 0;
-  int _currentFloatTwo = 0;
+
+  final _logger = getIt<Logger>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,8 @@ class _TemperaturePickerState extends State<TemperaturePicker> {
               infiniteLoop: true,
               itemWidth: 55,
               onChanged: (value) {
-                 _currentDecimal = value;
+                _logger.d("onChanged $value");
+                inputCubit.updateTensDigit(value);
               },
             ),
             const Text(
@@ -44,24 +46,30 @@ class _TemperaturePickerState extends State<TemperaturePicker> {
               style: TextStyle(fontSize: 18),
             ),
             NumberPicker(
-              value: _currentFloatOne,
+              value: _state.floatOneDigit,
               minValue: 0,
               maxValue: 9,
               itemWidth: 30,
               infiniteLoop: true,
               selectedTextStyle: selectedFloatTextTheme.headline6!
                   .apply(color: Theme.of(context).accentColor),
-              onChanged: (value) => setState(() => _currentFloatOne = value),
+              onChanged: (value) {
+                _logger.d("onChanged $value");
+                inputCubit.updateFloatOneDigit(value);
+              },
             ),
             NumberPicker(
-              value: _currentFloatTwo,
+              value: _state.floatTwoDigit,
               minValue: 0,
               maxValue: 9,
               itemWidth: 30,
               infiniteLoop: true,
               selectedTextStyle: selectedFloatTextTheme.headline6!
                   .apply(color: Theme.of(context).accentColor),
-              onChanged: (value) => setState(() => _currentFloatTwo = value),
+              onChanged: (value) {
+                _logger.d("onChanged $value");
+                inputCubit.updateFloatTwoDigit(value);
+              },
             ),
             const Text(
               "°C",

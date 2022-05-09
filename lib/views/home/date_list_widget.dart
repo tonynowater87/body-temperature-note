@@ -119,6 +119,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                       final saved = await context.router.push<bool>(InputPageRoute(dateString: dateString));
                       // TODO refresh list if saved == true
                       _logger.d("isSaved = $saved");
+                      context.read<HomeCubit>().queryRecordsThisMonth();
                     },
                     title: Text(
                       (index + 1).toString(),

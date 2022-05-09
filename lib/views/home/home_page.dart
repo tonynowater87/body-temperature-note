@@ -82,7 +82,7 @@ class HomePage extends StatelessWidget {
         onPressed: () async {
           context.router.push(InputPageRoute(
               dateString: formatDate(DateTime.now(),
-                  [yyyy, '-', mm, '-', dd, ' ', HH, ':', mm, ':', dd])));
+                  [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss])));
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),

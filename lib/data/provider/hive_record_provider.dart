@@ -44,8 +44,8 @@ class HiveRecordProvider {
 
     if (existedRecord != null) {
       return (existedRecord
-        ..dateTime = record.dateTime
-        ..temperature = record.temperature)
+            ..dateTime = record.dateTime
+            ..temperature = record.temperature)
           .save();
     } else {
       return Future.value();
@@ -62,24 +62,24 @@ class HiveRecordProvider {
     final tomorrow = day.add(const Duration(days: 1));
     final todayBeginPoint = DateTime(day.year, day.month, day.day, 0, 0, 0);
     final todayEndPoint =
-    DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 0, 0, 0);
+        DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 0, 0, 0);
     return _box.values
         .where((element) =>
-    element.dateTime.isBefore(todayEndPoint) &&
-        element.dateTime.isAfter(todayBeginPoint))
+            element.dateTime.isBefore(todayEndPoint) &&
+            element.dateTime.isAfter(todayBeginPoint))
         .toList(growable: false);
   }
 
   List<HiveRecord> queryMonthRecords(DateTime month) {
     final now = DateTime.now();
     final endDayOfTheMonth = DateUtils.getDaysInMonth(now.year, now.month);
-    final thisMonthBeginPoint = DateTime(now.year, now.month, now.day, 0, 0, 0);
+    final thisMonthBeginPoint = DateTime(now.year, now.month, 1, 0, 0, 0);
     final thisMonthEndPoint =
-    DateTime(now.year, now.month, endDayOfTheMonth, 23, 59, 59);
+        DateTime(now.year, now.month, endDayOfTheMonth, 23, 59, 59);
     return _box.values
         .where((element) =>
-    element.dateTime.isBefore(thisMonthBeginPoint) &&
-        element.dateTime.isAfter(thisMonthEndPoint))
+            element.dateTime.isBefore(thisMonthEndPoint) &&
+            element.dateTime.isAfter(thisMonthBeginPoint))
         .toList(growable: false);
   }
 }

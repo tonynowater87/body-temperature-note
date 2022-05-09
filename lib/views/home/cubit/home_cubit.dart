@@ -88,4 +88,11 @@ class HomeCubit extends Cubit<HomeState> {
           null));
     }
   }
+
+  void queryRecordsThisMonth() {
+    final records = repository.queryMonthRecords(DateTime.now());
+    records.forEach((element) {
+      _logger.d(element);
+    });
+  }
 }

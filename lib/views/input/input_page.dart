@@ -55,60 +55,66 @@ class _InputPageState extends State<InputPage> {
 }
 
 class InputContainer extends StatelessWidget {
-  final _logger = getIt<Logger>();
-
   final String _dateString;
 
-  InputContainer(this._dateString, {Key? key}) : super(key: key);
+  const InputContainer(this._dateString, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<InputCubit, InputState>(
       builder: (context, state) {
-        return Column(
-          children: [
-            Container(
-              color: Colors.green,
-              width: double.infinity,
-              padding: const EdgeInsets.all(4.0),
-              child: Wrap(children: [Text(_dateString)]),
-            ),
-            const Expanded(
-              child: Center(
-                child: TemperaturePicker(),
+        return Container(
+          color: Theme.of(context).primaryColorLight,
+          child: Column(
+            children: [
+              Container(
+                color: Theme.of(context).primaryColorLight,
+                width: double.infinity,
+                padding: const EdgeInsets.all(4.0),
+                child: Wrap(children: [Text(_dateString)]),
               ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero)),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          // remove the button build-in padding bottom
-                          padding: MaterialStateProperty.all(EdgeInsets.zero)),
-                      onPressed: () {},
-                      child: const Text('Save')),
+              const Expanded(
+                child: Center(
+                  child: TemperaturePicker(),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.red.shade400),
-                          shape: MaterialStateProperty.all(
-                              const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero)),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          padding: MaterialStateProperty.all(EdgeInsets.zero)),
-                      onPressed: () {},
-                      child: const Text('Delete')),
-                )
-              ],
-            )
-          ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.zero)),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            // remove the button build-in padding bottom
+                            padding:
+                                MaterialStateProperty.all(EdgeInsets.zero)),
+                        onPressed: () async {
+                          await context.read<InputCubit>().saveRecord();
+                          context.router.pop<bool>(true);
+                        },
+                        child: const Text('Save')),
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.red.shade400),
+                            shape: MaterialStateProperty.all(
+                                const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.zero)),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            padding:
+                                MaterialStateProperty.all(EdgeInsets.zero)),
+                        onPressed: () {},
+                        child: const Text('Delete')),
+                  )
+                ],
+              )
+            ],
+          ),
         );
       },
     );
