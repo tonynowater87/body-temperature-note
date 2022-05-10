@@ -30,18 +30,19 @@ class HomeDateState extends HomeState {
       int? currentDay, this.inputRecords)
       : super(currentDaysOfMonth, currentYear, currentMonth, currentDay) {
     outputRecords = [];
-    for (int i = 0; i < currentDaysOfMonth; i++) {
+    for (int dayOfMonth = 1; dayOfMonth <= currentDaysOfMonth; dayOfMonth++) {
       outputRecords.add(inputRecords
-          .takeWhile((value) => value.dateTime.day == i)
+          .where((record) => record.dateTime.day == dayOfMonth)
           .toList(growable: false));
     }
   }
 
   @override
-  List<Object> get props => [currentYear, currentMonth, currentDay ?? -1];
+  List<Object> get props =>
+      [currentYear, currentMonth, currentDay ?? -1, outputRecords];
 
   @override
   String toString() {
-    return "$currentYear/$currentMonth($currentDaysOfMonth)/${currentDay ?? ''}, records = $outputRecords";
+    return "$currentYear/$currentMonth($currentDaysOfMonth)/${currentDay ?? ''}, records size = ${outputRecords.length}";
   }
 }

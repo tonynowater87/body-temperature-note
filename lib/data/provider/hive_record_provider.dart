@@ -70,12 +70,13 @@ class HiveRecordProvider {
         .toList(growable: false);
   }
 
-  List<HiveRecord> queryMonthRecords(DateTime month) {
-    final now = DateTime.now();
-    final endDayOfTheMonth = DateUtils.getDaysInMonth(now.year, now.month);
-    final thisMonthBeginPoint = DateTime(now.year, now.month, 1, 0, 0, 0);
+  List<HiveRecord> queryMonthRecords(DateTime monthDate) {
+    final endDayOfTheMonth =
+        DateUtils.getDaysInMonth(monthDate.year, monthDate.month);
+    final thisMonthBeginPoint =
+        DateTime(monthDate.year, monthDate.month, 1, 0, 0, 0);
     final thisMonthEndPoint =
-        DateTime(now.year, now.month, endDayOfTheMonth, 23, 59, 59);
+        DateTime(monthDate.year, monthDate.month, endDayOfTheMonth, 23, 59, 59);
     return _box.values
         .where((element) =>
             element.dateTime.isBefore(thisMonthEndPoint) &&

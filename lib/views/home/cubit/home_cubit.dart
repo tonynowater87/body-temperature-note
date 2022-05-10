@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:body_temperature_note/data/model/hive_record.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/home/cubit/home_state.dart';
@@ -18,24 +17,11 @@ class HomeCubit extends Cubit<HomeState> {
           currentDatePosition.year,
           currentDatePosition.month,
           currentDatePosition.day,
-        )) {
-    _logger.d("repo in home = ${repository.hashCode}");
-  }
-
-  void changeToInitState() {
-    currentDatePosition = DateTime.now();
-    emit(HomeInitState(
-      DateUtils.getDaysInMonth(
-          currentDatePosition.year, currentDatePosition.month),
-      currentDatePosition.year,
-      currentDatePosition.month,
-      currentDatePosition.day,
-    ));
-  }
+        ));
 
   void changeToToday() {
     currentDatePosition = DateTime.now();
-    final records = queryRecordsThisMonth();
+    final records = repository.queryMonthRecords(currentDatePosition);
 
     emit(HomeDateState(
         DateUtils.getDaysInMonth(
@@ -56,7 +42,7 @@ class HomeCubit extends Cubit<HomeState> {
           DateTime.january, currentDatePosition.day);
     }
 
-    final records = queryRecordsThisMonth();
+    final records = repository.queryMonthRecords(currentDatePosition);
 
     emit(HomeDateState(
         DateUtils.getDaysInMonth(
@@ -77,7 +63,7 @@ class HomeCubit extends Cubit<HomeState> {
           DateTime.december, currentDatePosition.day);
     }
 
-    final records = queryRecordsThisMonth();
+    final records = repository.queryMonthRecords(currentDatePosition);
 
     emit(HomeDateState(
         DateUtils.getDaysInMonth(
@@ -88,7 +74,17 @@ class HomeCubit extends Cubit<HomeState> {
         records));
   }
 
-  List<HiveRecord> queryRecordsThisMonth() {
-    return repository.queryMonthRecords(DateTime.now());
+  void refreshRecords() {
+    final monthDate =
+        DateTime(state.currentYear, state.currentMonth, 1, 0, 0, 0, 0, 0);
+    final newRecords = repository.queryMonthRecords(monthDate);
+    var newState = HomeDateState(
+        DateUtils.getDaysInMonth(
+            currentDatePosition.year, currentDatePosition.month),
+        currentDatePosition.year,
+        currentDatePosition.month,
+        null,
+        newRecords);
+    emit(newState);
   }
 }
