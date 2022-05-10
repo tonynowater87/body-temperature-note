@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:body_temperature_note/data/model/hive_record.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/home/cubit/home_state.dart';
@@ -34,13 +35,15 @@ class HomeCubit extends Cubit<HomeState> {
 
   void changeToToday() {
     currentDatePosition = DateTime.now();
-    emit(HomeTodayState(
-      DateUtils.getDaysInMonth(
-          currentDatePosition.year, currentDatePosition.month),
-      currentDatePosition.year,
-      currentDatePosition.month,
-      currentDatePosition.day,
-    ));
+    final records = queryRecordsThisMonth();
+
+    emit(HomeDateState(
+        DateUtils.getDaysInMonth(
+            currentDatePosition.year, currentDatePosition.month),
+        currentDatePosition.year,
+        currentDatePosition.month,
+        currentDatePosition.day,
+        records));
   }
 
   void nextMonth() {
@@ -48,22 +51,20 @@ class HomeCubit extends Cubit<HomeState> {
     if (month < DateTime.december) {
       currentDatePosition = DateTime(
           currentDatePosition.year, month + 1, currentDatePosition.day);
-      emit(HomeDateState(
-          DateUtils.getDaysInMonth(
-              currentDatePosition.year, currentDatePosition.month),
-          currentDatePosition.year,
-          currentDatePosition.month,
-          null));
     } else {
       currentDatePosition = DateTime(currentDatePosition.year + 1,
           DateTime.january, currentDatePosition.day);
-      emit(HomeDateState(
-          DateUtils.getDaysInMonth(
-              currentDatePosition.year, currentDatePosition.month),
-          currentDatePosition.year,
-          currentDatePosition.month,
-          null));
     }
+
+    final records = queryRecordsThisMonth();
+
+    emit(HomeDateState(
+        DateUtils.getDaysInMonth(
+            currentDatePosition.year, currentDatePosition.month),
+        currentDatePosition.year,
+        currentDatePosition.month,
+        null,
+        records));
   }
 
   void previousMonth() {
@@ -71,28 +72,23 @@ class HomeCubit extends Cubit<HomeState> {
     if (month > DateTime.january) {
       currentDatePosition = DateTime(
           currentDatePosition.year, month - 1, currentDatePosition.day);
-      emit(HomeDateState(
-          DateUtils.getDaysInMonth(
-              currentDatePosition.year, currentDatePosition.month),
-          currentDatePosition.year,
-          currentDatePosition.month,
-          null));
     } else {
       currentDatePosition = DateTime(currentDatePosition.year - 1,
           DateTime.december, currentDatePosition.day);
-      emit(HomeDateState(
-          DateUtils.getDaysInMonth(
-              currentDatePosition.year, currentDatePosition.month),
-          currentDatePosition.year,
-          currentDatePosition.month,
-          null));
     }
+
+    final records = queryRecordsThisMonth();
+
+    emit(HomeDateState(
+        DateUtils.getDaysInMonth(
+            currentDatePosition.year, currentDatePosition.month),
+        currentDatePosition.year,
+        currentDatePosition.month,
+        null,
+        records));
   }
 
-  void queryRecordsThisMonth() {
-    final records = repository.queryMonthRecords(DateTime.now());
-    records.forEach((element) {
-      _logger.d(element);
-    });
+  List<HiveRecord> queryRecordsThisMonth() {
+    return repository.queryMonthRecords(DateTime.now());
   }
 }

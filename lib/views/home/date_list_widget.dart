@@ -30,7 +30,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
     context.read<HomeCubit>().stream.listen((state) {
       if (state is HomeInitState) {
         itemScrollController.jumpTo(index: DateTime.now().day - 1);
-      } else if (state is HomeTodayState) {
+      } else if (state is HomeDateState && state.currentDay == DateTime.now().day) {
         itemScrollController.scrollTo(
             index: DateTime.now().day - 1,
             // alignment: 0.2 // offset from the position scrolled to , 0..1
@@ -103,24 +103,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                 padding: const EdgeInsets.only(bottom: 10),
                 itemBuilder: (_, index) {
                   return ListTile(
-                    onTap: () async {
-                      final currentState = context.read<HomeCubit>().state;
-                      final now = DateTime.now();
-                      _logger.d("now = ${now}");
-                      final dateString = formatDate(
-                          DateTime(
-                              currentState.currentYear,
-                              currentState.currentMonth,
-                              index + 1,
-                              now.hour,
-                              now.minute,
-                              now.second),
-                          [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss]);
-                      final saved = await context.router.push<bool>(InputPageRoute(dateString: dateString));
-                      // TODO refresh list if saved == true
-                      _logger.d("isSaved = $saved");
-                      context.read<HomeCubit>().queryRecordsThisMonth();
-                    },
+                    onTap: () => onTapDay(context, index),
                     title: Text(
                       (index + 1).toString(),
                       style: TextStyle(
@@ -171,5 +154,17 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
       textColor = Colors.redAccent;
     }
     return textColor;
+  }
+
+  onTapDay(BuildContext context, int index) async {
+    final currentState = context.read<HomeCubit>().state;
+    final now = DateTime.now();
+    final dateString = formatDate(
+        DateTime(currentState.currentYear, currentState.currentMonth, index + 1,
+            now.hour, now.minute, now.second),
+        [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss]);
+    final saved =
+        await context.router.push<bool>(InputPageRoute(dateString: dateString));
+    context.read<HomeCubit>().queryRecordsThisMonth();
   }
 }
