@@ -4,6 +4,8 @@ import 'package:body_temperature_note/data/model/hive_record.dart';
 abstract class Repository {
   Future<void> addOrUpdateRecord(HiveRecord record);
 
+  Future<void> deleteRecord(HiveRecord record);
+
   HiveRecord? queryRecordByDate(DateTime now);
 
   List<HiveRecord> queryDayRecords(DateTime today);

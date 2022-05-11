@@ -91,8 +91,8 @@ class InputContainer extends StatelessWidget {
                             // remove the button build-in padding bottom
                             padding:
                                 MaterialStateProperty.all(EdgeInsets.zero)),
-                        onPressed: () async {
-                          await context.read<InputCubit>().saveRecord();
+                        onPressed: () {
+                          context.read<InputCubit>().saveRecord();
                           context.router.pop<bool>(true);
                         },
                         child: const Text('Save')),
@@ -108,7 +108,10 @@ class InputContainer extends StatelessWidget {
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             padding:
                                 MaterialStateProperty.all(EdgeInsets.zero)),
-                        onPressed: () {},
+                        onPressed: () {
+                          context.read<InputCubit>().deleteRecord();
+                          context.router.pop<bool>(true);
+                        },
                         child: const Text('Delete')),
                   )
                 ],

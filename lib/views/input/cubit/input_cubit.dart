@@ -61,7 +61,11 @@ class InputCubit extends Cubit<InputState> {
     emit(InputLoaded(currentRecord));
   }
 
-  Future<void> saveRecord() async {
+  void saveRecord() async {
     await repository.addOrUpdateRecord(currentRecord);
+  }
+
+  void deleteRecord() async {
+    await repository.deleteRecord(currentRecord);
   }
 }
