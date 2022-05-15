@@ -3,6 +3,7 @@ import 'package:body_temperature_note/data/model/hive_record.dart';
 import 'package:body_temperature_note/data/provider/firebase_cloud_store_record_provider.dart';
 import 'package:body_temperature_note/data/provider/hive_memo_provider.dart';
 import 'package:body_temperature_note/data/provider/hive_record_provider.dart';
+import 'package:body_temperature_note/data/provider/settings_provider.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/firebase_options.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
@@ -12,6 +13,7 @@ import 'package:body_temperature_note/theme/theme_data.dart';
 import 'package:body_temperature_note/utils/app_bloc_observer.dart';
 import 'package:body_temperature_note/views/home/cubit/home_cubit.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
+import 'package:body_temperature_note/views/settings/cubit/settings_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // This is our global ServiceLocator
 GetIt getIt = GetIt.instance;
@@ -47,6 +50,10 @@ Future<void> main() async {
   getIt.registerLazySingleton<Logger>(
       () => Logger(printer: SimplePrinter(printTime: true, colors: false)));
 
+  // init sharedPreference
+  final sharedPreferences = await SharedPreferences.getInstance();
+  final settingsProvider = SettingsProvider(sharedPreferences);
+
   //0:00:00.100910
   //0:00:00.060453
   //0:00:00.059683
@@ -57,6 +64,7 @@ Future<void> main() async {
       hiveRecordProvider: hiveRecordProvider,
       hiveMemoProvider: hiveMemoProvider,
       firebaseCloudStoreRecordProvider: fireStoreRecordProvider,
+      settingsProvider: settingsProvider,
     ));
   }, blocObserver: AppBlocObserver());
 }
@@ -66,13 +74,15 @@ class MyApp extends StatelessWidget {
   HiveRecordProvider hiveRecordProvider;
   HiveMemoProvider hiveMemoProvider;
   FirebaseCloudStoreRecordProvider firebaseCloudStoreRecordProvider;
+  SettingsProvider settingsProvider;
 
-  MyApp({
-    Key? key,
-    required this.hiveRecordProvider,
-    required this.hiveMemoProvider,
-    required this.firebaseCloudStoreRecordProvider,
-  }) : super(key: key);
+  MyApp(
+      {Key? key,
+      required this.hiveRecordProvider,
+      required this.hiveMemoProvider,
+      required this.firebaseCloudStoreRecordProvider,
+      required this.settingsProvider})
+      : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -89,13 +99,16 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<ThemeCubit>(
-              create: (BuildContext context) => ThemeCubit()),
+              create: (BuildContext context) => ThemeCubit(settingsProvider)),
           BlocProvider<HomeCubit>(
               create: (BuildContext context) =>
                   HomeCubit(repository: RepositoryProvider.of(context))),
           BlocProvider<InputCubit>(
               create: (BuildContext context) =>
                   InputCubit(repository: RepositoryProvider.of(context))),
+          BlocProvider<SettingsCubit>(
+              create: (BuildContext context) =>
+                  SettingsCubit(settingsProvider)),
         ],
         child: BlocBuilder<ThemeCubit, AppThemeDataState>(
           builder: (context, state) {

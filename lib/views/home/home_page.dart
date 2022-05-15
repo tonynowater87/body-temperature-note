@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
           IconButton(
               constraints: const BoxConstraints(),
               onPressed: () {
-                context.router.push(const SettingsPageRoute());
+                context.router.push(SettingsPageRoute());
               },
               padding: EdgeInsets.zero,
               icon: const Icon(Icons.settings_outlined))
