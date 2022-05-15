@@ -11,8 +11,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
           title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -24,9 +22,7 @@ class HomePage extends StatelessWidget {
             padding: EdgeInsets.zero,
             icon: const Icon(Icons.account_circle_outlined),
           ),
-          const Center(
-              child: Text("Title", //TODO
-                  style: TextStyle(fontWeight: FontWeight.bold))),
+          const Center(child: Text("Title")), //TODO
           IconButton(
               constraints: const BoxConstraints(),
               onPressed: () {

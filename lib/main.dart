@@ -6,6 +6,9 @@ import 'package:body_temperature_note/data/provider/hive_record_provider.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/firebase_options.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
+import 'package:body_temperature_note/theme/cubit/theme_cubit.dart';
+import 'package:body_temperature_note/theme/cubit/theme_state.dart';
+import 'package:body_temperature_note/theme/theme_data.dart';
 import 'package:body_temperature_note/utils/app_bloc_observer.dart';
 import 'package:body_temperature_note/views/home/cubit/home_cubit.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
@@ -85,6 +88,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider<ThemeCubit>(
+              create: (BuildContext context) => ThemeCubit()),
           BlocProvider<HomeCubit>(
               create: (BuildContext context) =>
                   HomeCubit(repository: RepositoryProvider.of(context))),
@@ -92,9 +97,18 @@ class MyApp extends StatelessWidget {
               create: (BuildContext context) =>
                   InputCubit(repository: RepositoryProvider.of(context))),
         ],
-        child: MaterialApp.router(
-          routerDelegate: _appRouter.delegate(),
-          routeInformationParser: _appRouter.defaultRouteParser(),
+        child: BlocBuilder<ThemeCubit, AppThemeDataState>(
+          builder: (context, state) {
+            return MaterialApp.router(
+              theme: AppTheme.light.getThemeData(),
+              darkTheme: AppTheme.dark.getThemeData(),
+              themeMode: state.appThemeMode,
+              debugShowCheckedModeBanner: false,
+              debugShowMaterialGrid: false,
+              routerDelegate: _appRouter.delegate(),
+              routeInformationParser: _appRouter.defaultRouteParser(),
+            );
+          },
         ),
       ),
     );
