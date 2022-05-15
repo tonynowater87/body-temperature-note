@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:body_temperature_note/data/provider/settings_provider.dart';
+import 'package:body_temperature_note/l10n/l10n.dart';
 import 'package:body_temperature_note/views/settings/cubit/settings_state.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     final isCelsius = settingsProvider.getIsCelsius() ?? false;
     final languageCode = settingsProvider.getLanguageCode();
     Locale locale;
+
     if (languageCode == null) {
       locale = const Locale('en', '');
     } else {
@@ -45,13 +47,13 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   updateLocale(Locale locale) async {
-    final isUpdated =
-        await settingsProvider.setLanguageCode(locale.languageCode);
-    if (isUpdated) {
-      emit(state.copyWith(
-          isDarkMode: state.isDarkMode,
-          isCelsius: state.isCelsius,
-          locale: locale));
-    }
+    final isUpdated = await settingsProvider.setLanguageCode(locale.languageCode);
+    if (!isUpdated) return;
+    await AppLocalizations.delegate.load(locale);
+
+    emit(state.copyWith(
+        isDarkMode: state.isDarkMode,
+        isCelsius: state.isCelsius,
+        locale: locale));
   }
 }

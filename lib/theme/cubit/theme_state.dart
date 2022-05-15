@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 
 class AppThemeDataState extends Equatable {
   ThemeMode appThemeMode;
+  Locale appLocale;
 
-  AppThemeDataState({required this.appThemeMode});
+  AppThemeDataState({required this.appThemeMode, required this.appLocale});
 
   @override
-  List<Object> get props => [appThemeMode];
+  List<Object> get props => [appThemeMode, appLocale];
 
-  AppThemeDataState copyWith(ThemeMode themeMode) {
-    return AppThemeDataState(appThemeMode: themeMode);
+  AppThemeDataState copyWith(
+      {required ThemeMode themeMode, required Locale appLocale}) {
+    return AppThemeDataState(appThemeMode: themeMode, appLocale: appLocale);
   }
 }

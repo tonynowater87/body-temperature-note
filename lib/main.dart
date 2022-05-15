@@ -18,6 +18,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
@@ -29,7 +31,7 @@ GetIt getIt = GetIt.instance;
 Future<void> main() async {
   const appName = "BodyTemperatureNote";
 
-  //final costTimeForLaunch = DateTime.now();
+  final costTimeForLaunch = DateTime.now();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       name: appName, options: DefaultFirebaseOptions.currentPlatform);
@@ -57,7 +59,7 @@ Future<void> main() async {
   //0:00:00.100910
   //0:00:00.060453
   //0:00:00.059683
-  //print('[Tony] ${costTimeForLaunch.difference(DateTime.now())})');
+  print('[Tony] ${costTimeForLaunch.difference(DateTime.now())})');
 
   BlocOverrides.runZoned(() {
     runApp(MyApp(
@@ -116,6 +118,14 @@ class MyApp extends StatelessWidget {
               theme: AppTheme.light.getThemeData(),
               darkTheme: AppTheme.dark.getThemeData(),
               themeMode: state.appThemeMode,
+              locale: state.appLocale,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
               debugShowCheckedModeBanner: false,
               debugShowMaterialGrid: false,
               routerDelegate: _appRouter.delegate(),

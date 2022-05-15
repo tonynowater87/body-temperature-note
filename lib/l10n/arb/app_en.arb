@@ -1,0 +1,11 @@
+{
+    "@@locale": "en",
+    "home_title": "Title",
+     "@home_title": {
+        "description": "The title of the home page"
+      },
+     "setting_title": "Settings",
+     "@setting_title": {
+             "description": "The title of the setting page"
+           }
+}
