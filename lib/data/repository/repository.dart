@@ -1,16 +1,16 @@
 import 'package:body_temperature_note/data/model/hive_memo.dart';
-import 'package:body_temperature_note/data/model/hive_record.dart';
+import 'package:body_temperature_note/data/model/record_ui_model.dart';
 
 abstract class Repository {
-  Future<void> addOrUpdateRecord(HiveRecord record);
+  Future<void> addOrUpdateRecord(RecordModel record);
 
-  Future<void> deleteRecord(HiveRecord record);
+  Future<void> deleteRecord(RecordModel record);
 
-  HiveRecord? queryRecordByDate(DateTime now);
+  RecordModel? queryRecordByDate(DateTime now);
 
-  List<HiveRecord> queryDayRecords(DateTime today);
+  List<RecordModel> queryDayRecords(DateTime today);
 
-  List<HiveRecord> queryMonthRecords(DateTime month);
+  List<RecordModel> queryMonthRecords(DateTime month);
 
   Future<void> addOrUpdateMemo(HiveMemo hiveMemo);
 

@@ -15,7 +15,7 @@ class InputLoading extends InputState {
 }
 
 class InputLoaded extends InputState {
-  final HiveRecord record;
+  final RecordModel record;
   late final int decimalDigit;
   late final int floatOneDigit;
   late final int floatTwoDigit;

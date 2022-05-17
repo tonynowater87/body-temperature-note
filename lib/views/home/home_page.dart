@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:body_temperature_note/l10n/l10n.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
+import 'package:body_temperature_note/views/home/cubit/home_cubit.dart';
 import 'package:body_temperature_note/views/home/date_list_widget.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -77,9 +79,11 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          context.router.push(InputPageRoute(
-              dateString: formatDate(DateTime.now(),
-                  [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss])));
+          final saved = await context.router.push<bool>(InputPageRoute(dateString: formatDate(DateTime.now(),
+              [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss])));
+          if (saved == true) {
+            context.read<HomeCubit>().refreshRecords();
+          }
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:body_temperature_note/data/model/hive_record.dart';
+import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class HomeState extends Equatable {
@@ -23,8 +23,8 @@ class HomeInitState extends HomeState {
 }
 
 class HomeDateState extends HomeState {
-  List<HiveRecord> inputRecords;
-  late List<List<HiveRecord>> outputRecords;
+  List<RecordModel> inputRecords;
+  late List<List<RecordModel>> outputRecords;
 
   HomeDateState(int currentDaysOfMonth, int currentYear, int currentMonth,
       int? currentDay, this.inputRecords)

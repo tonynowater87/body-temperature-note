@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:body_temperature_note/data/model/hive_record.dart';
+import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
 import 'package:body_temperature_note/utils/string_extensions.dart';
@@ -111,7 +111,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                       itemBuilder: (_, index) {
                         final dayRecords = state.outputRecords[index];
                         final List<Widget> temperatureViews = [];
-
+                        _logger.d("[TONY] refresh home list!!");
                         if (dayRecords.isEmpty) {
                           temperatureViews
                               .add(Card(child: Text('No Temperature')));
@@ -203,8 +203,8 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
     }
   }
 
-  onTapTemperature(BuildContext context, HiveRecord hiveRecord) async {
-    final dateString = formatDate(hiveRecord.dateTime,
+  onTapTemperature(BuildContext context, RecordModel recordModel) async {
+    final dateString = formatDate(recordModel.dateTime,
         [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss]);
     final saved =
         await context.router.push<bool>(InputPageRoute(dateString: dateString));

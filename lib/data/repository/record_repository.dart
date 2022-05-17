@@ -1,5 +1,6 @@
 import 'package:body_temperature_note/data/model/hive_memo.dart';
 import 'package:body_temperature_note/data/model/hive_record.dart';
+import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/data/provider/firebase_cloud_store_record_provider.dart';
 import 'package:body_temperature_note/data/provider/hive_memo_provider.dart';
 import 'package:body_temperature_note/data/provider/hive_record_provider.dart';
@@ -17,23 +18,45 @@ class RecordRepository extends Repository {
   });
 
   @override
-  Future<void> addOrUpdateRecord(HiveRecord record) {
-    return hiveRecordProvider.addOrUpdateRecord(record);
+  Future<void> addOrUpdateRecord(RecordModel record) {
+    final existedRecord =
+        hiveRecordProvider.queryRecordByDateTime(record.dateTime);
+    if (existedRecord != null) {
+      return hiveRecordProvider.addOrUpdateRecord(existedRecord
+        ..temperature = record.temperature
+        ..dateTime = record.dateTime);
+    } else {
+      return hiveRecordProvider.addOrUpdateRecord(HiveRecord()
+        ..dateTime = record.dateTime
+        ..temperature = record.temperature);
+    }
   }
 
   @override
-  HiveRecord? queryRecordByDate(DateTime now) {
-    return hiveRecordProvider.queryRecordByDateTime(now);
+  RecordModel? queryRecordByDate(DateTime now) {
+    final existedRecord = hiveRecordProvider.queryRecordByDateTime(now);
+    if (existedRecord == null) return null;
+    return RecordModel(
+        temperature: existedRecord.temperature,
+        dateTime: existedRecord.dateTime);
   }
 
   @override
-  List<HiveRecord> queryMonthRecords(DateTime month) {
-    return hiveRecordProvider.queryMonthRecords(month);
+  List<RecordModel> queryMonthRecords(DateTime month) {
+    return hiveRecordProvider
+        .queryMonthRecords(month)
+        .map((it) =>
+            RecordModel(temperature: it.temperature, dateTime: it.dateTime))
+        .toList(growable: false);
   }
 
   @override
-  List<HiveRecord> queryDayRecords(DateTime today) {
-    return hiveRecordProvider.queryDayRecords(today);
+  List<RecordModel> queryDayRecords(DateTime today) {
+    return hiveRecordProvider
+        .queryDayRecords(today)
+        .map((it) =>
+            RecordModel(temperature: it.temperature, dateTime: it.dateTime))
+        .toList(growable: false);
   }
 
   @override
@@ -47,7 +70,9 @@ class RecordRepository extends Repository {
   }
 
   @override
-  Future<void> deleteRecord(HiveRecord record) {
-    return hiveRecordProvider.removeRecord(record);
+  Future<void> deleteRecord(RecordModel record) {
+    final existedRecord =
+        hiveRecordProvider.queryRecordByDateTime(record.dateTime);
+    return hiveRecordProvider.removeRecord(existedRecord!);
   }
 }

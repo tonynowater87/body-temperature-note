@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:body_temperature_note/data/model/hive_record.dart';
+import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/utils/string_extensions.dart';
@@ -11,7 +12,7 @@ part 'input_state.dart';
 class InputCubit extends Cubit<InputState> {
   final RecordRepository repository;
   final _logger = getIt<Logger>();
-  late HiveRecord currentRecord;
+  late RecordModel currentRecord;
 
   InputCubit({required this.repository}) : super(InputInitial()) {
     _logger.d("repo in input = ${repository.hashCode}");
@@ -26,9 +27,7 @@ class InputCubit extends Cubit<InputState> {
     if (record != null) {
       currentRecord = record;
     } else {
-      currentRecord = HiveRecord()
-        ..temperature = 36.0
-        ..dateTime = dateTime;
+      currentRecord = RecordModel(temperature: 36.0, dateTime: dateTime);
     }
     emit(InputLoaded(currentRecord));
   }
