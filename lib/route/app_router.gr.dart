@@ -43,10 +43,10 @@ class AppRouter extends _i5.RootStackRouter {
           routeData: routeData, child: const _i3.ChartPage());
     },
     SettingsPageRoute.name: (routeData) {
-      final args = routeData.argsAs<SettingsPageRouteArgs>(
-          orElse: () => const SettingsPageRouteArgs());
+      final args = routeData.argsAs<SettingsPageRouteArgs>();
       return _i5.MaterialPageX<dynamic>(
-          routeData: routeData, child: _i4.SettingsPage(key: args.key));
+          routeData: routeData,
+          child: _i4.SettingsPage(key: args.key, onResult: args.onResult));
     }
   };
 
@@ -101,20 +101,23 @@ class ChartPageRoute extends _i5.PageRouteInfo<void> {
 /// generated route for
 /// [_i4.SettingsPage]
 class SettingsPageRoute extends _i5.PageRouteInfo<SettingsPageRouteArgs> {
-  SettingsPageRoute({_i7.Key? key})
+  SettingsPageRoute({_i7.Key? key, required void Function(bool) onResult})
       : super(SettingsPageRoute.name,
-            path: '/settings-page', args: SettingsPageRouteArgs(key: key));
+            path: '/settings-page',
+            args: SettingsPageRouteArgs(key: key, onResult: onResult));
 
   static const String name = 'SettingsPageRoute';
 }
 
 class SettingsPageRouteArgs {
-  const SettingsPageRouteArgs({this.key});
+  const SettingsPageRouteArgs({this.key, required this.onResult});
 
   final _i7.Key? key;
 
+  final void Function(bool) onResult;
+
   @override
   String toString() {
-    return 'SettingsPageRouteArgs{key: $key}';
+    return 'SettingsPageRouteArgs{key: $key, onResult: $onResult}';
   }
 }

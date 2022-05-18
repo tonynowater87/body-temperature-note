@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:body_temperature_note/data/model/record_ui_model.dart';
+import 'package:body_temperature_note/utils/double_extensions.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class HomeState extends Equatable {
@@ -24,22 +25,27 @@ class HomeInitState extends HomeState {
 
 class HomeDateState extends HomeState {
   List<RecordModel> inputRecords;
+  bool isCelsius;
   late List<List<RecordModel>> outputRecords;
 
   HomeDateState(int currentDaysOfMonth, int currentYear, int currentMonth,
-      int? currentDay, this.inputRecords)
+      int? currentDay, this.inputRecords, this.isCelsius)
       : super(currentDaysOfMonth, currentYear, currentMonth, currentDay) {
     outputRecords = [];
     for (int dayOfMonth = 1; dayOfMonth <= currentDaysOfMonth; dayOfMonth++) {
       outputRecords.add(inputRecords
           .where((record) => record.dateTime.day == dayOfMonth)
+          .map((element) => element
+            ..temperature = isCelsius
+                ? element.temperature
+                : element.temperature.toFahrenheit())
           .toList(growable: false));
     }
   }
 
   @override
   List<Object> get props =>
-      [currentYear, currentMonth, currentDay ?? -1, outputRecords];
+      [isCelsius, currentYear, currentMonth, currentDay ?? -1, outputRecords];
 
   @override
   String toString() {

@@ -13,7 +13,7 @@ class SettingsCubit extends Cubit<SettingsState> {
             isDarkMode: false,
             locale: const Locale('en', 'US'))) {
     final isDarkMode = settingsProvider.getIsDarkMode() ?? false;
-    final isCelsius = settingsProvider.getIsCelsius() ?? false;
+    final isCelsius = settingsProvider.getIsCelsius();
     final languageCode = settingsProvider.getLanguageCode();
     Locale locale;
 

@@ -21,8 +21,8 @@ class SettingsProvider {
     return sharedPreferences.setBool(keyIsCelsius, isCelsius);
   }
 
-  bool? getIsCelsius() {
-    return sharedPreferences.getBool(keyIsCelsius);
+  bool getIsCelsius() {
+    return sharedPreferences.getBool(keyIsCelsius) ?? true;
   }
 
   Future<bool> setLanguageCode(String languageCode) {

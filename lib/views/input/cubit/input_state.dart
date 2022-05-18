@@ -16,19 +16,28 @@ class InputLoading extends InputState {
 
 class InputLoaded extends InputState {
   final RecordModel record;
+  final bool isCelsius;
   late final int decimalDigit;
   late final int floatOneDigit;
   late final int floatTwoDigit;
 
-  InputLoaded(this.record) {
+  InputLoaded(this.record, this.isCelsius) {
     String temperatureString = '%.2f'.format([record.temperature]);
-    decimalDigit = int.parse(temperatureString.substring(0, 2));
-    floatOneDigit = int.parse(temperatureString.substring(3, 4));
-    floatTwoDigit = int.parse(temperatureString.substring(4, 5));
+    final _logger = getIt<Logger>();
+    if (temperatureString.split('.')[0].length >= 3) {
+      decimalDigit = int.parse(temperatureString.substring(0, 3));
+      floatOneDigit = int.parse(temperatureString.substring(4, 5));
+      floatTwoDigit = int.parse(temperatureString.substring(5, 6));
+    } else {
+      decimalDigit = int.parse(temperatureString.substring(0, 2));
+      floatOneDigit = int.parse(temperatureString.substring(3, 4));
+      floatTwoDigit = int.parse(temperatureString.substring(4, 5));
+    }
   }
 
   @override
-  List<Object?> get props => [record, decimalDigit, floatOneDigit, floatTwoDigit];
+  List<Object?> get props =>
+      [record, decimalDigit, floatOneDigit, floatTwoDigit];
 }
 
 class InputSaved extends InputState {

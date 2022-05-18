@@ -59,6 +59,7 @@ dependencies:
   sprintf: ^6.0.0
   settings_ui: ^2.0.2
   shared_preferences: ^2.0.15
+  adaptive_dialog: ^1.6.3
 
 dev_dependencies:
   flutter_test:

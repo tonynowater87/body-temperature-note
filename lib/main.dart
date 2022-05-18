@@ -104,10 +104,10 @@ class MyApp extends StatelessWidget {
               create: (BuildContext context) => ThemeCubit(settingsProvider)),
           BlocProvider<HomeCubit>(
               create: (BuildContext context) =>
-                  HomeCubit(repository: RepositoryProvider.of(context))),
+                  HomeCubit(repository: RepositoryProvider.of(context), settingsProvider: settingsProvider)),
           BlocProvider<InputCubit>(
               create: (BuildContext context) =>
-                  InputCubit(repository: RepositoryProvider.of(context))),
+                  InputCubit(repository: RepositoryProvider.of(context), settingsProvider: settingsProvider)),
           BlocProvider<SettingsCubit>(
               create: (BuildContext context) =>
                   SettingsCubit(settingsProvider)),

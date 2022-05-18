@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:body_temperature_note/data/provider/settings_provider.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/home/cubit/home_state.dart';
@@ -8,16 +9,20 @@ import 'package:logger/logger.dart';
 class HomeCubit extends Cubit<HomeState> {
   static DateTime currentDatePosition = DateTime.now();
   final RecordRepository repository;
+  final SettingsProvider settingsProvider;
   final _logger = getIt<Logger>();
+  bool isCelsius = false;
 
-  HomeCubit({required this.repository})
+  HomeCubit({required this.repository, required this.settingsProvider})
       : super(HomeInitState(
           DateUtils.getDaysInMonth(
               currentDatePosition.year, currentDatePosition.month),
           currentDatePosition.year,
           currentDatePosition.month,
           currentDatePosition.day,
-        ));
+        )) {
+    isCelsius = settingsProvider.getIsCelsius();
+  }
 
   void changeToToday() {
     currentDatePosition = DateTime.now();
@@ -29,7 +34,8 @@ class HomeCubit extends Cubit<HomeState> {
         currentDatePosition.year,
         currentDatePosition.month,
         currentDatePosition.day,
-        records));
+        records,
+        isCelsius));
   }
 
   void nextMonth() {
@@ -50,7 +56,8 @@ class HomeCubit extends Cubit<HomeState> {
         currentDatePosition.year,
         currentDatePosition.month,
         null,
-        records));
+        records,
+        isCelsius));
   }
 
   void previousMonth() {
@@ -71,12 +78,14 @@ class HomeCubit extends Cubit<HomeState> {
         currentDatePosition.year,
         currentDatePosition.month,
         null,
-        records));
+        records,
+        isCelsius));
   }
 
   void refreshRecords() {
     final monthDate =
         DateTime(state.currentYear, state.currentMonth, 1, 0, 0, 0, 0, 0);
+    isCelsius = settingsProvider.getIsCelsius();
     final newRecords = repository.queryMonthRecords(monthDate);
     var newState = HomeDateState(
         DateUtils.getDaysInMonth(
@@ -84,7 +93,8 @@ class HomeCubit extends Cubit<HomeState> {
         currentDatePosition.year,
         currentDatePosition.month,
         null,
-        newRecords);
+        newRecords,
+        isCelsius);
     emit(newState);
   }
 }
