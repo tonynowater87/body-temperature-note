@@ -11,7 +11,6 @@
 // ignore_for_file: type=lint
 
 import 'package:auto_route/auto_route.dart' as _i5;
-import 'package:flutter/cupertino.dart' as _i7;
 import 'package:flutter/material.dart' as _i6;
 
 import '../views/chart_page.dart' as _i3;
@@ -101,7 +100,7 @@ class ChartPageRoute extends _i5.PageRouteInfo<void> {
 /// generated route for
 /// [_i4.SettingsPage]
 class SettingsPageRoute extends _i5.PageRouteInfo<SettingsPageRouteArgs> {
-  SettingsPageRoute({_i7.Key? key, required void Function(bool) onResult})
+  SettingsPageRoute({_i6.Key? key, required void Function(bool) onResult})
       : super(SettingsPageRoute.name,
             path: '/settings-page',
             args: SettingsPageRouteArgs(key: key, onResult: onResult));
@@ -112,7 +111,7 @@ class SettingsPageRoute extends _i5.PageRouteInfo<SettingsPageRouteArgs> {
 class SettingsPageRouteArgs {
   const SettingsPageRouteArgs({this.key, required this.onResult});
 
-  final _i7.Key? key;
+  final _i6.Key? key;
 
   final void Function(bool) onResult;
 
