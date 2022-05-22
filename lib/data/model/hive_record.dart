@@ -9,7 +9,7 @@ class HiveRecord extends HiveObject {
   late double temperature;
 
   @HiveField(1)
-  late DateTime dateTime;
+  late DateTime dateTime; // [yyyy, mm, dd, HH, nn];
 
   @override
   String toString() {

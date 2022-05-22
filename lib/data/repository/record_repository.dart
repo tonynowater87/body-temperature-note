@@ -1,5 +1,6 @@
 import 'package:body_temperature_note/data/model/hive_memo.dart';
 import 'package:body_temperature_note/data/model/hive_record.dart';
+import 'package:body_temperature_note/data/model/memo_ui_model.dart';
 import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/data/provider/firebase_cloud_store_record_provider.dart';
 import 'package:body_temperature_note/data/provider/hive_memo_provider.dart';
@@ -19,15 +20,18 @@ class RecordRepository extends Repository {
 
   @override
   Future<void> addOrUpdateRecord(RecordModel record) {
+    final formattedDate = DateTime(record.dateTime.year, record.dateTime.month,
+        record.dateTime.day, record.dateTime.hour, record.dateTime.minute);
+
     final existedRecord =
-        hiveRecordProvider.queryRecordByDateTime(record.dateTime);
+        hiveRecordProvider.queryRecordByDateTime(formattedDate);
     if (existedRecord != null) {
       return hiveRecordProvider.addOrUpdateRecord(existedRecord
         ..temperature = record.temperature
-        ..dateTime = record.dateTime);
+        ..dateTime = formattedDate);
     } else {
       return hiveRecordProvider.addOrUpdateRecord(HiveRecord()
-        ..dateTime = record.dateTime
+        ..dateTime = formattedDate
         ..temperature = record.temperature);
     }
   }
@@ -60,8 +64,20 @@ class RecordRepository extends Repository {
   }
 
   @override
-  Future<void> addOrUpdateMemo(HiveMemo hiveMemo) {
-    return hiveMemoProvider.addOrUpdateMemo(hiveMemo);
+  Future<void> addOrUpdateMemo(MemoModel memoModel) {
+    final formattedDate = DateTime(memoModel.dateTime.year,
+        memoModel.dateTime.month, memoModel.dateTime.day);
+
+    final existedMemo = hiveMemoProvider.queryMemoByDateTime(formattedDate);
+    if (existedMemo != null) {
+      return hiveMemoProvider.addOrUpdateMemo(existedMemo
+        ..memo = memoModel.memo
+        ..dateTime = formattedDate);
+    } else {
+      return hiveMemoProvider.addOrUpdateMemo(HiveMemo()
+        ..dateTime = formattedDate
+        ..memo = existedMemo!.memo);
+    }
   }
 
   @override

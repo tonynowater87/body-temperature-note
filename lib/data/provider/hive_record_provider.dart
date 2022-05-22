@@ -39,19 +39,6 @@ class HiveRecordProvider {
     }
   }
 
-  Future<void> updateRecord(HiveRecord record) {
-    final existedRecord = _box.get(record.key);
-
-    if (existedRecord != null) {
-      return (existedRecord
-            ..dateTime = record.dateTime
-            ..temperature = record.temperature)
-          .save();
-    } else {
-      return Future.value();
-    }
-  }
-
   Future<void> removeRecord(HiveRecord record) {
     return _box.values
         .firstWhere((element) => element.key == record.key)

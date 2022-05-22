@@ -6,6 +6,19 @@ class HiveMemoProvider {
 
   HiveMemoProvider(this.box);
 
+  HiveMemo? queryMemoByDateTime(DateTime dateTime) {
+    HiveMemo? existedMemo;
+
+    try {
+      existedMemo =
+          box.values.firstWhere((element) => element.dateTime == dateTime);
+    } on StateError {
+      existedMemo = null;
+    }
+
+    return existedMemo;
+  }
+
   Future<int> addOrUpdateMemo(HiveMemo newlyHiveMemo) async {
     HiveMemo? existedMemo;
     try {

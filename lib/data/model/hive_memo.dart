@@ -8,7 +8,7 @@ class HiveMemo extends HiveObject {
   late String memo;
 
   @HiveField(1)
-  late DateTime dateTime;
+  late DateTime dateTime; // [yyyy, mm, dd];
 
   @override
   String toString() {
