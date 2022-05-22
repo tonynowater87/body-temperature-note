@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/main.dart';
@@ -54,21 +56,24 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
               child: Column(
             children: [
               Container(
-                color: Colors.lime.shade100,
+                height: 60,
+                color: Theme.of(context).colorScheme.background,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     IconButton(
-                        padding: EdgeInsets.zero,
-                        highlightColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        constraints:
-                            const BoxConstraints(minHeight: 40, minWidth: 40),
-                        onPressed: () {
-                          context.read<HomeCubit>().previousMonth();
-                        },
-                        icon: const Icon(Icons.arrow_left_outlined)),
+                      padding: EdgeInsets.zero,
+                      highlightColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      constraints:
+                          const BoxConstraints(minHeight: 40, minWidth: 40),
+                      onPressed: () {
+                        context.read<HomeCubit>().previousMonth();
+                      },
+                      icon: Icon(Icons.arrow_circle_left_outlined),
+                      color: Theme.of(context).iconTheme.color,
+                    ),
                     SizedBox(
                       width: 150,
                       child: TextButton(
@@ -82,6 +87,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                                 DateTime(state.currentYear, state.currentMonth),
                                 [yyyy, '-', mm]),
                             textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineMedium,
                           );
                         }),
                       ),
@@ -96,14 +102,16 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                         onPressed: () {
                           context.read<HomeCubit>().nextMonth();
                         },
-                        icon: const Icon(Icons.arrow_right_outlined)),
+                        icon: Icon(
+                          Icons.arrow_circle_right_outlined,
+                          color: Theme.of(context).iconTheme.color,
+                        )),
                   ],
                 ),
               ),
               const Divider(
                 height: 0.0,
                 thickness: 0.5,
-                color: Colors.grey,
               ),
               Expanded(
                   child: ScrollablePositionedList.separated(
@@ -111,60 +119,67 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                       itemBuilder: (_, index) {
                         final dayRecords = state.outputRecords[index];
                         final List<Widget> temperatureViews = [];
-                        _logger.d("[TONY] refresh home list!!");
                         if (dayRecords.isEmpty) {
-                          temperatureViews
-                              .add(Card(child: Text('No Temperature')));
+                          temperatureViews.add(const Card(
+                              child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('No Temperature'),
+                          )));
                         } else {
                           var maxCount = 0;
                           for (int i = 0; i < dayRecords.length; i++) {
                             if (maxCount == 3) break;
                             maxCount++;
                             temperatureViews.add(Card(
-                              child: InkWell(
-                                  child: Text("%.2f"
-                                      .format([dayRecords[i].temperature])),
-                                  onTap: () {
-                                    onTapTemperature(context, dayRecords[i]);
-                                  }),
+                              elevation: 5.0,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: InkWell(
+                                    child: Text("%.2f"
+                                        .format([dayRecords[i].temperature])),
+                                    onTap: () {
+                                      onTapTemperature(context, dayRecords[i]);
+                                    }),
+                              ),
                             ));
                           }
                         }
 
+                        temperatureViews.add(Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: InkWell(
+                              child: Icon(Icons.note_add_outlined,
+                                  color: Theme.of(context).iconTheme.color),
+                              onTap: () {
+                                // TODO
+                              }),
+                        ));
+
                         return ListTile(
                           onTap: () => onTapDay(context, index),
                           trailing: Wrap(children: temperatureViews),
-                          title: Text(
-                            (index + 1).toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                fontStyle: FontStyle.italic,
-                                color: _getWeekDaysTextColor(DateTime(
-                                    state.currentYear,
-                                    state.currentMonth,
-                                    index + 1))),
-                          ),
+                          title: Text((index + 1).toString(),
+                              style: _getWeekDaysTextStyle(DateTime(
+                                  state.currentYear,
+                                  state.currentMonth,
+                                  index + 1))),
                           subtitle: Text(
-                            formatDate(
-                                DateTime(state.currentYear, state.currentMonth,
-                                    index + 1),
-                                [D]),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: _getWeekDaysTextColor(DateTime(
-                                    state.currentYear,
-                                    state.currentMonth,
-                                    index + 1))),
-                          ),
+                              formatDate(
+                                  DateTime(state.currentYear,
+                                      state.currentMonth, index + 1),
+                                  [D]),
+                              style: _getWeekDaysTextStyle(DateTime(
+                                  state.currentYear,
+                                  state.currentMonth,
+                                  index + 1))),
                           selected: index == DateTime.now().day - 1 &&
                               state.currentMonth == DateTime.now().month,
-                          selectedTileColor: Colors.yellow,
+                          selectedTileColor: Colors.yellow, //TODO today
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {
                         return const Divider(
-                            thickness: 0.5, height: 1, color: Colors.grey);
+                            thickness: 0.5, height: 1);
                       },
                       itemScrollController: itemScrollController,
                       itemPositionsListener: itemPositionsListener,
@@ -178,15 +193,19 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
     );
   }
 
-  Color _getWeekDaysTextColor(DateTime dateTime) {
+  TextStyle _getWeekDaysTextStyle(DateTime dateTime) {
     final int weekday = dateTime.weekday;
-    var textColor = Colors.black87;
+    var textStyle = Theme.of(context).textTheme.headlineMedium!;
     if (weekday == 6) {
-      textColor = Colors.orange;
+      textStyle = textStyle.copyWith(
+          color: Theme.of(context).colorScheme.secondary,
+          fontStyle: FontStyle.italic);
     } else if (weekday == 7) {
-      textColor = Colors.redAccent;
+      textStyle = textStyle.copyWith(
+          color: Theme.of(context).colorScheme.secondary,
+          fontStyle: FontStyle.italic);
     }
-    return textColor;
+    return textStyle;
   }
 
   onTapDay(BuildContext context, int index) async {

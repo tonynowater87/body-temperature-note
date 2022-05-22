@@ -13,7 +13,6 @@ import 'package:logger/logger.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class SettingsPage extends StatelessWidget {
-
   final void Function(bool) onResult;
 
   SettingsPage({Key? key, required this.onResult}) : super(key: key);
@@ -38,7 +37,11 @@ class SettingsPage extends StatelessWidget {
             builder: (context, state) {
               return Scaffold(
                 appBar: AppBar(
-                  title: Text(context.l10n.setting_title),
+                  iconTheme: Theme.of(context).iconTheme,
+                  title: Text(
+                    context.l10n.setting_title,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                 ),
                 body: SettingsList(
                     lightTheme: AppTheme.light.getSettingsThemeData(),
@@ -48,6 +51,7 @@ class SettingsPage extends StatelessWidget {
                         SettingsTile.switchTile(
                           initialValue: state.isDarkMode,
                           leading: const Icon(Icons.mode_night_outlined),
+                          activeSwitchColor: Theme.of(context).primaryColor,
                           onToggle: (value) {
                             context.read<ThemeCubit>().toggle();
                             context
@@ -66,24 +70,14 @@ class SettingsPage extends StatelessWidget {
                           },
                           title: Text('Language'),
                           leading: const Icon(Icons.language_outlined),
-                          trailing: Text(
-                            state.locale.languageCode,
-                            style: TextStyle(
-                                color: state.isDarkMode
-                                    ? Colors.white
-                                    : Colors.black),
-                          ),
+                          trailing: Text(state.locale.languageCode),
                         )
                       ]),
                       SettingsSection(title: Text('Others'), tiles: [
                         SettingsTile.navigation(
                           title: Text('攝氏/華氏'),
                           leading: const Icon(Icons.app_settings_alt),
-                          trailing: Text(state.isCelsius ? '攝氏' : '華氏',
-                              style: TextStyle(
-                                  color: state.isDarkMode
-                                      ? Colors.white
-                                      : Colors.black)),
+                          trailing: Text(state.isCelsius ? '攝氏' : '華氏'),
                           onPressed: (context) {
                             showCupertinoModalPopup(
                                 builder: (BuildContext context) {

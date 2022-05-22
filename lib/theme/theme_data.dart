@@ -10,33 +10,57 @@ extension AppThemeExtension on AppTheme {
       case AppTheme.light:
         return themeData.copyWith(
             brightness: Brightness.light,
-            appBarTheme: const AppBarTheme(backgroundColor: Colors.green),
+            appBarTheme: AppBarTheme(backgroundColor: Colors.green.shade100),
             primaryColor: Colors.green,
-            colorScheme:
-                themeData.colorScheme.copyWith(secondary: Colors.greenAccent),
-            cardColor: Colors.green.shade500,
+            dividerColor: Colors.black45,
+            iconTheme: IconThemeData(color: Colors.black),
+            colorScheme: themeData.colorScheme.copyWith(
+                secondary: Colors.greenAccent.shade700,
+                background: Colors.green.shade200),
+            cardColor: Colors.green.shade100,
             textTheme: TextTheme(
-                headlineMedium: const TextStyle().copyWith(color: Colors.grey),
-                headlineSmall: const TextStyle().copyWith(color: Colors.grey),
-                headlineLarge: const TextStyle().copyWith(color: Colors.grey),
-                displaySmall: const TextStyle().copyWith(color: Colors.grey),
-                displayMedium: const TextStyle().copyWith(color: Colors.grey),
-                displayLarge: const TextStyle().copyWith(color: Colors.grey)));
+                headlineMedium: const TextStyle()
+                    .copyWith(color: Colors.black, fontSize: 24),
+                headlineSmall: const TextStyle()
+                    .copyWith(color: Colors.black, fontSize: 20),
+                headlineLarge: const TextStyle()
+                    .copyWith(color: Colors.black, fontSize: 34),
+                bodyLarge: const TextStyle().copyWith(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    letterSpacing: 1.25),
+                bodyMedium: const TextStyle().copyWith(
+                    color: Colors.black, fontSize: 16, letterSpacing: 0.5),
+                bodySmall: const TextStyle().copyWith(
+                    color: Colors.black, fontSize: 14, letterSpacing: 0.25)));
       case AppTheme.dark:
         return themeData.copyWith(
             brightness: Brightness.dark,
             appBarTheme: const AppBarTheme(backgroundColor: Colors.teal),
             primaryColor: Colors.teal,
-            cardColor: Colors.teal.shade500,
-            colorScheme:
-                themeData.colorScheme.copyWith(secondary: Colors.tealAccent),
+            dividerColor: Colors.white38,
+            iconTheme: IconThemeData(color: Colors.white),
+            cardColor: Colors.teal.shade900,
+            colorScheme: themeData.colorScheme.copyWith(
+                secondary: Colors.tealAccent.shade100,
+                background: Colors.teal.shade700),
             textTheme: TextTheme(
-                headlineMedium: const TextStyle().copyWith(color: Colors.white),
-                headlineSmall: const TextStyle().copyWith(color: Colors.white),
-                headlineLarge: const TextStyle().copyWith(color: Colors.white),
-                displaySmall: const TextStyle().copyWith(color: Colors.white),
-                displayMedium: const TextStyle().copyWith(color: Colors.white),
-                displayLarge: const TextStyle().copyWith(color: Colors.white)));
+                headlineMedium: const TextStyle()
+                    .copyWith(color: Colors.white, fontSize: 24),
+                headlineSmall: const TextStyle()
+                    .copyWith(color: Colors.white, fontSize: 20),
+                headlineLarge: const TextStyle()
+                    .copyWith(color: Colors.white, fontSize: 34),
+                bodyLarge: const TextStyle().copyWith(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    letterSpacing: 1.25),
+                bodyMedium: const TextStyle().copyWith(
+                    color: Colors.white, fontSize: 16, letterSpacing: 0.5),
+                bodySmall: const TextStyle().copyWith(
+                    color: Colors.white, fontSize: 14, letterSpacing: 0.25)));
     }
   }
 
@@ -50,8 +74,8 @@ extension AppThemeExtension on AppTheme {
             titleTextColor: Colors.black87,
             trailingTextColor: Colors.black87,
             tileDescriptionTextColor: Colors.black87,
-            settingsListBackground: Colors.green.shade50,
-            settingsSectionBackground: Colors.white);
+            settingsListBackground: Colors.green.shade200,
+            settingsSectionBackground: Colors.green.shade100);
       case AppTheme.dark:
         return settingsThemeData.copyWith(
             dividerColor: Colors.white,
@@ -59,8 +83,8 @@ extension AppThemeExtension on AppTheme {
             titleTextColor: Colors.white,
             trailingTextColor: Colors.white,
             tileDescriptionTextColor: Colors.white,
-            settingsListBackground: Colors.green.shade900,
-            settingsSectionBackground: Colors.black12);
+            settingsListBackground: Colors.teal.shade700,
+            settingsSectionBackground: Colors.teal.shade600);
     }
   }
 }

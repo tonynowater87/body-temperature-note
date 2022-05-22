@@ -35,7 +35,9 @@ class _InputPageState extends State<InputPage> {
     logger.d('[Tony] InputPage arg: ${widget.dateString}');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('記錄目前的體溫'),
+        iconTheme: Theme.of(context).iconTheme,
+        title:
+            Text('記錄目前的體溫', style: Theme.of(context).textTheme.headlineMedium),
       ),
       body: BlocBuilder<InputCubit, InputState>(
         builder: (context, state) {
@@ -64,14 +66,18 @@ class InputContainer extends StatelessWidget {
     return BlocBuilder<InputCubit, InputState>(
       builder: (context, state) {
         return Container(
-          color: Theme.of(context).primaryColorLight,
+          color: Theme.of(context).colorScheme.background,
           child: Column(
             children: [
               Container(
-                color: Theme.of(context).primaryColorLight,
                 width: double.infinity,
                 padding: const EdgeInsets.all(4.0),
-                child: Wrap(children: [Text(_dateString)]),
+                child: Wrap(children: [
+                  Text(
+                    _dateString,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  )
+                ]),
               ),
               const Expanded(
                 child: Center(
@@ -84,6 +90,8 @@ class InputContainer extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                         style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).primaryColor),
                             shape: MaterialStateProperty.all(
                                 const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.zero)),
@@ -100,8 +108,8 @@ class InputContainer extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                         style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.red.shade400),
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).errorColor),
                             shape: MaterialStateProperty.all(
                                 const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.zero)),
