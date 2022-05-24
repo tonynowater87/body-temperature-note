@@ -7,6 +7,7 @@ import 'package:body_temperature_note/route/app_router.gr.dart';
 import 'package:body_temperature_note/utils/string_extensions.dart';
 import 'package:body_temperature_note/views/home/cubit/home_cubit.dart';
 import 'package:body_temperature_note/views/home/cubit/home_state.dart';
+import 'package:body_temperature_note/views/memo/memo_page.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -151,7 +152,15 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                               child: Icon(Icons.note_add_outlined,
                                   color: Theme.of(context).iconTheme.color),
                               onTap: () {
-                                // TODO
+                                showDialog<String>(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (BuildContext dialogContext) {
+                                    return MemoPage(
+                                        dateString: state
+                                            .toDaysStringIso8604(index + 1));
+                                  },
+                                );
                               }),
                         ));
 
@@ -178,8 +187,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {
-                        return const Divider(
-                            thickness: 0.5, height: 1);
+                        return const Divider(thickness: 0.5, height: 1);
                       },
                       itemScrollController: itemScrollController,
                       itemPositionsListener: itemPositionsListener,

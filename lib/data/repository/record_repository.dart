@@ -76,7 +76,7 @@ class RecordRepository extends Repository {
     } else {
       return hiveMemoProvider.addOrUpdateMemo(HiveMemo()
         ..dateTime = formattedDate
-        ..memo = existedMemo!.memo);
+        ..memo = memoModel.memo);
     }
   }
 
@@ -90,5 +90,15 @@ class RecordRepository extends Repository {
     final existedRecord =
         hiveRecordProvider.queryRecordByDateTime(record.dateTime);
     return hiveRecordProvider.removeRecord(existedRecord!);
+  }
+
+  @override
+  MemoModel? queryMemo(DateTime day) {
+    HiveMemo? hiveMemo = hiveMemoProvider.queryMemoByDateTime(day);
+    if (hiveMemo == null) {
+      return null;
+    }
+
+    return MemoModel(memo: hiveMemo.memo, dateTime: hiveMemo.dateTime);
   }
 }

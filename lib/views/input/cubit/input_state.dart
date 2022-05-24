@@ -39,12 +39,3 @@ class InputLoaded extends InputState {
   List<Object?> get props =>
       [record, decimalDigit, floatOneDigit, floatTwoDigit];
 }
-
-class InputSaved extends InputState {
-  final HiveRecord record;
-
-  const InputSaved(this.record);
-
-  @override
-  List<Object?> get props => [record];
-}

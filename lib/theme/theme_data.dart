@@ -18,6 +18,7 @@ extension AppThemeExtension on AppTheme {
                 secondary: Colors.greenAccent.shade700,
                 background: Colors.green.shade200),
             cardColor: Colors.green.shade100,
+            dialogTheme: DialogTheme(backgroundColor: Colors.green.shade200),
             textTheme: TextTheme(
                 headlineMedium: const TextStyle()
                     .copyWith(color: Colors.black, fontSize: 24),
@@ -45,6 +46,7 @@ extension AppThemeExtension on AppTheme {
             colorScheme: themeData.colorScheme.copyWith(
                 secondary: Colors.tealAccent.shade100,
                 background: Colors.teal.shade700),
+            dialogTheme: DialogTheme(backgroundColor: Colors.teal.shade700),
             textTheme: TextTheme(
                 headlineMedium: const TextStyle()
                     .copyWith(color: Colors.white, fontSize: 24),

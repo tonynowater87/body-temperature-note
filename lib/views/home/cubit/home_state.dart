@@ -51,4 +51,8 @@ class HomeDateState extends HomeState {
   String toString() {
     return "$currentYear/$currentMonth($currentDaysOfMonth)/${currentDay ?? ''}, records size = ${outputRecords.length}";
   }
+
+  String toDaysStringIso8604(int day) {
+    return DateTime(currentYear, currentMonth, day).toIso8601String();
+  }
 }
