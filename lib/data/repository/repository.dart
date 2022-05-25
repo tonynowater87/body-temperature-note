@@ -14,6 +14,8 @@ abstract class Repository {
 
   MemoModel? queryMemo(DateTime day);
 
+  List<MemoModel> queryMonthMemos(DateTime month);
+
   Future<void> addOrUpdateMemo(MemoModel memoModel);
 
   Future<void> deleteMemo(DateTime datetime);

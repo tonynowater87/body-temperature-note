@@ -52,7 +52,7 @@ class _MemoPageState extends State<MemoPage> {
                 child: Text('Save'),
                 onPressed: () async {
                   await context.read<MemoCubit>().save();
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(true);
                 },
               ),
             ],

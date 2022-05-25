@@ -101,4 +101,12 @@ class RecordRepository extends Repository {
 
     return MemoModel(memo: hiveMemo.memo, dateTime: hiveMemo.dateTime);
   }
+
+  @override
+  List<MemoModel> queryMonthMemos(DateTime month) {
+    return hiveMemoProvider
+        .queryMonthRecords(month)
+        .map((it) => MemoModel(memo: it.memo, dateTime: it.dateTime))
+        .toList(growable: false);
+  }
 }

@@ -27,6 +27,7 @@ class HomeCubit extends Cubit<HomeState> {
   void changeToToday() {
     currentDatePosition = DateTime.now();
     final records = repository.queryMonthRecords(currentDatePosition);
+    final memos = repository.queryMonthMemos(currentDatePosition);
 
     emit(HomeDateState(
         DateUtils.getDaysInMonth(
@@ -35,6 +36,7 @@ class HomeCubit extends Cubit<HomeState> {
         currentDatePosition.month,
         currentDatePosition.day,
         records,
+        memos,
         isCelsius));
   }
 
@@ -49,6 +51,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
 
     final records = repository.queryMonthRecords(currentDatePosition);
+    final memos = repository.queryMonthMemos(currentDatePosition);
 
     emit(HomeDateState(
         DateUtils.getDaysInMonth(
@@ -57,6 +60,7 @@ class HomeCubit extends Cubit<HomeState> {
         currentDatePosition.month,
         null,
         records,
+        memos,
         isCelsius));
   }
 
@@ -71,6 +75,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
 
     final records = repository.queryMonthRecords(currentDatePosition);
+    final memos = repository.queryMonthMemos(currentDatePosition);
 
     emit(HomeDateState(
         DateUtils.getDaysInMonth(
@@ -79,14 +84,17 @@ class HomeCubit extends Cubit<HomeState> {
         currentDatePosition.month,
         null,
         records,
+        memos,
         isCelsius));
   }
 
   void refreshRecords() {
-    final monthDate =
-        DateTime(state.currentYear, state.currentMonth, 1, 0, 0, 0, 0, 0);
+    final monthDate = DateTime(state.currentYear, state.currentMonth, 1, 0, 0,
+        0, 0, 1); // 日不帶1的話會變成是是上個月的最後一天
     isCelsius = settingsProvider.getIsCelsius();
     final newRecords = repository.queryMonthRecords(monthDate);
+    final newMemos = repository.queryMonthMemos(monthDate);
+
     var newState = HomeDateState(
         DateUtils.getDaysInMonth(
             currentDatePosition.year, currentDatePosition.month),
@@ -94,6 +102,7 @@ class HomeCubit extends Cubit<HomeState> {
         currentDatePosition.month,
         null,
         newRecords,
+        newMemos,
         isCelsius);
     emit(newState);
   }

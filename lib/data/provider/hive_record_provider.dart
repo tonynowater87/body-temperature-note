@@ -60,8 +60,7 @@ class HiveRecordProvider {
   List<HiveRecord> queryMonthRecords(DateTime monthDate) {
     final endDayOfTheMonth =
         DateUtils.getDaysInMonth(monthDate.year, monthDate.month);
-    final thisMonthBeginPoint =
-        DateTime(monthDate.year, monthDate.month, 1, 0, 0, 0);
+    final thisMonthBeginPoint = DateTime(monthDate.year, monthDate.month);
     final thisMonthEndPoint =
         DateTime(monthDate.year, monthDate.month, endDayOfTheMonth, 23, 59, 59);
     return _box.values

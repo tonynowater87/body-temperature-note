@@ -47,9 +47,7 @@ class HomePage extends StatelessWidget {
           )),
       body: Container(
         color: Theme.of(context).colorScheme.background,
-        child: Column(
-          children: const [DateSelectorWidget()],
-        ),
+        child: DateSelectorWidget(),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,

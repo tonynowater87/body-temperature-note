@@ -1,4 +1,5 @@
 import 'package:body_temperature_note/data/model/hive_memo.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 class HiveMemoProvider {
@@ -17,6 +18,19 @@ class HiveMemoProvider {
     }
 
     return existedMemo;
+  }
+
+  List<HiveMemo> queryMonthRecords(DateTime monthDate) {
+    final endDayOfTheMonth =
+        DateUtils.getDaysInMonth(monthDate.year, monthDate.month);
+    final thisMonthBeginPoint = DateTime(monthDate.year, monthDate.month);
+    final thisMonthEndPoint =
+        DateTime(monthDate.year, monthDate.month, endDayOfTheMonth, 23, 59, 59);
+    return box.values
+        .where((element) =>
+            element.dateTime.isBefore(thisMonthEndPoint) &&
+            element.dateTime.isAfter(thisMonthBeginPoint))
+        .toList(growable: false);
   }
 
   Future<int> addOrUpdateMemo(HiveMemo newlyHiveMemo) async {
