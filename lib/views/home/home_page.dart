@@ -51,14 +51,15 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () async {
-          final saved = await context.router.push<bool>(
+          context.router.push(ChartPageRoute());
+          /*final saved = await context.router.push<bool>(
               InputPageRoute(dateString: DateTime.now().toIso8601String()));
           if (saved == true) {
             context.read<HomeCubit>().refreshRecords();
-          }
+          }*/
         },
         child: Icon(
-          Icons.add,
+          Icons.bar_chart,
           color: Theme.of(context).iconTheme.color,
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
