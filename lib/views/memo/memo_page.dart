@@ -58,7 +58,7 @@ class _MemoPageState extends State<MemoPage> {
             ],
           );
         } else {
-          return const CircularProgressIndicator();
+          return const AlertDialog(content: CircularProgressIndicator());
         }
       },
     );

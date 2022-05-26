@@ -152,24 +152,14 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                 }
               }
 
-              if (state.dateListModel.outputMemos[index] != null) {
+              var memo = state.dateListModel.outputMemos[index];
+              if (memo != null && memo.memo.isNotEmpty) {
                 temperatureViews.add(Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
-                      child: Text(state.dateListModel.outputMemos[index]!.memo),
-                      onTap: () async {
-                        bool? shouldRefresh = await showDialog<bool?>(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext dialogContext) {
-                            return MemoPage(
-                                dateString:
-                                    state.toDaysStringIso8604(index + 1));
-                          },
-                        );
-                        if (shouldRefresh == true) {
-                          context.read<HomeCubit>().refreshRecords();
-                        }
+                      child: Text(memo.memo),
+                      onTap: () {
+                        onTapMemo(state, index);
                       }),
                 ));
               } else {
@@ -179,15 +169,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                       child: Icon(Icons.note_add_outlined,
                           color: Theme.of(context).iconTheme.color),
                       onTap: () {
-                        showDialog<String>(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext dialogContext) {
-                            return MemoPage(
-                                dateString:
-                                    state.toDaysStringIso8604(index + 1));
-                          },
-                        );
+                        onTapMemo(state, index);
                       }),
                 ));
               }
@@ -213,6 +195,19 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
             itemScrollController: itemScrollController,
             itemPositionsListener: itemPositionsListener,
             itemCount: state.currentDaysOfMonth));
+  }
+
+  onTapMemo(HomeDateState state, int index) async {
+    bool? shouldRefresh = await showDialog<bool?>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return MemoPage(dateString: state.toDaysStringIso8604(index + 1));
+      },
+    );
+    if (shouldRefresh == true) {
+      context.read<HomeCubit>().refreshRecords();
+    }
   }
 
   TextStyle _getWeekDaysTextStyle(DateTime dateTime) {
