@@ -228,10 +228,9 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
   onTapDay(BuildContext context, int index) async {
     final currentState = context.read<HomeCubit>().state;
     final now = DateTime.now();
-    final dateString = formatDate(
-        DateTime(currentState.currentYear, currentState.currentMonth, index + 1,
-            now.hour, now.minute, now.second),
-        [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss]);
+    final dateString = DateTime(currentState.currentYear,
+            currentState.currentMonth, index + 1, now.hour, now.minute)
+        .toIso8601String();
     final saved =
         await context.router.push<bool>(InputPageRoute(dateString: dateString));
     if (saved == true) {
@@ -240,10 +239,8 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
   }
 
   onTapTemperature(BuildContext context, RecordModel recordModel) async {
-    final dateString = formatDate(recordModel.dateTime,
-        [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss]);
-    final saved =
-        await context.router.push<bool>(InputPageRoute(dateString: dateString));
+    final saved = await context.router.push<bool>(
+        InputPageRoute(dateString: recordModel.dateTime.toIso8601String()));
     if (saved == true) {
       context.read<HomeCubit>().refreshRecords();
     }

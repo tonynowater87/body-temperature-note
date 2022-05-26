@@ -12,14 +12,15 @@ class MemoInitialState extends MemoState {
 
 class MemoLoadedState extends MemoState {
   late MemoModel memo;
+  late String formattedDateString;
 
-  MemoLoadedState(this.memo);
+  MemoLoadedState(this.memo, this.formattedDateString);
 
   @override
-  List<Object> get props => [memo];
+  List<Object> get props => [memo, formattedDateString];
 
   @override
   String toString() {
-    return "${memo.dateTime.toIso8601String()} ${memo.memo}";
+    return "$formattedDateString ${memo.memo}";
   }
 }

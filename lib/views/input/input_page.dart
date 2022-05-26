@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
 import 'package:body_temperature_note/views/input/view/temperature_picker.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -72,12 +73,20 @@ class InputContainer extends StatelessWidget {
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(4.0),
-                child: Wrap(children: [
-                  Text(
-                    _dateString,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  )
-                ]),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        formatDate(DateTime.parse(_dateString),
+                            ["yyyy", "/", "mm", "/", "dd", "(", "DD", ")"]),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      Text(
+                        formatDate(
+                            DateTime.parse(_dateString), ["hh", ":", "nn"]),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      )
+                    ]),
               ),
               const Expanded(
                 child: Center(

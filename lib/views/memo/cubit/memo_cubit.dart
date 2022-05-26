@@ -3,6 +3,7 @@ import 'package:body_temperature_note/data/model/memo_ui_model.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/memo/cubit/memo_state.dart';
+import 'package:date_format/date_format.dart';
 import 'package:logger/logger.dart';
 
 class MemoCubit extends Cubit<MemoState> {
@@ -14,11 +15,14 @@ class MemoCubit extends Cubit<MemoState> {
 
   void load(String dateStringIso8601) async {
     var dateTime = DateTime.parse(dateStringIso8601);
+    final formattedDateString =
+        formatDate(dateTime, ["yyyy", "/", "mm", "/", "dd", "(", "DD", ")"]);
     MemoModel? memoModel = recordRepository.queryMemo(dateTime);
     if (memoModel == null) {
-      emit(MemoLoadedState(MemoModel(memo: "", dateTime: dateTime)));
+      emit(MemoLoadedState(
+          MemoModel(memo: "", dateTime: dateTime), formattedDateString));
     } else {
-      emit(MemoLoadedState(memoModel));
+      emit(MemoLoadedState(memoModel, formattedDateString));
     }
   }
 

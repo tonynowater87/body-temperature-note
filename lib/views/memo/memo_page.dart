@@ -43,7 +43,7 @@ class _MemoPageState extends State<MemoPage> {
       builder: (buildContext, state) {
         if (state is MemoLoadedState) {
           return AlertDialog(
-            title: Text(state.memo.dateTime.toIso8601String()),
+            title: Text(state.formattedDateString),
             content: TextField(
                 focusNode: myFocusNode,
                 controller: textEditingController..text = state.memo.memo),
