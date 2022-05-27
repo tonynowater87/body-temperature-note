@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:body_temperature_note/constants.dart';
 import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
@@ -82,7 +83,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                         return Text(
                           formatDate(
                               DateTime(state.currentYear, state.currentMonth),
-                              [yyyy, '-', mm]),
+                              titleMonthFormatyyyymm),
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.headlineMedium,
                         );
@@ -184,7 +185,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                     formatDate(
                         DateTime(
                             state.currentYear, state.currentMonth, index + 1),
-                        [D]),
+                        titleWeekDaysAbbrFormat),
                     style: _getWeekDaysTextStyle(DateTime(
                         state.currentYear, state.currentMonth, index + 1))),
               );

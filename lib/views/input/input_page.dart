@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:body_temperature_note/constants.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
 import 'package:body_temperature_note/views/input/view/temperature_picker.dart';
@@ -77,12 +78,12 @@ class InputContainer extends StatelessWidget {
                     children: [
                       Text(
                         formatDate(DateTime.parse(_dateString),
-                            ["yyyy", "/", "mm", "/", "dd", "(", "DD", ")"]),
+                            titleDayFormatyyyymmddDD),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       Text(
                         formatDate(
-                            DateTime.parse(_dateString), ["hh", ":", "nn"]),
+                            DateTime.parse(_dateString), titleTimeFormathhnn),
                         style: Theme.of(context).textTheme.bodySmall,
                       )
                     ]),
