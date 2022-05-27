@@ -13,7 +13,7 @@
 import 'package:auto_route/auto_route.dart' as _i5;
 import 'package:flutter/material.dart' as _i6;
 
-import '../views/chart_page.dart' as _i3;
+import '../views/chart/chart_page.dart' as _i3;
 import '../views/home/home_page.dart' as _i1;
 import '../views/input/input_page.dart' as _i2;
 import '../views/settings/settings_page.dart' as _i4;
@@ -38,8 +38,13 @@ class AppRouter extends _i5.RootStackRouter {
           child: _i2.InputPage(dateString: args.dateString));
     },
     ChartPageRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<ChartPageRouteArgs>(
+          orElse: () =>
+              ChartPageRouteArgs(dateString: pathParams.getString('argument')));
       return _i5.MaterialPageX<dynamic>(
-          routeData: routeData, child: const _i3.ChartPage());
+          routeData: routeData,
+          child: _i3.ChartPage(dateString: args.dateString));
     },
     SettingsPageRoute.name: (routeData) {
       final args = routeData.argsAs<SettingsPageRouteArgs>();
@@ -91,10 +96,25 @@ class InputPageRouteArgs {
 
 /// generated route for
 /// [_i3.ChartPage]
-class ChartPageRoute extends _i5.PageRouteInfo<void> {
-  const ChartPageRoute() : super(ChartPageRoute.name, path: '/chart-page');
+class ChartPageRoute extends _i5.PageRouteInfo<ChartPageRouteArgs> {
+  ChartPageRoute({required String dateString})
+      : super(ChartPageRoute.name,
+            path: '/chart-page',
+            args: ChartPageRouteArgs(dateString: dateString),
+            rawPathParams: {'argument': dateString});
 
   static const String name = 'ChartPageRoute';
+}
+
+class ChartPageRouteArgs {
+  const ChartPageRouteArgs({required this.dateString});
+
+  final String dateString;
+
+  @override
+  String toString() {
+    return 'ChartPageRouteArgs{dateString: $dateString}';
+  }
 }
 
 /// generated route for

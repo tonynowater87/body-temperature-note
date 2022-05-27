@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
 class InputPage extends StatefulWidget {
-  //yyyy-mm-dd hh:nn:ss
   late String dateString;
 
   InputPage({@PathParam("argument") required this.dateString})

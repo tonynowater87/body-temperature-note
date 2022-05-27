@@ -51,7 +51,8 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () async {
-          context.router.push(ChartPageRoute());
+          context.router.push(
+              ChartPageRoute(dateString: DateTime.now().toIso8601String()));
           /*final saved = await context.router.push<bool>(
               InputPageRoute(dateString: DateTime.now().toIso8601String()));
           if (saved == true) {

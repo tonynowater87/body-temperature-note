@@ -1,10 +1,19 @@
+import 'package:auto_route/annotations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ChartPage extends StatelessWidget {
-  const ChartPage({Key? key}) : super(key: key);
+class ChartPage extends StatefulWidget {
+  late String dateString;
 
+  ChartPage({@PathParam("argument") required this.dateString})
+      : super(key: null);
+
+  @override
+  State<ChartPage> createState() => _ChartPageState();
+}
+
+class _ChartPageState extends State<ChartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
