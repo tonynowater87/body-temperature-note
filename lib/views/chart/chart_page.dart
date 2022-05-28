@@ -57,10 +57,10 @@ class _ChartPageState extends State<ChartPage> {
                                         Text('${value.toInt()}')))),
                         lineBarsData: [
                           LineChartBarData(
-                              spots: [FlSpot(2, 2), FlSpot(15, 15)],
-                              belowBarData: BarAreaData(
-                                  gradient: LinearGradient(
-                                      colors: [Colors.green, Colors.red])),
+                              spots: [
+                                FlSpot(2, 2),
+                                FlSpot(15, 10),
+                              ],
                               gradient: LinearGradient(
                                   colors: [Colors.green, Colors.red]))
                         ])),
