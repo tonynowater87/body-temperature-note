@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:body_temperature_note/data/provider/settings_provider.dart';
+import 'package:body_temperature_note/data/provider/setting_provider.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/home/cubit/home_state.dart';

@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:body_temperature_note/data/model/hive_record.dart';
 import 'package:body_temperature_note/data/model/record_ui_model.dart';
-import 'package:body_temperature_note/data/provider/settings_provider.dart';
+import 'package:body_temperature_note/data/provider/setting_provider.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/utils/double_extensions.dart';
@@ -51,11 +50,15 @@ class InputCubit extends Cubit<InputState> {
     var updateToMaximum = tensDigit == 45.0 || tensDigit == 113.0;
 
     if (temperatureString.split('.')[0].length >= 3) {
-      currentRecord.temperature = double.parse(
-          "%d.%s".format([tensDigit, updateToMaximum ? "00" : temperatureString.substring(4, 6)]));
+      currentRecord.temperature = double.parse("%d.%s".format([
+        tensDigit,
+        updateToMaximum ? "00" : temperatureString.substring(4, 6)
+      ]));
     } else {
-      currentRecord.temperature = double.parse(
-          "%d.%s".format([tensDigit, updateToMaximum ? "00" : temperatureString.substring(3, 5)]));
+      currentRecord.temperature = double.parse("%d.%s".format([
+        tensDigit,
+        updateToMaximum ? "00" : temperatureString.substring(3, 5)
+      ]));
     }
 
     emit(InputLoaded(currentRecord, isCelsius));
@@ -101,7 +104,8 @@ class InputCubit extends Cubit<InputState> {
     if (isCelsius) {
       await repository.addOrUpdateRecord(currentRecord);
     } else {
-      await repository.addOrUpdateRecord(currentRecord..temperature = currentRecord.temperature.toCelsius());
+      await repository.addOrUpdateRecord(
+          currentRecord..temperature = currentRecord.temperature.toCelsius());
     }
   }
 

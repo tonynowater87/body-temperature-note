@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:body_temperature_note/data/provider/settings_provider.dart';
+import 'package:body_temperature_note/data/provider/setting_provider.dart';
 import 'package:body_temperature_note/l10n/l10n.dart';
 import 'package:body_temperature_note/views/settings/cubit/settings_state.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +47,8 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   updateLocale(Locale locale) async {
-    final isUpdated = await settingsProvider.setLanguageCode(locale.languageCode);
+    final isUpdated =
+        await settingsProvider.setLanguageCode(locale.languageCode);
     if (!isUpdated) return;
     await AppLocalizations.delegate.load(locale);
 

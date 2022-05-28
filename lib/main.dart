@@ -3,7 +3,8 @@ import 'package:body_temperature_note/data/model/hive_record.dart';
 import 'package:body_temperature_note/data/provider/firebase_cloud_store_record_provider.dart';
 import 'package:body_temperature_note/data/provider/hive_memo_provider.dart';
 import 'package:body_temperature_note/data/provider/hive_record_provider.dart';
-import 'package:body_temperature_note/data/provider/settings_provider.dart';
+import 'package:body_temperature_note/data/provider/setting_provider.dart';
+import 'package:body_temperature_note/data/provider/settings_provider_impl.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
 import 'package:body_temperature_note/firebase_options.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
@@ -55,7 +56,7 @@ Future<void> main() async {
 
   // init sharedPreference
   final sharedPreferences = await SharedPreferences.getInstance();
-  final settingsProvider = SettingsProvider(sharedPreferences);
+  final settingsProvider = SettingsProviderImpl(sharedPreferences);
 
   //0:00:00.100910
   //0:00:00.060453
