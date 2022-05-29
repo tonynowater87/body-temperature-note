@@ -23,8 +23,8 @@ class ChartCubit extends Cubit<ChartPageState> {
   ChartDuration selectedChartDuration = ChartDuration.week;
   late DateTime initDateTime;
   late DateTime selectedDateTime;
-  late double baseline;
   late bool isCelsius;
+  double? baseline;
 
   ChartCubit(this.repository, this.settingsProvider)
       : super(ChartLoadingState());
@@ -32,10 +32,12 @@ class ChartCubit extends Cubit<ChartPageState> {
   void init(DateTime dateTime) {
     emit(ChartLoadingState());
     isCelsius = settingsProvider.getIsCelsius();
-    baseline = settingsProvider.getBaseline();
 
-    if (!isCelsius) {
-      baseline = defaultBaselineInCelsius.toFahrenheit();
+    if (settingsProvider.getIsDisplayBaseline()) {
+      baseline = settingsProvider.getBaseline();
+      if (!isCelsius) {
+        baseline = defaultBaselineInCelsius.toFahrenheit();
+      }
     }
 
     initDateTime = dateTime;

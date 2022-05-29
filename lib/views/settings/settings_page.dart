@@ -60,6 +60,17 @@ class SettingsPage extends StatelessWidget {
                           },
                           title: Text('開啟DarkMode'),
                         ),
+                        SettingsTile.switchTile(
+                          initialValue: state.isDisplayBaseline,
+                          leading: const Icon(Icons.line_axis_outlined),
+                          activeSwitchColor: Theme.of(context).primaryColor,
+                          onToggle: (value) {
+                            context
+                                .read<SettingsCubit>()
+                                .updateIsDisplayBaseline(value);
+                          },
+                          title: Text('是否顯示水平基準線'),
+                        ),
                         SettingsTile.navigation(
                           onPressed: (context) {
                             if (Platform.isAndroid) {

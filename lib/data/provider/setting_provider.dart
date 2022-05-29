@@ -14,4 +14,8 @@ abstract class SettingsProvider {
   Future<bool> setBaseline(double baseline);
 
   double getBaseline();
+
+  Future<bool> setIsDisplayBaseline(bool isDisplayBaseline);
+
+  bool getIsDisplayBaseline();
 }

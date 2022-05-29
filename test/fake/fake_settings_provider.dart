@@ -1,9 +1,13 @@
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
 
 class FakeSettingsProvider extends SettingsProvider {
+  late bool isCelsius;
+  late bool isDisplayBaseline;
+  late double baseline;
+
   @override
   bool getIsCelsius() {
-    return true;
+    return isCelsius;
   }
 
   @override
@@ -38,7 +42,7 @@ class FakeSettingsProvider extends SettingsProvider {
 
   @override
   double getBaseline() {
-    return 37.7;
+    return baseline;
   }
 
   @override
@@ -46,4 +50,21 @@ class FakeSettingsProvider extends SettingsProvider {
     // TODO: implement setBaseline
     throw UnimplementedError();
   }
+
+  @override
+  bool getIsDisplayBaseline() {
+    return isDisplayBaseline;
+  }
+
+  @override
+  Future<bool> setIsDisplayBaseline(bool isDisplayBaseline) {
+    // TODO: implement setIsDisplayBaseline
+    throw UnimplementedError();
+  }
+
+  FakeSettingsProvider({
+    required this.isCelsius,
+    required this.isDisplayBaseline,
+    required this.baseline,
+  });
 }

@@ -7,3 +7,5 @@ const titleWeekDaysAbbrFormat = [D];
 const titleMonthFormatyyyymm = [yyyy, "/", mm];
 
 const defaultBaselineInCelsius = 37.7;
+const defaultIsCelsius = true;
+const defaultIsDisplayBaseline = false;

@@ -11,10 +11,12 @@ class SettingsCubit extends Cubit<SettingsState> {
       : super(SettingsState(
             isCelsius: false,
             isDarkMode: false,
+            isDisplayBaseline: false,
             locale: const Locale('en', 'US'))) {
     final isDarkMode = settingsProvider.getIsDarkMode() ?? false;
     final isCelsius = settingsProvider.getIsCelsius();
     final languageCode = settingsProvider.getLanguageCode();
+    final isDisplayBaseline = settingsProvider.getIsDisplayBaseline();
     Locale locale;
 
     if (languageCode == null) {
@@ -23,7 +25,10 @@ class SettingsCubit extends Cubit<SettingsState> {
       locale = Locale(languageCode, '');
     }
     emit(SettingsState(
-        isDarkMode: isDarkMode, isCelsius: isCelsius, locale: locale));
+        isDarkMode: isDarkMode,
+        isCelsius: isCelsius,
+        isDisplayBaseline: isDisplayBaseline,
+        locale: locale));
   }
 
   updateIsCelsius(bool isCelsius) async {
@@ -32,6 +37,7 @@ class SettingsCubit extends Cubit<SettingsState> {
       emit(state.copyWith(
           isDarkMode: state.isDarkMode,
           isCelsius: isCelsius,
+          isDisplayBaseline: state.isDisplayBaseline,
           locale: state.locale));
     }
   }
@@ -42,6 +48,7 @@ class SettingsCubit extends Cubit<SettingsState> {
       emit(state.copyWith(
           isDarkMode: isDarkMode,
           isCelsius: state.isCelsius,
+          isDisplayBaseline: state.isDisplayBaseline,
           locale: state.locale));
     }
   }
@@ -55,6 +62,19 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(state.copyWith(
         isDarkMode: state.isDarkMode,
         isCelsius: state.isCelsius,
+        isDisplayBaseline: state.isDisplayBaseline,
         locale: locale));
+  }
+
+  updateIsDisplayBaseline(bool isDisplayBaseline) async {
+    final isUpdated =
+        await settingsProvider.setIsDisplayBaseline(isDisplayBaseline);
+    if (!isUpdated) return;
+
+    emit(state.copyWith(
+        isDarkMode: state.isDarkMode,
+        isCelsius: state.isCelsius,
+        isDisplayBaseline: isDisplayBaseline,
+        locale: state.locale));
   }
 }

@@ -9,12 +9,12 @@ class ChartLoadingState extends ChartPageState {
 
 class ChartLoadedState extends ChartPageState {
   late String title;
-  late double baseline;
+  late double? baseline;
   late ChartDuration chartDuration;
   late List<ChartModel> records;
 
   @override
-  List<Object> get props => [records, title, baseline, chartDuration];
+  List<Object> get props => [records, title, chartDuration];
 
   ChartLoadedState({
     required this.title,

@@ -67,8 +67,11 @@ class _ChartPageState extends State<ChartPage> {
                               maxY: 50,
                               maxX: 30,
                               minX: 1,
-                              extraLinesData: ExtraLinesData(
-                                  horizontalLines: [HorizontalLine(y: 38)]),
+                              extraLinesData: _state.baseline != null
+                                  ? ExtraLinesData(horizontalLines: [
+                                      HorizontalLine(y: _state.baseline!)
+                                    ])
+                                  : null,
                               borderData: FlBorderData(show: false),
                               titlesData: FlTitlesData(
                                   topTitles: AxisTitles(),

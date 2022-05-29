@@ -7,6 +7,7 @@ class SettingsProviderImpl extends SettingsProvider {
   static const keyIsCelsius = 'keyIsCelsius';
   static const keyLanguageCode = 'keyLanguageCode';
   static const keyBaseline = 'keyBaseline';
+  static const keyIsDisplayBaseline = 'keyIsDisplayBaseline';
 
   late SharedPreferences sharedPreferences;
 
@@ -29,7 +30,7 @@ class SettingsProviderImpl extends SettingsProvider {
 
   @override
   bool getIsCelsius() {
-    return sharedPreferences.getBool(keyIsCelsius) ?? true;
+    return sharedPreferences.getBool(keyIsCelsius) ?? defaultIsCelsius;
   }
 
   @override
@@ -50,5 +51,16 @@ class SettingsProviderImpl extends SettingsProvider {
   @override
   Future<bool> setBaseline(double baseline) {
     return sharedPreferences.setDouble(keyBaseline, baseline);
+  }
+
+  @override
+  bool getIsDisplayBaseline() {
+    return sharedPreferences.getBool(keyIsDisplayBaseline) ??
+        defaultIsDisplayBaseline;
+  }
+
+  @override
+  Future<bool> setIsDisplayBaseline(bool isDisplayBaseline) {
+    return sharedPreferences.setBool(keyIsDisplayBaseline, isDisplayBaseline);
   }
 }

@@ -4,26 +4,39 @@ import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fake/fake_settings_provider.dart';
-import 'fake/fake_settings_provider_is_not_celsius.dart';
 import 'fake/fake_week_repository.dart';
 
 void main() {
   group('test baseline', () {
     late ChartCubit chartCubit;
-    test('isCelsius', () {
+
+    test('is not display baseline', () {
       chartCubit = ChartCubit(
           FakeWeekRepository(dayRecords: [], memoModel: null),
-          FakeSettingsProvider());
+          FakeSettingsProvider(
+              isCelsius: true, isDisplayBaseline: false, baseline: 37.7));
+      chartCubit.init(DateTime(2022, 5, 29));
+      final state = chartCubit.state as ChartLoadedState;
+
+      expect(state.baseline, null);
+    });
+
+    test('isBaselineCelsius', () {
+      chartCubit = ChartCubit(
+          FakeWeekRepository(dayRecords: [], memoModel: null),
+          FakeSettingsProvider(
+              isCelsius: true, isDisplayBaseline: true, baseline: 37.7));
       chartCubit.init(DateTime(2022, 5, 29));
       final state = chartCubit.state as ChartLoadedState;
 
       expect(state.baseline, 37.7);
     });
 
-    test('isNotCelsius', () {
+    test('isBaselineNotCelsius', () {
       chartCubit = ChartCubit(
           FakeWeekRepository(dayRecords: [], memoModel: null),
-          FakeIsNotCelsiusSettingsProvider());
+          FakeSettingsProvider(
+              isCelsius: false, isDisplayBaseline: true, baseline: 37.7));
       chartCubit.init(DateTime(2022, 5, 29));
       final state = chartCubit.state as ChartLoadedState;
 
@@ -38,7 +51,8 @@ void main() {
           FakeWeekRepository(
               dayRecords: [recordModel(36), recordModel(37), recordModel(38)],
               memoModel: null),
-          FakeSettingsProvider());
+          FakeSettingsProvider(
+              isCelsius: true, isDisplayBaseline: false, baseline: 0));
     });
     test('change to week', () {
       chartCubit.init(DateTime(2022, 5, 29));
@@ -144,7 +158,8 @@ void main() {
           FakeWeekRepository(
               dayRecords: [recordModel(36), recordModel(37), recordModel(38)],
               memoModel: MemoModel(memo: "UnitTest", dateTime: DateTime.now())),
-          FakeSettingsProvider());
+          FakeSettingsProvider(
+              isCelsius: true, isDisplayBaseline: false, baseline: 0));
     });
 
     test('change to month', () {
@@ -275,7 +290,8 @@ void main() {
           FakeWeekRepository(
               dayRecords: [recordModel(36)],
               memoModel: MemoModel(memo: "UnitTest", dateTime: DateTime.now())),
-          FakeSettingsProvider());
+          FakeSettingsProvider(
+              isCelsius: true, isDisplayBaseline: false, baseline: 0));
     });
     test('change to season', () {
       chartCubit.init(DateTime(2022, 5, 29));
