@@ -6,6 +6,7 @@ import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
 import 'package:body_temperature_note/utils/string_extensions.dart';
+import 'package:body_temperature_note/utils/view/date_toolbar_widget.dart';
 import 'package:body_temperature_note/views/home/cubit/home_cubit.dart';
 import 'package:body_temperature_note/views/home/cubit/home_state.dart';
 import 'package:body_temperature_note/views/memo/memo_page.dart';
@@ -53,59 +54,23 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
       builder: (context, state) {
         return Column(
           children: <Widget>[
-            Container(
-              height: 60,
-              color: Theme.of(context).colorScheme.background,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    highlightColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    constraints:
-                        const BoxConstraints(minHeight: 40, minWidth: 40),
-                    onPressed: () {
-                      context.read<HomeCubit>().previousMonth();
-                    },
-                    icon: Icon(Icons.arrow_circle_left_outlined),
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                  SizedBox(
-                    width: 150,
-                    child: TextButton(
-                      onPressed: () {
-                        context.read<HomeCubit>().changeToToday();
-                      },
-                      child: BlocBuilder<HomeCubit, HomeState>(
-                          builder: (BuildContext context, state) {
-                        return Text(
-                          formatDate(
-                              DateTime(state.currentYear, state.currentMonth),
-                              titleMonthFormatyyyymm),
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        );
-                      }),
-                    ),
-                  ),
-                  IconButton(
-                      padding: EdgeInsets.zero,
-                      highlightColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      constraints:
-                          const BoxConstraints(minHeight: 40, minWidth: 40),
-                      onPressed: () {
-                        context.read<HomeCubit>().nextMonth();
-                      },
-                      icon: Icon(
-                        Icons.arrow_circle_right_outlined,
-                        color: Theme.of(context).iconTheme.color,
-                      )),
-                ],
-              ),
+            BlocBuilder<HomeCubit, HomeState>(
+              builder: (context, state) {
+                return DateToolbarWidget(
+                  title: formatDate(
+                      DateTime(state.currentYear, state.currentMonth),
+                      titleMonthFormatyyyymm),
+                  onClickNext: () {
+                    context.read<HomeCubit>().nextMonth();
+                  },
+                  onClickPrevious: () {
+                    context.read<HomeCubit>().previousMonth();
+                  },
+                  onClickTitle: () {
+                    context.read<HomeCubit>().changeToToday();
+                  },
+                );
+              },
             ),
             const Divider(
               height: 0.0,
