@@ -63,11 +63,12 @@ class ChartCubit extends Cubit<ChartPageState> {
         break;
     }
 
-    emit(ChartLoadedState(
+    final newState = ChartLoadedState(
         title: dateTitle,
         baseline: 36,
         chartDuration: chartDuration,
-        records: records));
+        records: records);
+    emit(newState);
   }
 
   void updateChartDuration(ChartDuration chartDuration) {
@@ -142,20 +143,29 @@ class ChartCubit extends Cubit<ChartPageState> {
   List<ChartModel> getDurationChartModels(DateTime startDay, DateTime endDay) {
     List<ChartModel> results = [];
     do {
-      results.add(getDayChartModel(startDay));
+      var dayChartModel = getDayChartModel(startDay);
+      if (dayChartModel != null) {
+        results.add(dayChartModel);
+      }
       startDay = startDay.add(const Duration(days: 1));
     } while (!startDay.isAfter(endDay));
 
     return results;
   }
 
-  ChartModel getDayChartModel(DateTime day) {
+  ChartModel? getDayChartModel(DateTime day) {
     List<RecordModel> dayRecords = repository.queryDayRecords(day);
     int dayRecordsLen = dayRecords.length;
-    double dayAvgTemp = dayRecords
-            .map((e) => e.temperature)
-            .reduce((value, element) => value + element) /
-        dayRecordsLen;
+    double dayAvgTemp;
+    try {
+      dayAvgTemp = dayRecords
+              .map((e) => e.temperature)
+              .reduce((value, element) => value + element) /
+          dayRecordsLen;
+    } catch (e) {
+      return null;
+    }
+
     String memo = repository.queryMemo(day)?.memo ?? "";
 
     return ChartModel(valueY: dayAvgTemp, valueX: day.day, memo: memo);

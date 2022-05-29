@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:body_temperature_note/utils/view/date_toolbar_widget.dart';
 import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +20,7 @@ class _ChartPageState extends State<ChartPage> {
   @override
   void initState() {
     super.initState();
-    context.read<ChartCubit>();
+    context.read<ChartCubit>().init(DateTime.parse(widget.dateString));
   }
 
   @override
@@ -32,67 +33,105 @@ class _ChartPageState extends State<ChartPage> {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
-      body: Center(
-        child: Container(
+      body: Container(
           color: Theme.of(context).colorScheme.background,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: LineChart(LineChartData(
-                        minY: 0,
-                        maxY: 50,
-                        maxX: 30,
-                        minX: 1,
-                        extraLinesData: ExtraLinesData(
-                            horizontalLines: [HorizontalLine(y: 38)]),
-                        borderData: FlBorderData(show: false),
-                        titlesData: FlTitlesData(
-                            topTitles: AxisTitles(),
-                            rightTitles: AxisTitles(),
-                            bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                    showTitles: true,
-                                    reservedSize: 16,
-                                    interval: 5,
-                                    getTitlesWidget: (value, meta) =>
-                                        Text('${value.toInt()}')))),
-                        lineBarsData: [
-                          LineChartBarData(
-                              spots: [
-                                FlSpot(2, 2),
-                                FlSpot(15, 10),
-                              ],
-                              gradient: LinearGradient(
-                                  colors: [Colors.green, Colors.red]))
-                        ])),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: double.maxFinite,
-                child: CupertinoSegmentedControl(children: const {
-                  1: Text('週'),
-                  2: Text('月'),
-                  3: Text('季'),
-                }, groupValue: 1, onValueChanged: (value) => {}),
-              ),
-              const SizedBox(
-                height: 10,
-              )
-            ],
-          ),
-        ),
-      ),
+          child: BlocBuilder<ChartCubit, ChartPageState>(
+            builder: (context, _state) {
+              if (_state is ChartLoadingState) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                ChartLoadedState loadedState = _state as ChartLoadedState;
+                return Column(
+                  children: [
+                    DateToolbarWidget(
+                        title: loadedState.title,
+                        onClickNext: () {
+                          context.read<ChartCubit>().changeToNext();
+                        },
+                        onClickPrevious: () {
+                          context.read<ChartCubit>().changeToPrevious();
+                        },
+                        onClickTitle: () {
+                          context.read<ChartCubit>().changeToToday();
+                        }),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: LineChart(LineChartData(
+                              minY: 0,
+                              maxY: 50,
+                              maxX: 30,
+                              minX: 1,
+                              extraLinesData: ExtraLinesData(
+                                  horizontalLines: [HorizontalLine(y: 38)]),
+                              borderData: FlBorderData(show: false),
+                              titlesData: FlTitlesData(
+                                  topTitles: AxisTitles(),
+                                  rightTitles: AxisTitles(),
+                                  bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                          showTitles: true,
+                                          reservedSize: 16,
+                                          interval: 5,
+                                          getTitlesWidget: (value, meta) =>
+                                              Text('${value.toInt()}')))),
+                              lineBarsData: [
+                                LineChartBarData(
+                                    spots: _state.records
+                                        .map((e) => FlSpot(
+                                            e.valueX.toDouble(), e.valueY))
+                                        .toList(),
+                                    gradient: LinearGradient(
+                                        colors: [Colors.green, Colors.red]))
+                              ])),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: double.maxFinite,
+                      child: CupertinoSegmentedControl(
+                          children: const {
+                            1: Text('週'),
+                            2: Text('月'),
+                            3: Text('季'),
+                          },
+                          groupValue: _state.chartDuration.index + 1,
+                          onValueChanged: (value) {
+                            switch (value) {
+                              case 1:
+                                context
+                                    .read<ChartCubit>()
+                                    .updateChartDuration(ChartDuration.week);
+                                break;
+                              case 2:
+                                context
+                                    .read<ChartCubit>()
+                                    .updateChartDuration(ChartDuration.month);
+                                break;
+                              case 3:
+                                context
+                                    .read<ChartCubit>()
+                                    .updateChartDuration(ChartDuration.season);
+                                break;
+                            }
+                          }),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    )
+                  ],
+                );
+              }
+            },
+          )),
     );
   }
 }
