@@ -4,7 +4,7 @@ import 'package:body_temperature_note/data/repository/repository.dart';
 
 class FakeWeekRepository extends Repository {
   List<RecordModel> dayRecords;
-  List<RecordModel> monthRecords;
+  MemoModel? memoModel;
 
   @override
   Future<void> addOrUpdateMemo(MemoModel memoModel) {
@@ -36,13 +36,12 @@ class FakeWeekRepository extends Repository {
 
   @override
   MemoModel? queryMemo(DateTime day) {
-    // TODO: implement queryMemo
-    throw UnimplementedError();
+    return memoModel;
   }
 
   @override
   List<MemoModel> queryMonthMemos(DateTime month) {
-    // TODO: implement queryMonthMemos
+    // TODO: implement queryMonthRecords
     throw UnimplementedError();
   }
 
@@ -60,6 +59,6 @@ class FakeWeekRepository extends Repository {
 
   FakeWeekRepository({
     required this.dayRecords,
-    required this.monthRecords,
+    required this.memoModel,
   });
 }
