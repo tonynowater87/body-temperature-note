@@ -107,12 +107,30 @@ class ChartCubit extends Cubit<ChartPageState> {
   void changeToPrevious() {
     switch (selectedChartDuration) {
       case ChartDuration.week:
+        selectedDateTime = selectedDateTime
+            .subtract(const Duration(days: DateTime.daysPerWeek));
         break;
       case ChartDuration.month:
+        if (selectedDateTime.month == 1) {
+          selectedDateTime =
+              DateTime(selectedDateTime.year - 1, DateTime.december, 1);
+        } else {
+          selectedDateTime =
+              DateTime(selectedDateTime.year, selectedDateTime.month - 1, 1);
+        }
         break;
       case ChartDuration.season:
+        if (selectedDateTime.month <= DateTime.march) {
+          selectedDateTime = DateTime(
+              selectedDateTime.year - 1, (selectedDateTime.month - 3) + 12, 1);
+        } else {
+          selectedDateTime =
+              DateTime(selectedDateTime.year, selectedDateTime.month - 3, 1);
+        }
         break;
     }
+
+    refreshChart(selectedDateTime, selectedChartDuration);
   }
 
   List<ChartModel> getDurationChartModels(DateTime startDay, DateTime endDay) {
