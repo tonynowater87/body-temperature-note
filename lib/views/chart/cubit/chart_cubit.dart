@@ -6,6 +6,7 @@ import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
 import 'package:body_temperature_note/data/repository/repository.dart';
 import 'package:body_temperature_note/utils/date_time_extensions.dart';
+import 'package:body_temperature_note/utils/double_extensions.dart';
 import 'package:body_temperature_note/utils/pair.dart';
 import 'package:body_temperature_note/utils/string_extensions.dart';
 import 'package:body_temperature_note/views/chart/model/chart_ui_model.dart';
@@ -22,12 +23,21 @@ class ChartCubit extends Cubit<ChartPageState> {
   ChartDuration selectedChartDuration = ChartDuration.week;
   late DateTime initDateTime;
   late DateTime selectedDateTime;
+  late double baseline;
+  late bool isCelsius;
 
   ChartCubit(this.repository, this.settingsProvider)
       : super(ChartLoadingState());
 
   void init(DateTime dateTime) {
     emit(ChartLoadingState());
+    isCelsius = settingsProvider.getIsCelsius();
+    baseline = settingsProvider.getBaseline();
+
+    if (!isCelsius) {
+      baseline = defaultBaselineInCelsius.toFahrenheit();
+    }
+
     initDateTime = dateTime;
     selectedDateTime = dateTime;
     refreshChart(selectedDateTime, selectedChartDuration);
@@ -65,7 +75,7 @@ class ChartCubit extends Cubit<ChartPageState> {
 
     final newState = ChartLoadedState(
         title: dateTitle,
-        baseline: 36,
+        baseline: baseline,
         chartDuration: chartDuration,
         records: records);
     emit(newState);

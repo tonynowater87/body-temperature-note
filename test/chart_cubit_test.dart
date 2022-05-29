@@ -4,9 +4,33 @@ import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fake/fake_settings_provider.dart';
+import 'fake/fake_settings_provider_is_not_celsius.dart';
 import 'fake/fake_week_repository.dart';
 
 void main() {
+  group('test baseline', () {
+    late ChartCubit chartCubit;
+    test('isCelsius', () {
+      chartCubit = ChartCubit(
+          FakeWeekRepository(dayRecords: [], memoModel: null),
+          FakeSettingsProvider());
+      chartCubit.init(DateTime(2022, 5, 29));
+      final state = chartCubit.state as ChartLoadedState;
+
+      expect(state.baseline, 37.7);
+    });
+
+    test('isNotCelsius', () {
+      chartCubit = ChartCubit(
+          FakeWeekRepository(dayRecords: [], memoModel: null),
+          FakeIsNotCelsiusSettingsProvider());
+      chartCubit.init(DateTime(2022, 5, 29));
+      final state = chartCubit.state as ChartLoadedState;
+
+      expect(state.baseline, 99.86);
+    });
+  });
+
   group('chart bloc week test', () {
     late ChartCubit chartCubit;
     setUp(() {

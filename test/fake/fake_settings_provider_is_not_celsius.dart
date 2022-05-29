@@ -1,9 +1,9 @@
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
 
-class FakeSettingsProvider extends SettingsProvider {
+class FakeIsNotCelsiusSettingsProvider extends SettingsProvider {
   @override
   bool getIsCelsius() {
-    return true;
+    return false;
   }
 
   @override

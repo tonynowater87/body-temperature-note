@@ -1,3 +1,4 @@
+import 'package:body_temperature_note/constants.dart';
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -5,6 +6,7 @@ class SettingsProviderImpl extends SettingsProvider {
   static const keyIsDarkMode = 'keyIsDarkMode';
   static const keyIsCelsius = 'keyIsCelsius';
   static const keyLanguageCode = 'keyLanguageCode';
+  static const keyBaseline = 'keyBaseline';
 
   late SharedPreferences sharedPreferences;
 
@@ -38,5 +40,15 @@ class SettingsProviderImpl extends SettingsProvider {
   @override
   String? getLanguageCode() {
     return sharedPreferences.getString(keyLanguageCode);
+  }
+
+  @override
+  double getBaseline() {
+    return sharedPreferences.getDouble(keyBaseline) ?? defaultBaselineInCelsius;
+  }
+
+  @override
+  Future<bool> setBaseline(double baseline) {
+    return sharedPreferences.setDouble(keyBaseline, baseline);
   }
 }

@@ -10,4 +10,8 @@ abstract class SettingsProvider {
   Future<bool> setLanguageCode(String languageCode);
 
   String? getLanguageCode();
+
+  Future<bool> setBaseline(double baseline);
+
+  double getBaseline();
 }

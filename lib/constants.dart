@@ -5,3 +5,5 @@ const titleDayFormatyyyymmddDD = [yyyy, "/", mm, "/", dd, " ", DD];
 const titleTimeFormathhnn = [hh, ":", nn];
 const titleWeekDaysAbbrFormat = [D];
 const titleMonthFormatyyyymm = [yyyy, "/", mm];
+
+const defaultBaselineInCelsius = 37.7;
