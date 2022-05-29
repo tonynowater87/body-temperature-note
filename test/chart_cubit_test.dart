@@ -16,7 +16,7 @@ void main() {
               memoModel: null),
           FakeSettingsProvider());
     });
-    test('week', () {
+    test('change to week', () {
       chartCubit.init(DateTime(2022, 5, 29));
       chartCubit.updateChartDuration(ChartDuration.week);
       final state = chartCubit.state as ChartLoadedState;
@@ -25,6 +25,27 @@ void main() {
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "");
       expect(state.records.length, 7);
+    });
+
+    test('change to today', () {
+      chartCubit.init(DateTime(2022, 5, 29));
+      chartCubit.updateChartDuration(ChartDuration.week);
+      chartCubit.changeToNext();
+
+      var state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/05/30 Monday - 2022/06/05 Sunday");
+
+      chartCubit.changeToToday();
+      state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/05/23 Monday - 2022/05/29 Sunday");
+
+      chartCubit.changeToPrevious();
+      state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/05/16 Monday - 2022/05/22 Sunday");
+
+      chartCubit.changeToToday();
+      state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/05/23 Monday - 2022/05/29 Sunday");
     });
 
     test('next week', () {
@@ -101,7 +122,8 @@ void main() {
               memoModel: MemoModel(memo: "UnitTest", dateTime: DateTime.now())),
           FakeSettingsProvider());
     });
-    test('month', () {
+
+    test('change to month', () {
       chartCubit.init(DateTime(2022, 5, 29));
       chartCubit.updateChartDuration(ChartDuration.month);
       final state = chartCubit.state as ChartLoadedState;
@@ -112,6 +134,28 @@ void main() {
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 31);
+    });
+
+    test('change to today', () {
+      chartCubit.init(DateTime(2022, 5, 29));
+      chartCubit.updateChartDuration(ChartDuration.month);
+      chartCubit.changeToNext();
+
+      var state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/06");
+
+      chartCubit.changeToToday();
+      state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/05/23 Monday - 2022/05/29 Sunday");
+
+      chartCubit.updateChartDuration(ChartDuration.month);
+      chartCubit.changeToPrevious();
+      state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/04");
+
+      chartCubit.changeToToday();
+      state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/05/23 Monday - 2022/05/29 Sunday");
     });
 
     test('next month', () {
@@ -209,7 +253,7 @@ void main() {
               memoModel: MemoModel(memo: "UnitTest", dateTime: DateTime.now())),
           FakeSettingsProvider());
     });
-    test('season', () {
+    test('change to season', () {
       chartCubit.init(DateTime(2022, 5, 29));
       chartCubit.updateChartDuration(ChartDuration.season);
       final state = chartCubit.state as ChartLoadedState;
@@ -220,6 +264,28 @@ void main() {
       expect(state.records.first.valueY, 36.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 91);
+    });
+
+    test('change to today', () {
+      chartCubit.init(DateTime(2022, 5, 29));
+      chartCubit.updateChartDuration(ChartDuration.season);
+      chartCubit.changeToNext();
+
+      var state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/07 - 2022/09");
+
+      chartCubit.changeToToday();
+      state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/05/23 Monday - 2022/05/29 Sunday");
+
+      chartCubit.updateChartDuration(ChartDuration.season);
+      chartCubit.changeToPrevious();
+      state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/01 - 2022/03");
+
+      chartCubit.changeToToday();
+      state = chartCubit.state as ChartLoadedState;
+      expect(state.title, "2022/05/23 Monday - 2022/05/29 Sunday");
     });
 
     test('next season', () {

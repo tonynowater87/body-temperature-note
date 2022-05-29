@@ -20,6 +20,7 @@ class ChartCubit extends Cubit<ChartPageState> {
   late SettingsProvider settingsProvider;
 
   ChartDuration selectedChartDuration = ChartDuration.week;
+  late DateTime initDateTime;
   late DateTime selectedDateTime;
 
   ChartCubit(this.repository, this.settingsProvider)
@@ -27,6 +28,7 @@ class ChartCubit extends Cubit<ChartPageState> {
 
   void init(DateTime dateTime) {
     emit(ChartLoadingState());
+    initDateTime = dateTime;
     selectedDateTime = dateTime;
     refreshChart(selectedDateTime, selectedChartDuration);
   }
@@ -73,7 +75,11 @@ class ChartCubit extends Cubit<ChartPageState> {
     refreshChart(selectedDateTime, selectedChartDuration);
   }
 
-  void changeToToday() {}
+  void changeToToday() {
+    selectedDateTime = initDateTime;
+    selectedChartDuration = ChartDuration.week;
+    refreshChart(selectedDateTime, selectedChartDuration);
+  }
 
   void changeToNext() {
     switch (selectedChartDuration) {
