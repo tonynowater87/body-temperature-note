@@ -35,6 +35,7 @@ class _ChartPageState extends State<ChartPage> {
       ),
       body: Container(
           color: Theme.of(context).colorScheme.background,
+          width: double.maxFinite,
           child: BlocBuilder<ChartCubit, ChartPageState>(
             builder: (context, _state) {
               if (_state is ChartLoadingState) {
@@ -44,6 +45,7 @@ class _ChartPageState extends State<ChartPage> {
                 return Column(
                   children: [
                     DateToolbarWidget(
+                        height: 100,
                         title: loadedState.title,
                         onClickNext: () {
                           context.read<ChartCubit>().changeToNext();
@@ -58,42 +60,35 @@ class _ChartPageState extends State<ChartPage> {
                       height: 10,
                     ),
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 12),
-                          child: LineChart(LineChartData(
-                              minY: 0,
-                              maxY: 50,
-                              maxX: 30,
-                              minX: 1,
-                              extraLinesData: _state.baseline != null
-                                  ? ExtraLinesData(horizontalLines: [
-                                      HorizontalLine(y: _state.baseline!)
-                                    ])
-                                  : null,
-                              borderData: FlBorderData(show: false),
-                              titlesData: FlTitlesData(
-                                  topTitles: AxisTitles(),
-                                  rightTitles: AxisTitles(),
-                                  bottomTitles: AxisTitles(
-                                      sideTitles: SideTitles(
-                                          showTitles: true,
-                                          reservedSize: 16,
-                                          interval: 5,
-                                          getTitlesWidget: (value, meta) =>
-                                              Text('${value.toInt()}')))),
-                              lineBarsData: [
-                                LineChartBarData(
-                                    spots: _state.records
-                                        .map((e) => FlSpot(
-                                            e.valueX.toDouble(), e.valueY))
-                                        .toList(),
-                                    gradient: LinearGradient(
-                                        colors: [Colors.green, Colors.red]))
-                              ])),
-                        ),
-                      ),
+                      child: LineChart(LineChartData(
+                          minY: _state.minY - 5,
+                          maxY: _state.maxY + 5,
+                          maxX: _state.maxX,
+                          minX: _state.minX,
+                          extraLinesData: _state.baseline != null
+                              ? ExtraLinesData(horizontalLines: [
+                                  HorizontalLine(y: _state.baseline!)
+                                ])
+                              : null,
+                          borderData: FlBorderData(show: false),
+                          titlesData: FlTitlesData(
+                              topTitles: AxisTitles(),
+                              bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 16,
+                                      interval: _state.intervalsX,
+                                      getTitlesWidget: (value, meta) =>
+                                          Text('${value.toInt()}')))),
+                          lineBarsData: [
+                            LineChartBarData(
+                                spots: _state.records
+                                    .map((e) =>
+                                        FlSpot(e.valueX.toDouble(), e.valueY))
+                                    .toList(),
+                                gradient: LinearGradient(
+                                    colors: [Colors.green, Colors.red]))
+                          ])),
                     ),
                     const SizedBox(
                       height: 10,

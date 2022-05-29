@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class DateToolbarWidget extends StatelessWidget {
   String title;
+  double? height;
   VoidCallback onClickNext;
   VoidCallback onClickPrevious;
   VoidCallback onClickTitle;
@@ -9,7 +10,7 @@ class DateToolbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: height ?? 60,
       color: Theme.of(context).colorScheme.background,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -26,8 +27,7 @@ class DateToolbarWidget extends StatelessWidget {
             icon: const Icon(Icons.arrow_circle_left_outlined),
             color: Theme.of(context).iconTheme.color,
           ),
-          SizedBox(
-            width: 150,
+          Expanded(
             child: TextButton(
                 onPressed: () {
                   onClickTitle.call();
@@ -57,10 +57,10 @@ class DateToolbarWidget extends StatelessWidget {
   }
 
   DateToolbarWidget({
-    Key? key,
     required this.title,
+    this.height,
     required this.onClickNext,
     required this.onClickPrevious,
     required this.onClickTitle,
-  }) : super(key: key);
+  });
 }

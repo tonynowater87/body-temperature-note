@@ -48,7 +48,9 @@ class ChartCubit extends Cubit<ChartPageState> {
   void refreshChart(DateTime dateTime, ChartDuration chartDuration) {
     String dateTitle;
     List<ChartModel> records;
-
+    int maxX;
+    int minX;
+    int intervalsX;
     switch (chartDuration) {
       case ChartDuration.week:
         Pair<DateTime> pair = dateTime.getWeekStartAndEndDay(DateTime.monday);
@@ -57,13 +59,20 @@ class ChartCubit extends Cubit<ChartPageState> {
           formatDate(pair.right, titleDayFormatyyyymmddDD)
         ]);
         records = getDurationChartModels(pair.left, pair.right);
+        minX = pair.left.day;
+        maxX = pair.right.day;
+        intervalsX = 1;
         break;
       case ChartDuration.month:
         dateTitle = formatDate(dateTime, titleMonthFormatyyyymm);
+        int daysInMonth =
+            DateUtils.getDaysInMonth(dateTime.year, dateTime.month);
         records = getDurationChartModels(
             DateTime(dateTime.year, dateTime.month, 1),
-            DateTime(dateTime.year, dateTime.month,
-                DateUtils.getDaysInMonth(dateTime.year, dateTime.month)));
+            DateTime(dateTime.year, dateTime.month, daysInMonth));
+        minX = 1;
+        maxX = daysInMonth;
+        intervalsX = 5;
         break;
       case ChartDuration.season:
         Pair<DateTime> pair = dateTime.getSeasonStartAndEndMonth();
@@ -72,12 +81,24 @@ class ChartCubit extends Cubit<ChartPageState> {
           formatDate(pair.right, titleMonthFormatyyyymm)
         ]);
         records = getDurationChartModels(pair.left, pair.right);
+        minX = 1;
+        maxX = pair.right.difference(pair.left).inDays;
+        intervalsX = 14;
         break;
     }
 
     final newState = ChartLoadedState(
         title: dateTitle,
         baseline: baseline,
+        intervalsX: intervalsX.toDouble(),
+        maxX: maxX.toDouble(),
+        minX: minX.toDouble(),
+        maxY: records
+            .map((e) => isCelsius ? e.valueY : e.valueY.toFahrenheit())
+            .fold(50, (value, element) => value > element ? value : element),
+        minY: records
+            .map((e) => isCelsius ? e.valueY : e.valueY.toFahrenheit())
+            .fold(30, (value, element) => value < element ? value : element),
         chartDuration: chartDuration,
         records: records);
     emit(newState);
@@ -180,6 +201,9 @@ class ChartCubit extends Cubit<ChartPageState> {
 
     String memo = repository.queryMemo(day)?.memo ?? "";
 
-    return ChartModel(valueY: dayAvgTemp, valueX: day.day, memo: memo);
+    return ChartModel(
+        valueY: isCelsius ? dayAvgTemp : dayAvgTemp.toFahrenheit(),
+        valueX: day.day,
+        memo: memo);
   }
 }
