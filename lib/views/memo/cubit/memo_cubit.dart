@@ -1,14 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:body_temperature_note/constants.dart';
 import 'package:body_temperature_note/data/model/memo_ui_model.dart';
-import 'package:body_temperature_note/data/repository/record_repository.dart';
+import 'package:body_temperature_note/data/repository/repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/memo/cubit/memo_state.dart';
 import 'package:date_format/date_format.dart';
 import 'package:logger/logger.dart';
 
 class MemoCubit extends Cubit<MemoState> {
-  RecordRepository recordRepository;
+  Repository recordRepository;
   String? updateMemo;
   final _logger = getIt<Logger>();
 

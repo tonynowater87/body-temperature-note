@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
-import 'package:body_temperature_note/data/repository/record_repository.dart';
+import 'package:body_temperature_note/data/repository/repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/utils/double_extensions.dart';
 import 'package:body_temperature_note/utils/string_extensions.dart';
@@ -13,7 +13,7 @@ part 'input_state.dart';
 class InputCubit extends Cubit<InputState> {
   static const double defaultTemperature = 36.0;
 
-  final RecordRepository repository;
+  final Repository repository;
   final SettingsProvider settingsProvider;
   late RecordModel currentRecord;
   bool isCelsius = false;

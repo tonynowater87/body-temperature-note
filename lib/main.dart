@@ -6,12 +6,14 @@ import 'package:body_temperature_note/data/provider/hive_record_provider.dart';
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
 import 'package:body_temperature_note/data/provider/settings_provider_impl.dart';
 import 'package:body_temperature_note/data/repository/record_repository.dart';
+import 'package:body_temperature_note/data/repository/repository.dart';
 import 'package:body_temperature_note/firebase_options.dart';
 import 'package:body_temperature_note/route/app_router.gr.dart';
 import 'package:body_temperature_note/theme/cubit/theme_cubit.dart';
 import 'package:body_temperature_note/theme/cubit/theme_state.dart';
 import 'package:body_temperature_note/theme/theme_data.dart';
 import 'package:body_temperature_note/utils/app_bloc_observer.dart';
+import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
 import 'package:body_temperature_note/views/home/cubit/home_cubit.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
 import 'package:body_temperature_note/views/memo/cubit/memo_cubit.dart';
@@ -93,7 +95,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<RecordRepository>(
+        RepositoryProvider<Repository>(
             create: (BuildContext context) => RecordRepository(
                 hiveRecordProvider: hiveRecordProvider,
                 hiveMemoProvider: hiveMemoProvider,
@@ -117,7 +119,10 @@ class MyApp extends StatelessWidget {
                   SettingsCubit(settingsProvider)),
           BlocProvider<MemoCubit>(
               create: (context) =>
-                  MemoCubit(recordRepository: RepositoryProvider.of(context)))
+                  MemoCubit(recordRepository: RepositoryProvider.of(context))),
+          BlocProvider<ChartCubit>(
+              create: (context) =>
+                  ChartCubit(RepositoryProvider.of(context), settingsProvider))
         ],
         child: BlocBuilder<ThemeCubit, AppThemeDataState>(
           builder: (context, state) {

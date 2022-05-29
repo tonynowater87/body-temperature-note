@@ -16,8 +16,8 @@ import 'package:flutter/material.dart';
 part 'chart_state.dart';
 
 class ChartCubit extends Cubit<ChartPageState> {
-  late Repository repository;
-  late SettingsProvider settingsProvider;
+  Repository repository;
+  SettingsProvider settingsProvider;
 
   ChartDuration selectedChartDuration = ChartDuration.week;
   late DateTime initDateTime;

@@ -1,7 +1,9 @@
 import 'package:auto_route/annotations.dart';
+import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChartPage extends StatefulWidget {
   late String dateString;
@@ -14,6 +16,12 @@ class ChartPage extends StatefulWidget {
 }
 
 class _ChartPageState extends State<ChartPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ChartCubit>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

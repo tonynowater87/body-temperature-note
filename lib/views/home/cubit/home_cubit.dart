@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
-import 'package:body_temperature_note/data/repository/record_repository.dart';
+import 'package:body_temperature_note/data/repository/repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/home/cubit/home_state.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,7 @@ import 'package:logger/logger.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   static DateTime currentDatePosition = DateTime.now();
-  final RecordRepository repository;
+  final Repository repository;
   final SettingsProvider settingsProvider;
   final _logger = getIt<Logger>();
   bool isCelsius = false;
