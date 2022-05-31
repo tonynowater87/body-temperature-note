@@ -3,8 +3,8 @@ import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'fake/fake_settings_provider.dart';
-import 'fake/fake_week_repository.dart';
+import '../fake/fake_settings_provider.dart';
+import '../fake/fake_week_repository.dart';
 
 void main() {
   group('test baseline', () {

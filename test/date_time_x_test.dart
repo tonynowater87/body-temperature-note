@@ -12,6 +12,9 @@ void main() {
     expect(today.weekday, DateTime.saturday);
     expect(pair.left.weekday, DateTime.saturday);
     expect(pair.right.weekday, DateTime.friday);
+    expect(pair.right.hour, 23);
+    expect(pair.right.minute, 59);
+    expect(pair.right.second, 59);
     expect(true, today.isBefore(pair.right));
   });
 
@@ -23,6 +26,9 @@ void main() {
     expect(today.weekday, DateTime.saturday);
     expect(pair.left.weekday, DateTime.monday);
     expect(pair.right.weekday, DateTime.sunday);
+    expect(pair.right.hour, 23);
+    expect(pair.right.minute, 59);
+    expect(pair.right.second, 59);
     expect(true, today.isAfter(pair.left) && today.isBefore(pair.right));
   });
 
@@ -69,6 +75,9 @@ void main() {
     expect(today.weekday, DateTime.thursday);
     expect(pair.left.weekday, DateTime.sunday);
     expect(pair.right.weekday, DateTime.saturday);
+    expect(pair.right.hour, 23);
+    expect(pair.right.minute, 59);
+    expect(pair.right.second, 59);
     expect(true, today.isAfter(pair.left));
   });
 

@@ -1,6 +1,8 @@
 import 'package:auto_route/annotations.dart';
+import 'package:body_temperature_note/constants.dart';
 import 'package:body_temperature_note/utils/view/date_toolbar_widget.dart';
 import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
+import 'package:date_format/date_format.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,35 +62,74 @@ class _ChartPageState extends State<ChartPage> {
                       height: 10,
                     ),
                     Expanded(
-                      child: LineChart(LineChartData(
-                          minY: _state.minY - 5,
-                          maxY: _state.maxY + 5,
-                          maxX: _state.maxX,
-                          minX: _state.minX,
-                          extraLinesData: _state.baseline != null
-                              ? ExtraLinesData(horizontalLines: [
-                                  HorizontalLine(y: _state.baseline!)
-                                ])
-                              : null,
-                          borderData: FlBorderData(show: false),
-                          titlesData: FlTitlesData(
-                              topTitles: AxisTitles(),
-                              bottomTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                      showTitles: true,
-                                      reservedSize: 16,
-                                      interval: _state.intervalsX,
-                                      getTitlesWidget: (value, meta) =>
-                                          Text('${value.toInt()}')))),
-                          lineBarsData: [
-                            LineChartBarData(
-                                spots: _state.records
-                                    .map((e) =>
-                                        FlSpot(e.valueX.toDouble(), e.valueY))
-                                    .toList(),
-                                gradient: LinearGradient(
-                                    colors: [Colors.green, Colors.red]))
-                          ])),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: LineChart(LineChartData(
+                            minY: _state.minY - 5,
+                            maxY: _state.maxY + 5,
+                            maxX: _state.maxX,
+                            minX: _state.minX,
+                            lineTouchData: LineTouchData(
+                                touchTooltipData: LineTouchTooltipData(
+                                    maxContentWidth:
+                                        MediaQuery.of(context).size.width / 2,
+                                    fitInsideHorizontally: true,
+                                    tooltipBgColor:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    getTooltipItems:
+                                        (List<LineBarSpot> touchedBarSpots) {
+                                      return touchedBarSpots.map((element) {
+                                        var dateTime =
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                element.x.toInt());
+                                        var formatDateString = formatDate(
+                                            dateTime,
+                                            titleDateFormatChartTouchData);
+                                        return LineTooltipItem(
+                                            "${element.y}\n$formatDateString",
+                                            Theme.of(context)
+                                                .textTheme
+                                                .headlineSmall!);
+                                      }).toList();
+                                    })),
+                            extraLinesData: _state.baseline != null
+                                ? ExtraLinesData(horizontalLines: [
+                                    HorizontalLine(y: _state.baseline!)
+                                  ])
+                                : null,
+                            borderData: FlBorderData(show: false),
+                            titlesData: FlTitlesData(
+                                topTitles: AxisTitles(),
+                                bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                        showTitles: true,
+                                        reservedSize: 16,
+                                        interval: _state.intervalsX,
+                                        getTitlesWidget: (value, meta) {
+                                          var dateTime = DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                                  value.toInt());
+                                          print(
+                                              '[Tony] value=$value,dateTime=$dateTime,max=${meta.max},min=${meta.min},meta=${meta.formattedValue}');
+                                          if (_state.chartDuration ==
+                                              ChartDuration.week) {
+                                            return Text(formatDate(dateTime,
+                                                titleWeekDaysAbbrFormat));
+                                          } else {
+                                            return Text(formatDate(dateTime,
+                                                titleDateFormatChartXAxis));
+                                          }
+                                        }))),
+                            lineBarsData: [
+                              LineChartBarData(
+                                  spots: _state.records
+                                      .map((e) =>
+                                          FlSpot(e.valueX.toDouble(), e.valueY))
+                                      .toList(),
+                                  gradient: LinearGradient(
+                                      colors: [Colors.green, Colors.red]))
+                            ])),
+                      ),
                     ),
                     const SizedBox(
                       height: 10,

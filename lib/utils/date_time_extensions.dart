@@ -6,21 +6,32 @@ extension DateTimeX on DateTime {
     if (weekday == startWeekday) {
       // 今天就是起始天
       DateTime endDateTime = add(const Duration(days: 6));
-      return Pair(this, endDateTime);
+      return Pair(
+          DateTime(year, month, day),
+          DateTime(endDateTime.year, endDateTime.month, endDateTime.day + 1)
+              .subtract(const Duration(seconds: 1)));
     } else {
       // 今天的星期 > 起始星期
       if (weekday > startWeekday) {
         DateTime startDateTime =
             subtract(Duration(days: weekday - startWeekday));
         DateTime endDateTime = startDateTime.add(const Duration(days: 6));
-        return Pair(startDateTime, endDateTime);
+        return Pair(
+            DateTime(
+                startDateTime.year, startDateTime.month, startDateTime.day),
+            DateTime(endDateTime.year, endDateTime.month, endDateTime.day + 1)
+                .subtract(const Duration(seconds: 1)));
       } else {
         // 今天的星期 < 起始星期
         DateTime startDateTime =
             subtract(Duration(days: weekday - startWeekday))
                 .subtract(const Duration(days: DateTime.daysPerWeek));
         DateTime endDateTime = startDateTime.add(const Duration(days: 6));
-        return Pair(startDateTime, endDateTime);
+        return Pair(
+            DateTime(
+                startDateTime.year, startDateTime.month, startDateTime.day),
+            DateTime(endDateTime.year, endDateTime.month, endDateTime.day + 1)
+                .subtract(const Duration(seconds: 1)));
       }
     }
   }

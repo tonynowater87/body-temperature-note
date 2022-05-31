@@ -42,6 +42,8 @@ class ChartCubit extends Cubit<ChartPageState> {
 
     initDateTime = dateTime;
     selectedDateTime = dateTime;
+    print(
+        '[Tony] initDate=${initDateTime.millisecondsSinceEpoch},selectedDateTime=${selectedDateTime.millisecondsSinceEpoch}');
     refreshChart(selectedDateTime, selectedChartDuration);
   }
 
@@ -58,21 +60,23 @@ class ChartCubit extends Cubit<ChartPageState> {
           formatDate(pair.left, titleDayFormatyyyymmddDD),
           formatDate(pair.right, titleDayFormatyyyymmddDD)
         ]);
-        records = getDurationChartModels(pair.left, pair.right);
-        minX = pair.left.day;
-        maxX = pair.right.day;
-        intervalsX = 1;
+        records = _getDurationChartModels(pair.left, pair.right);
+        minX = pair.left.millisecondsSinceEpoch;
+        maxX = pair.right.millisecondsSinceEpoch;
+        intervalsX = const Duration(days: 1).inMilliseconds;
         break;
       case ChartDuration.month:
         dateTitle = formatDate(dateTime, titleMonthFormatyyyymm);
         int daysInMonth =
             DateUtils.getDaysInMonth(dateTime.year, dateTime.month);
-        records = getDurationChartModels(
-            DateTime(dateTime.year, dateTime.month, 1),
-            DateTime(dateTime.year, dateTime.month, daysInMonth));
-        minX = 1;
-        maxX = daysInMonth;
-        intervalsX = 5;
+        var monthStartDate = DateTime(dateTime.year, dateTime.month, 1);
+        var monthEndDate =
+            DateTime(dateTime.year, dateTime.month, daysInMonth + 1)
+                .subtract(const Duration(seconds: 1));
+        records = _getDurationChartModels(monthStartDate, monthEndDate);
+        minX = monthStartDate.millisecondsSinceEpoch;
+        maxX = monthEndDate.millisecondsSinceEpoch;
+        intervalsX = const Duration(days: 7).inMilliseconds;
         break;
       case ChartDuration.season:
         Pair<DateTime> pair = dateTime.getSeasonStartAndEndMonth();
@@ -80,10 +84,14 @@ class ChartCubit extends Cubit<ChartPageState> {
           formatDate(pair.left, titleMonthFormatyyyymm),
           formatDate(pair.right, titleMonthFormatyyyymm)
         ]);
-        records = getDurationChartModels(pair.left, pair.right);
-        minX = 1;
-        maxX = pair.right.difference(pair.left).inDays;
-        intervalsX = 14;
+        records = _getDurationChartModels(
+            pair.left,
+            pair.right
+                .add(const Duration(days: 1))
+                .subtract(const Duration(seconds: 1)));
+        minX = pair.left.millisecondsSinceEpoch;
+        maxX = pair.right.millisecondsSinceEpoch;
+        intervalsX = const Duration(days: 14).inMilliseconds;
         break;
     }
 
@@ -173,10 +181,11 @@ class ChartCubit extends Cubit<ChartPageState> {
     refreshChart(selectedDateTime, selectedChartDuration);
   }
 
-  List<ChartModel> getDurationChartModels(DateTime startDay, DateTime endDay) {
+  List<ChartModel> _getDurationChartModels(DateTime startDay, DateTime endDay) {
     List<ChartModel> results = [];
     do {
-      var dayChartModel = getDayChartModel(startDay);
+      var dayChartModel = _getDayChartModel(startDay);
+      print('[Tony] ${dayChartModel?.valueX}');
       if (dayChartModel != null) {
         results.add(dayChartModel);
       }
@@ -186,7 +195,7 @@ class ChartCubit extends Cubit<ChartPageState> {
     return results;
   }
 
-  ChartModel? getDayChartModel(DateTime day) {
+  ChartModel? _getDayChartModel(DateTime day) {
     List<RecordModel> dayRecords = repository.queryDayRecords(day);
     int dayRecordsLen = dayRecords.length;
     double dayAvgTemp;
@@ -203,7 +212,7 @@ class ChartCubit extends Cubit<ChartPageState> {
 
     return ChartModel(
         valueY: isCelsius ? dayAvgTemp : dayAvgTemp.toFahrenheit(),
-        valueX: day.day,
+        valueX: day.millisecondsSinceEpoch,
         memo: memo);
   }
 }
