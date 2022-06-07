@@ -6,7 +6,7 @@ const titleTimeFormathhnn = [hh, ":", nn];
 const titleWeekDaysAbbrFormat = [D];
 const titleMonthFormatyyyymm = [yyyy, "/", mm];
 const titleDateFormatChartTouchData = [mm, "/", dd, " ", DD];
-const titleDateFormatChartXAxis = [mm, "/", dd];
+const titleDateFormatChartXAxis = [m, "/", dd];
 
 const defaultBaselineInCelsius = 37.7;
 const defaultIsCelsius = true;

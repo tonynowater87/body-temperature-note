@@ -77,9 +77,9 @@ class ChartCubit extends Cubit<ChartPageState> {
             DateTime(dateTime.year, dateTime.month, daysInMonth + 1)
                 .subtract(const Duration(seconds: 1));
         records = _getDurationChartModels(monthStartDate, monthEndDate);
-        minX = monthStartDate.millisecondsSinceEpoch;
-        maxX = monthEndDate.millisecondsSinceEpoch;
-        intervalsX = const Duration(days: 7).inMilliseconds;
+        minX = dayInYear(monthStartDate);
+        maxX = dayInYear(monthEndDate);
+        intervalsX = 10;
         break;
       case ChartDuration.season:
         Pair<DateTime> pair = dateTime.getSeasonStartAndEndMonth();
@@ -92,9 +92,9 @@ class ChartCubit extends Cubit<ChartPageState> {
             pair.right
                 .add(const Duration(days: 1))
                 .subtract(const Duration(seconds: 1)));
-        minX = pair.left.millisecondsSinceEpoch;
-        maxX = pair.right.millisecondsSinceEpoch;
-        intervalsX = const Duration(days: 14).inMilliseconds;
+        minX = dayInYear(pair.left);
+        maxX = dayInYear(pair.right);
+        intervalsX = 21;
         break;
     }
 
@@ -209,7 +209,7 @@ class ChartCubit extends Cubit<ChartPageState> {
               .reduce((value, element) => value + element) /
           dayRecordsLen;
     } catch (e) {
-      return ChartModel(valueY: 0, valueX: dayInYear(day), memo: '');
+      return null;
     }
 
     String memo = repository.queryMemo(day)?.memo ?? "";

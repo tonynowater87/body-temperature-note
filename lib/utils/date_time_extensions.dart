@@ -1,6 +1,13 @@
 import 'package:body_temperature_note/utils/pair.dart';
 import 'package:flutter/material.dart';
 
+DateTime fromDayInYear(int dayInYear) {
+  var now = DateTime.now();
+  return DateTime.fromMillisecondsSinceEpoch(
+      DateTime(now.year).millisecondsSinceEpoch +
+          dayInYear * const Duration(days: 1).inMilliseconds);
+}
+
 extension DateTimeX on DateTime {
   Pair<DateTime> getWeekStartAndEndDay(int startWeekday) {
     if (weekday == startWeekday) {

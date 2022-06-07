@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:body_temperature_note/constants.dart';
+import 'package:body_temperature_note/utils/date_time_extensions.dart';
 import 'package:body_temperature_note/utils/view/date_toolbar_widget.dart';
 import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
 import 'package:date_format/date_format.dart';
@@ -80,8 +81,7 @@ class _ChartPageState extends State<ChartPage> {
                                         (List<LineBarSpot> touchedBarSpots) {
                                       return touchedBarSpots.map((element) {
                                         var dateTime =
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                                element.x.toInt());
+                                            fromDayInYear(element.x.toInt());
                                         var formatDateString = formatDate(
                                             dateTime,
                                             titleDateFormatChartTouchData);
@@ -106,14 +106,8 @@ class _ChartPageState extends State<ChartPage> {
                                         reservedSize: 16,
                                         interval: _state.intervalsX,
                                         getTitlesWidget: (value, meta) {
-                                          var now =
-                                              DateTime(DateTime.now().year)
-                                                  .millisecondsSinceEpoch;
-                                          var dateTime = DateTime
-                                              .fromMillisecondsSinceEpoch(now +
-                                                  value.toInt() *
-                                                      const Duration(days: 1)
-                                                          .inMilliseconds);
+                                          var dateTime =
+                                              fromDayInYear(value.toInt());
                                           print(
                                               '[Tony] value=$value,dateTime=$dateTime,max=${meta.max},min=${meta.min},meta=${meta.formattedValue}');
                                           if (_state.chartDuration ==
