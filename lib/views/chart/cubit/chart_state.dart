@@ -33,6 +33,11 @@ class ChartLoadedState extends ChartPageState {
     required this.maxX,
     required this.intervalsX,
   });
+
+  @override
+  String toString() {
+    return records.toString();
+  }
 }
 
 enum ChartDuration { week, month, season }

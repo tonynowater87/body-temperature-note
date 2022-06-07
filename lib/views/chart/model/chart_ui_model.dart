@@ -8,4 +8,9 @@ class ChartModel {
     required this.valueX,
     required this.memo,
   });
+
+  @override
+  String toString() {
+    return "x=($valueX:${DateTime.fromMillisecondsSinceEpoch(valueX)}),y=$valueY,memo=$memo";
+  }
 }

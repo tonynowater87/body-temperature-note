@@ -106,9 +106,14 @@ class _ChartPageState extends State<ChartPage> {
                                         reservedSize: 16,
                                         interval: _state.intervalsX,
                                         getTitlesWidget: (value, meta) {
+                                          var now =
+                                              DateTime(DateTime.now().year)
+                                                  .millisecondsSinceEpoch;
                                           var dateTime = DateTime
-                                              .fromMillisecondsSinceEpoch(
-                                                  value.toInt());
+                                              .fromMillisecondsSinceEpoch(now +
+                                                  value.toInt() *
+                                                      const Duration(days: 1)
+                                                          .inMilliseconds);
                                           print(
                                               '[Tony] value=$value,dateTime=$dateTime,max=${meta.max},min=${meta.min},meta=${meta.formattedValue}');
                                           if (_state.chartDuration ==

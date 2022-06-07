@@ -60,10 +60,13 @@ class ChartCubit extends Cubit<ChartPageState> {
           formatDate(pair.left, titleDayFormatyyyymmddDD),
           formatDate(pair.right, titleDayFormatyyyymmddDD)
         ]);
+        // 1, 2, 3, 4, 5, 6, 7
+        print(
+            '[Tony] left=(${pair.left.toIso8601String()},${pair.left.millisecondsSinceEpoch}) right=(${pair.right.toIso8601String()},${pair.right.millisecondsSinceEpoch})');
         records = _getDurationChartModels(pair.left, pair.right);
-        minX = pair.left.millisecondsSinceEpoch;
-        maxX = pair.right.millisecondsSinceEpoch;
-        intervalsX = const Duration(days: 1).inMilliseconds;
+        minX = dayInYear(pair.left);
+        maxX = dayInYear(pair.right);
+        intervalsX = 1;
         break;
       case ChartDuration.month:
         dateTitle = formatDate(dateTime, titleMonthFormatyyyymm);
@@ -185,7 +188,7 @@ class ChartCubit extends Cubit<ChartPageState> {
     List<ChartModel> results = [];
     do {
       var dayChartModel = _getDayChartModel(startDay);
-      print('[Tony] ${dayChartModel?.valueX}');
+      print('[Tony] ${results.length}. ${dayChartModel?.valueX}');
       if (dayChartModel != null) {
         results.add(dayChartModel);
       }
@@ -196,6 +199,7 @@ class ChartCubit extends Cubit<ChartPageState> {
   }
 
   ChartModel? _getDayChartModel(DateTime day) {
+    print('[Tony] _getDayChartModel ${day.toIso8601String()}');
     List<RecordModel> dayRecords = repository.queryDayRecords(day);
     int dayRecordsLen = dayRecords.length;
     double dayAvgTemp;
@@ -205,14 +209,14 @@ class ChartCubit extends Cubit<ChartPageState> {
               .reduce((value, element) => value + element) /
           dayRecordsLen;
     } catch (e) {
-      return null;
+      return ChartModel(valueY: 0, valueX: dayInYear(day), memo: '');
     }
 
     String memo = repository.queryMemo(day)?.memo ?? "";
 
     return ChartModel(
         valueY: isCelsius ? dayAvgTemp : dayAvgTemp.toFahrenheit(),
-        valueX: day.millisecondsSinceEpoch,
+        valueX: dayInYear(day),
         memo: memo);
   }
 }
