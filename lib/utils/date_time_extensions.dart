@@ -1,14 +1,20 @@
 import 'package:body_temperature_note/utils/pair.dart';
 import 'package:flutter/material.dart';
 
-DateTime fromDayInYear(int dayInYear) {
+DateTime fromDayInYearSince1970(int dayInYearSince1970) {
+  // TODO 將從1970年的天數轉回日期
+  // 需要得知潤年
   var now = DateTime.now();
   return DateTime.fromMillisecondsSinceEpoch(
       DateTime(now.year).millisecondsSinceEpoch +
-          dayInYear * const Duration(days: 1).inMilliseconds);
+          dayInYearSince1970 * const Duration(days: 1).inMilliseconds);
 }
 
 extension DateTimeX on DateTime {
+  int dayInYearSince1970() {
+    return difference(DateTime(1970, 1, 1)).inDays;
+  }
+
   Pair<DateTime> getWeekStartAndEndDay(int startWeekday) {
     if (weekday == startWeekday) {
       // 今天就是起始天
