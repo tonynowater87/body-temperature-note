@@ -15,6 +15,7 @@ extension AppThemeExtension on AppTheme {
             dividerColor: Colors.black45,
             iconTheme: IconThemeData(color: Colors.black),
             colorScheme: themeData.colorScheme.copyWith(
+                onSurface: Colors.green.shade50,
                 secondary: Colors.greenAccent.shade700,
                 background: Colors.green.shade200),
             cardColor: Colors.green.shade100,
@@ -44,6 +45,7 @@ extension AppThemeExtension on AppTheme {
             iconTheme: IconThemeData(color: Colors.white),
             cardColor: Colors.teal.shade900,
             colorScheme: themeData.colorScheme.copyWith(
+                onSurface: Colors.green.shade900,
                 secondary: Colors.tealAccent.shade100,
                 background: Colors.teal.shade700),
             dialogTheme: DialogTheme(backgroundColor: Colors.teal.shade700),

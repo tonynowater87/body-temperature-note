@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:body_temperature_note/constants.dart';
 import 'package:body_temperature_note/utils/date_time_extensions.dart';
+import 'package:body_temperature_note/utils/string_extensions.dart';
 import 'package:body_temperature_note/utils/view/date_toolbar_widget.dart';
 import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
 import 'package:date_format/date_format.dart';
@@ -64,10 +65,10 @@ class _ChartPageState extends State<ChartPage> {
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.only(left: 12, right: 24),
                         child: LineChart(LineChartData(
-                            minY: _state.minY - 5,
-                            maxY: _state.maxY + 5,
+                            minY: _state.minY,
+                            maxY: _state.maxY,
                             maxX: _state.maxX,
                             minX: _state.minX,
                             lineTouchData: LineTouchData(
@@ -80,13 +81,14 @@ class _ChartPageState extends State<ChartPage> {
                                     getTooltipItems:
                                         (List<LineBarSpot> touchedBarSpots) {
                                       return touchedBarSpots.map((element) {
+                                        var temp = "%.2f".format([element.y]);
                                         var dateTime =
                                             fromDayInYear(element.x.toInt());
                                         var formatDateString = formatDate(
                                             dateTime,
                                             titleDateFormatChartTouchData);
                                         return LineTooltipItem(
-                                            "${element.y}\n$formatDateString",
+                                            "$temp\n$formatDateString",
                                             Theme.of(context)
                                                 .textTheme
                                                 .headlineSmall!);
@@ -100,6 +102,7 @@ class _ChartPageState extends State<ChartPage> {
                             borderData: FlBorderData(show: false),
                             titlesData: FlTitlesData(
                                 topTitles: AxisTitles(),
+                                rightTitles: AxisTitles(),
                                 bottomTitles: AxisTitles(
                                     sideTitles: SideTitles(
                                         showTitles: true,
@@ -114,19 +117,40 @@ class _ChartPageState extends State<ChartPage> {
                                               ChartDuration.week) {
                                             return Text(formatDate(dateTime,
                                                 titleWeekDaysAbbrFormat));
+                                          }
+                                          if (_state.chartDuration ==
+                                              ChartDuration.month) {
+                                            if (value == meta.min ||
+                                                value == meta.max) {
+                                              return const Text('');
+                                            } else {
+                                              return Text(formatDate(dateTime,
+                                                  titleDateFormatChartXAxis));
+                                            }
                                           } else {
-                                            return Text(formatDate(dateTime,
-                                                titleDateFormatChartXAxis));
+                                            // season
+                                            if (value == meta.min ||
+                                                value == meta.max) {
+                                              return const Text('');
+                                            } else {
+                                              return Text(formatDate(dateTime,
+                                                  titleDateFormatChartXAxis));
+                                            }
                                           }
                                         }))),
                             lineBarsData: [
                               LineChartBarData(
-                                  spots: _state.records
-                                      .map((e) =>
-                                          FlSpot(e.valueX.toDouble(), e.valueY))
-                                      .toList(),
-                                  gradient: LinearGradient(
-                                      colors: [Colors.green, Colors.red]))
+                                  isStrokeJoinRound: true,
+                                  isCurved: true,
+                                  isStrokeCapRound: true,
+                                  isStepLineChart: false,
+                                  // TODO
+                                  spots: _state.records.map((e) {
+                                    print(
+                                        '[Tony] x:${e.valueX.toDouble()},y:${e.valueY}');
+                                    return FlSpot(
+                                        e.valueX.toDouble(), e.valueY);
+                                  }).toList())
                             ])),
                       ),
                     ),
