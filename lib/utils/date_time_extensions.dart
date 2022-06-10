@@ -1,13 +1,37 @@
 import 'package:body_temperature_note/utils/pair.dart';
 import 'package:flutter/material.dart';
 
+/// 將從1970年的天數轉回日期
 DateTime fromDayInYearSince1970(int dayInYearSince1970) {
-  // TODO 將從1970年的天數轉回日期
-  // 需要得知潤年
-  var now = DateTime.now();
+  var thisYear = DateTime.now().year;
+  var remainDays = dayInYearSince1970;
+  var startYear = 1970;
+  Map<int, bool> leapYears = {};
+
+  for (var year = startYear; year <= thisYear - 1; year++) {
+    if (year % 400 == 0) {
+      leapYears[year] = true;
+      continue;
+    }
+    if (year % 4 == 0 && year % 100 != 0) {
+      leapYears[year] = true;
+      continue;
+    }
+
+    leapYears[year] = false;
+  }
+  for (var element in leapYears.keys) {
+    startYear++;
+    if (leapYears[element]!) {
+      remainDays -= 366;
+    } else {
+      remainDays -= 365;
+    }
+  }
+
   return DateTime.fromMillisecondsSinceEpoch(
-      DateTime(now.year).millisecondsSinceEpoch +
-          dayInYearSince1970 * const Duration(days: 1).inMilliseconds);
+      DateTime(startYear).millisecondsSinceEpoch +
+          remainDays * const Duration(days: 1).inMilliseconds);
 }
 
 extension DateTimeX on DateTime {

@@ -4,6 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('get date time from days since 1970 case 1', () {
+    var now = DateTime(2022, 6, 10, 1, 1, 1);
+    var daysSince1970 = now.dayInYearSince1970();
+    var datetimeFromDaysSince1970 = fromDayInYearSince1970(daysSince1970);
+    expect(datetimeFromDaysSince1970.year, now.year);
+    expect(datetimeFromDaysSince1970.month, now.month);
+    expect(datetimeFromDaysSince1970.day, now.day);
+  });
+
+  test('get date time from days since 1970 case 2', () {
+    var now = DateTime(2020, 12, 31, 1, 1, 1);
+    var daysSince1970 = now.dayInYearSince1970();
+    var datetimeFromDaysSince1970 = fromDayInYearSince1970(daysSince1970);
+    expect(datetimeFromDaysSince1970.year, now.year);
+    expect(datetimeFromDaysSince1970.month, now.month);
+    expect(datetimeFromDaysSince1970.day, now.day);
+  });
+
   test('start day is today', () {
     // 1 2 3 4 5 6 7
     //         e t
