@@ -42,8 +42,6 @@ class ChartCubit extends Cubit<ChartPageState> {
 
     initDateTime = dateTime;
     selectedDateTime = dateTime;
-    print(
-        '[Tony] initDate=${initDateTime.millisecondsSinceEpoch},selectedDateTime=${selectedDateTime.millisecondsSinceEpoch}');
     refreshChart(selectedDateTime, selectedChartDuration);
   }
 
@@ -60,12 +58,9 @@ class ChartCubit extends Cubit<ChartPageState> {
           formatDate(pair.left, titleDayFormatyyyymmddDD),
           formatDate(pair.right, titleDayFormatyyyymmddDD)
         ]);
-        // 1, 2, 3, 4, 5, 6, 7
-        print(
-            '[Tony] left=(${pair.left.toIso8601String()},${pair.left.millisecondsSinceEpoch}) right=(${pair.right.toIso8601String()},${pair.right.millisecondsSinceEpoch})');
         records = _getDurationChartModels(pair.left, pair.right);
-        minX = dayInYear(pair.left);
-        maxX = dayInYear(pair.right);
+        minX = pair.left.dayInYearSince1970();
+        maxX = pair.right.dayInYearSince1970();
         intervalsX = 1;
         break;
       case ChartDuration.month:
@@ -77,8 +72,8 @@ class ChartCubit extends Cubit<ChartPageState> {
             DateTime(dateTime.year, dateTime.month, daysInMonth + 1)
                 .subtract(const Duration(seconds: 1));
         records = _getDurationChartModels(monthStartDate, monthEndDate);
-        minX = dayInYear(monthStartDate);
-        maxX = dayInYear(monthEndDate);
+        minX = monthStartDate.dayInYearSince1970();
+        maxX = monthEndDate.dayInYearSince1970();
         intervalsX = 10;
         break;
       case ChartDuration.season:
@@ -92,8 +87,8 @@ class ChartCubit extends Cubit<ChartPageState> {
             pair.right
                 .add(const Duration(days: 1))
                 .subtract(const Duration(seconds: 1)));
-        minX = dayInYear(pair.left);
-        maxX = dayInYear(pair.right);
+        minX = pair.left.dayInYearSince1970();
+        maxX = pair.right.dayInYearSince1970();
         intervalsX = 21;
         break;
     }
@@ -188,7 +183,6 @@ class ChartCubit extends Cubit<ChartPageState> {
     List<ChartModel> results = [];
     do {
       var dayChartModel = _getDayChartModel(startDay);
-      print('[Tony] ${results.length}. ${dayChartModel?.valueX}');
       if (dayChartModel != null) {
         results.add(dayChartModel);
       }
@@ -199,7 +193,6 @@ class ChartCubit extends Cubit<ChartPageState> {
   }
 
   ChartModel? _getDayChartModel(DateTime day) {
-    print('[Tony] _getDayChartModel ${day.toIso8601String()}');
     List<RecordModel> dayRecords = repository.queryDayRecords(day);
     int dayRecordsLen = dayRecords.length;
     double dayAvgTemp;
@@ -216,7 +209,7 @@ class ChartCubit extends Cubit<ChartPageState> {
 
     return ChartModel(
         valueY: isCelsius ? dayAvgTemp : dayAvgTemp.toFahrenheit(),
-        valueX: dayInYear(day),
+        valueX: day.dayInYearSince1970(),
         memo: memo);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:body_temperature_note/data/model/memo_ui_model.dart';
 import 'package:body_temperature_note/data/model/record_ui_model.dart';
+import 'package:body_temperature_note/utils/date_time_extensions.dart';
 import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -59,7 +60,8 @@ void main() {
       chartCubit.updateChartDuration(ChartDuration.week);
       final state = chartCubit.state as ChartLoadedState;
       expect(state.title, "2022/05/23 Monday - 2022/05/29 Sunday");
-      expect(state.records.first.valueX, 23);
+      expect(state.records.first.valueX,
+          DateTime(2022, 5, 23).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "");
       expect(state.records.length, 7);
@@ -96,7 +98,8 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 6);
       expect(chartCubit.selectedDateTime.day, 5);
       expect(state.title, "2022/05/30 Monday - 2022/06/05 Sunday");
-      expect(state.records.first.valueX, 30);
+      expect(state.records.first.valueX,
+          DateTime(2022, 5, 30).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "");
       expect(state.records.length, 7);
@@ -112,7 +115,8 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 1);
       expect(chartCubit.selectedDateTime.day, 6);
       expect(state.title, "2023/01/02 Monday - 2023/01/08 Sunday");
-      expect(state.records.first.valueX, 2);
+      expect(state.records.first.valueX,
+          DateTime(2023, 1, 2).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "");
       expect(state.records.length, 7);
@@ -128,7 +132,8 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 5);
       expect(chartCubit.selectedDateTime.day, 22);
       expect(state.title, "2022/05/16 Monday - 2022/05/22 Sunday");
-      expect(state.records.first.valueX, 16);
+      expect(state.records.first.valueX,
+          DateTime(2022, 5, 16).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "");
       expect(state.records.length, 7);
@@ -144,7 +149,8 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 12);
       expect(chartCubit.selectedDateTime.day, 25);
       expect(state.title, "2021/12/20 Monday - 2021/12/26 Sunday");
-      expect(state.records.first.valueX, 20);
+      expect(state.records.first.valueX,
+          DateTime(2021, 12, 20).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "");
       expect(state.records.length, 7);
@@ -168,8 +174,10 @@ void main() {
       final state = chartCubit.state as ChartLoadedState;
 
       expect(state.title, "2022/05");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 31);
+      expect(state.records.first.valueX,
+          DateTime(2022, 5, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2022, 5, 31).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 31);
@@ -207,8 +215,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 6);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2022/06");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 30);
+      expect(state.records.first.valueX,
+          DateTime(2022, 6, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2022, 6, 30).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 30);
@@ -224,8 +234,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 2);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2022/02");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 28);
+      expect(state.records.first.valueX,
+          DateTime(2022, 2, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2022, 2, 28).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 28);
@@ -241,8 +253,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 1);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2023/01");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 31);
+      expect(state.records.first.valueX,
+          DateTime(2023, 1, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2023, 1, 31).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 31);
@@ -258,8 +272,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 4);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2022/04");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 30);
+      expect(state.records.first.valueX,
+          DateTime(2022, 4, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2022, 4, 30).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 30);
@@ -275,8 +291,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 12);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2021/12");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 31);
+      expect(state.records.first.valueX,
+          DateTime(2021, 12, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2021, 12, 31).dayInYearSince1970());
       expect(state.records.first.valueY, 37.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 31);
@@ -294,13 +312,16 @@ void main() {
               isCelsius: true, isDisplayBaseline: false, baseline: 0));
     });
     test('change to season', () {
-      chartCubit.init(DateTime(2022, 5, 29));
+      var dateTime = DateTime(2022, 5, 29);
+      chartCubit.init(dateTime);
       chartCubit.updateChartDuration(ChartDuration.season);
       final state = chartCubit.state as ChartLoadedState;
 
       expect(state.title, "2022/04 - 2022/06");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 30);
+      expect(state.records.first.valueX,
+          DateTime(2022, 4, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2022, 6, 30).dayInYearSince1970());
       expect(state.records.first.valueY, 36.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 91);
@@ -338,8 +359,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 8);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2022/07 - 2022/09");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 30);
+      expect(state.records.first.valueX,
+          DateTime(2022, 7, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2022, 9, 30).dayInYearSince1970());
       expect(state.records.first.valueY, 36.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 92);
@@ -355,8 +378,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 1);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2022/12 - 2023/02");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 28);
+      expect(state.records.first.valueX,
+          DateTime(2022, 12, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2023, 2, 28).dayInYearSince1970());
       expect(state.records.first.valueY, 36.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 90);
@@ -372,8 +397,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 2);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2023/01 - 2023/03");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 31);
+      expect(state.records.first.valueX,
+          DateTime(2023, 1, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2023, 3, 31).dayInYearSince1970());
       expect(state.records.first.valueY, 36.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 90);
@@ -389,8 +416,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 3);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2023/02 - 2023/04");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 30);
+      expect(state.records.first.valueX,
+          DateTime(2023, 2, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2023, 4, 30).dayInYearSince1970());
       expect(state.records.first.valueY, 36.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 89);
@@ -406,8 +435,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 1);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2021/12 - 2022/02");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 28);
+      expect(state.records.first.valueX,
+          DateTime(2021, 12, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2022, 2, 28).dayInYearSince1970());
       expect(state.records.first.valueY, 36.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 90);
@@ -423,8 +454,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 12);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2021/11 - 2022/01");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 31);
+      expect(state.records.first.valueX,
+          DateTime(2021, 11, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2022, 1, 31).dayInYearSince1970());
       expect(state.records.first.valueY, 36.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 92);
@@ -440,8 +473,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 11);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2021/10 - 2021/12");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 31);
+      expect(state.records.first.valueX,
+          DateTime(2021, 10, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2021, 12, 31).dayInYearSince1970());
       expect(state.records.first.valueY, 36.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 92);
@@ -457,8 +492,10 @@ void main() {
       expect(chartCubit.selectedDateTime.month, 10);
       expect(chartCubit.selectedDateTime.day, 1);
       expect(state.title, "2021/09 - 2021/11");
-      expect(state.records.first.valueX, 1);
-      expect(state.records.last.valueX, 30);
+      expect(state.records.first.valueX,
+          DateTime(2021, 9, 1).dayInYearSince1970());
+      expect(state.records.last.valueX,
+          DateTime(2021, 11, 30).dayInYearSince1970());
       expect(state.records.first.valueY, 36.0);
       expect(state.records.first.memo, "UnitTest");
       expect(state.records.length, 91);

@@ -82,8 +82,8 @@ class _ChartPageState extends State<ChartPage> {
                                         (List<LineBarSpot> touchedBarSpots) {
                                       return touchedBarSpots.map((element) {
                                         var temp = "%.2f".format([element.y]);
-                                        var dateTime =
-                                            fromDayInYear(element.x.toInt());
+                                        var dateTime = fromDayInYearSince1970(
+                                            element.x.toInt());
                                         var formatDateString = formatDate(
                                             dateTime,
                                             titleDateFormatChartTouchData);
@@ -109,10 +109,8 @@ class _ChartPageState extends State<ChartPage> {
                                         reservedSize: 16,
                                         interval: _state.intervalsX,
                                         getTitlesWidget: (value, meta) {
-                                          var dateTime =
-                                              fromDayInYear(value.toInt());
-                                          print(
-                                              '[Tony] value=$value,dateTime=$dateTime,max=${meta.max},min=${meta.min},meta=${meta.formattedValue}');
+                                          var dateTime = fromDayInYearSince1970(
+                                              value.toInt());
                                           if (_state.chartDuration ==
                                               ChartDuration.week) {
                                             return Text(formatDate(dateTime,
@@ -146,8 +144,6 @@ class _ChartPageState extends State<ChartPage> {
                                   isStepLineChart: false,
                                   // TODO
                                   spots: _state.records.map((e) {
-                                    print(
-                                        '[Tony] x:${e.valueX.toDouble()},y:${e.valueY}');
                                     return FlSpot(
                                         e.valueX.toDouble(), e.valueY);
                                   }).toList())
