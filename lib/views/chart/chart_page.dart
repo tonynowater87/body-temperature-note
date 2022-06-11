@@ -71,6 +71,20 @@ class _ChartPageState extends State<ChartPage> {
                             maxY: _state.maxY,
                             maxX: _state.maxX,
                             minX: _state.minX,
+                            gridData:
+                                FlGridData(getDrawingHorizontalLine: (value) {
+                              return FlLine(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  strokeWidth: 0.25,
+                                  dashArray: [15, 5]);
+                            }, getDrawingVerticalLine: (value) {
+                              return FlLine(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  strokeWidth: 0.25,
+                                  dashArray: [15, 5]);
+                            }),
                             lineTouchData: LineTouchData(
                                 touchTooltipData: LineTouchTooltipData(
                                     maxContentWidth:
@@ -139,7 +153,6 @@ class _ChartPageState extends State<ChartPage> {
                             lineBarsData: [
                               LineChartBarData(
                                   isStrokeJoinRound: true,
-                                  isCurved: true,
                                   isStrokeCapRound: true,
                                   isStepLineChart: false,
                                   // TODO
