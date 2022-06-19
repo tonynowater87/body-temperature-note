@@ -18,6 +18,7 @@ class ChartLoadedState extends ChartPageState {
   late double minX;
   late double maxX;
   late double intervalsX;
+  late bool isCelsius;
 
   @override
   List<Object> get props => [
@@ -29,8 +30,14 @@ class ChartLoadedState extends ChartPageState {
         maxX,
         minX,
         maxY,
-        minY
+        minY,
+        isCelsius
       ];
+
+  @override
+  String toString() {
+    return records.toString();
+  }
 
   ChartLoadedState({
     required this.title,
@@ -43,12 +50,8 @@ class ChartLoadedState extends ChartPageState {
     required this.minX,
     required this.maxX,
     required this.intervalsX,
+    required this.isCelsius,
   });
-
-  @override
-  String toString() {
-    return records.toString();
-  }
 }
 
 enum ChartDuration { week, month, season }

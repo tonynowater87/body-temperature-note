@@ -108,7 +108,8 @@ class ChartCubit extends Cubit<ChartPageState> {
             .fold(30, (value, element) => value < element ? value : element),
         chartDuration: chartDuration,
         records: records,
-        memos: memos);
+        memos: memos,
+        isCelsius: isCelsius);
     emit(newState);
   }
 

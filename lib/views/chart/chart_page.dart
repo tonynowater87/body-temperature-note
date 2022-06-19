@@ -43,7 +43,7 @@ class _ChartPageState extends State<ChartPage> {
           child: BlocBuilder<ChartCubit, ChartPageState>(
             builder: (context, _state) {
               if (_state is ChartLoadingState) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else {
                 ChartLoadedState loadedState = _state as ChartLoadedState;
                 return Column(
@@ -99,7 +99,14 @@ class _ChartPageState extends State<ChartPage> {
                                             .memos[element.x.toInt() -
                                                 loadedState.minX.toInt()]
                                             .memo;
-                                        var temp = "%.2f%s".format([element.y]);
+                                        var temp;
+                                        if (loadedState.isCelsius) {
+                                          temp = "%.2f%s"
+                                              .format([element.y, "°C"]);
+                                        } else {
+                                          temp = "%.2f%s"
+                                              .format([element.y, "°F"]);
+                                        }
                                         var dateTime = fromDayInYearSince1970(
                                             element.x.toInt());
                                         var formatDateString = formatDate(
