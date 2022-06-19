@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:body_temperature_note/constants.dart';
+import 'package:body_temperature_note/data/model/memo_ui_model.dart';
 import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
 import 'package:body_temperature_note/data/repository/repository.dart';
@@ -48,6 +49,7 @@ class ChartCubit extends Cubit<ChartPageState> {
   void refreshChart(DateTime dateTime, ChartDuration chartDuration) {
     String dateTitle;
     List<ChartModel> records;
+    List<MemoModel> memos;
     int maxX;
     int minX;
     int intervalsX;
@@ -59,6 +61,7 @@ class ChartCubit extends Cubit<ChartPageState> {
           formatDate(pair.right, titleDayFormatyyyymmddDD)
         ]);
         records = _getDurationChartModels(pair.left, pair.right);
+        memos = _getDurationMemos(pair.left, pair.right);
         minX = pair.left.dayInYearSince1970();
         maxX = pair.right.dayInYearSince1970();
         intervalsX = 1;
@@ -72,6 +75,7 @@ class ChartCubit extends Cubit<ChartPageState> {
             DateTime(dateTime.year, dateTime.month, daysInMonth + 1)
                 .subtract(const Duration(seconds: 1));
         records = _getDurationChartModels(monthStartDate, monthEndDate);
+        memos = _getDurationMemos(monthStartDate, monthEndDate);
         minX = monthStartDate.dayInYearSince1970();
         maxX = monthEndDate.dayInYearSince1970();
         intervalsX = 10;
@@ -82,11 +86,8 @@ class ChartCubit extends Cubit<ChartPageState> {
           formatDate(pair.left, titleMonthFormatyyyymm),
           formatDate(pair.right, titleMonthFormatyyyymm)
         ]);
-        records = _getDurationChartModels(
-            pair.left,
-            pair.right
-                .add(const Duration(days: 1))
-                .subtract(const Duration(seconds: 1)));
+        records = _getDurationChartModels(pair.left, pair.right);
+        memos = _getDurationMemos(pair.left, pair.right);
         minX = pair.left.dayInYearSince1970();
         maxX = pair.right.dayInYearSince1970();
         intervalsX = 21;
@@ -106,7 +107,8 @@ class ChartCubit extends Cubit<ChartPageState> {
             .map((e) => isCelsius ? e.valueY : e.valueY.toFahrenheit())
             .fold(30, (value, element) => value < element ? value : element),
         chartDuration: chartDuration,
-        records: records);
+        records: records,
+        memos: memos);
     emit(newState);
   }
 
@@ -185,6 +187,23 @@ class ChartCubit extends Cubit<ChartPageState> {
       var dayChartModel = _getDayChartModel(startDay);
       if (dayChartModel != null) {
         results.add(dayChartModel);
+      }
+      startDay = startDay.add(const Duration(days: 1));
+    } while (!startDay.isAfter(endDay));
+
+    return results;
+  }
+
+  List<MemoModel> _getDurationMemos(DateTime startDay, DateTime endDay) {
+    List<MemoModel> results = [];
+
+    do {
+      var dayMemoModel = repository
+          .queryMemo(DateTime(startDay.year, startDay.month, startDay.day));
+      if (dayMemoModel == null) {
+        results.add(MemoModel(memo: "", dateTime: startDay));
+      } else {
+        results.add(dayMemoModel);
       }
       startDay = startDay.add(const Duration(days: 1));
     } while (!startDay.isAfter(endDay));

@@ -95,14 +95,18 @@ class _ChartPageState extends State<ChartPage> {
                                     getTooltipItems:
                                         (List<LineBarSpot> touchedBarSpots) {
                                       return touchedBarSpots.map((element) {
-                                        var temp = "%.2f".format([element.y]);
+                                        var memo = loadedState
+                                            .memos[element.x.toInt() -
+                                                loadedState.minX.toInt()]
+                                            .memo;
+                                        var temp = "%.2f%s".format([element.y]);
                                         var dateTime = fromDayInYearSince1970(
                                             element.x.toInt());
                                         var formatDateString = formatDate(
                                             dateTime,
                                             titleDateFormatChartTouchData);
                                         return LineTooltipItem(
-                                            "$temp\n$formatDateString",
+                                            "$temp\n$formatDateString\n$memo",
                                             Theme.of(context)
                                                 .textTheme
                                                 .headlineSmall!);
