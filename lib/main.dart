@@ -13,11 +13,6 @@ import 'package:body_temperature_note/theme/cubit/theme_cubit.dart';
 import 'package:body_temperature_note/theme/cubit/theme_state.dart';
 import 'package:body_temperature_note/theme/theme_data.dart';
 import 'package:body_temperature_note/utils/app_bloc_observer.dart';
-import 'package:body_temperature_note/views/chart/cubit/chart_cubit.dart';
-import 'package:body_temperature_note/views/home/cubit/home_cubit.dart';
-import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
-import 'package:body_temperature_note/views/memo/cubit/memo_cubit.dart';
-import 'package:body_temperature_note/views/settings/cubit/settings_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -100,30 +95,12 @@ class MyApp extends StatelessWidget {
                 hiveRecordProvider: hiveRecordProvider,
                 hiveMemoProvider: hiveMemoProvider,
                 firebaseCloudStoreRecordProvider:
-                    firebaseCloudStoreRecordProvider))
+                    firebaseCloudStoreRecordProvider)),
+        RepositoryProvider<SettingsProvider>(
+            create: (BuildContext context) => settingsProvider)
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<ThemeCubit>(
-              create: (BuildContext context) => ThemeCubit(settingsProvider)),
-          BlocProvider<HomeCubit>(
-              create: (BuildContext context) => HomeCubit(
-                  repository: RepositoryProvider.of(context),
-                  settingsProvider: settingsProvider)),
-          BlocProvider<InputCubit>(
-              create: (BuildContext context) => InputCubit(
-                  repository: RepositoryProvider.of(context),
-                  settingsProvider: settingsProvider)),
-          BlocProvider<SettingsCubit>(
-              create: (BuildContext context) =>
-                  SettingsCubit(settingsProvider)),
-          BlocProvider<MemoCubit>(
-              create: (context) =>
-                  MemoCubit(recordRepository: RepositoryProvider.of(context))),
-          BlocProvider<ChartCubit>(
-              create: (context) =>
-                  ChartCubit(RepositoryProvider.of(context), settingsProvider))
-        ],
+      child: BlocProvider<ThemeCubit>(
+        create: (context) => ThemeCubit(settingsProvider),
         child: BlocBuilder<ThemeCubit, AppThemeDataState>(
           builder: (context, state) {
             return MaterialApp.router(

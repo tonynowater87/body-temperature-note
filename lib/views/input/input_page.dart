@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:body_temperature_note/constants.dart';
+import 'package:body_temperature_note/data/provider/setting_provider.dart';
+import 'package:body_temperature_note/data/repository/repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
 import 'package:body_temperature_note/views/input/view/temperature_picker.dart';
@@ -25,33 +27,34 @@ class _InputPageState extends State<InputPage> {
   _InputPageState();
 
   @override
-  void initState() {
-    super.initState();
-    _inputCubit = context.read<InputCubit>();
-    _inputCubit.initState(widget.dateString);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    logger.d('[Tony] InputPage arg: ${widget.dateString}');
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: Theme.of(context).iconTheme,
-        title:
-            Text('記錄目前的體溫', style: Theme.of(context).textTheme.headlineMedium),
-      ),
-      body: BlocBuilder<InputCubit, InputState>(
-        builder: (context, state) {
-          if (state is InputInitial) {
-            return const CircularProgressIndicator();
-          } else if (state is InputLoading) {
-            return const CircularProgressIndicator();
-          } else if (state is InputLoaded) {
-            return InputContainer(widget.dateString);
-          } else {
-            throw Error();
-          }
-        },
+    return BlocProvider(
+      create: (context) {
+        final cubit = InputCubit(
+            repository: context.read<Repository>(),
+            settingsProvider: context.read<SettingsProvider>());
+        cubit.initState(widget.dateString);
+        return cubit;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          iconTheme: Theme.of(context).iconTheme,
+          title: Text('記錄目前的體溫',
+              style: Theme.of(context).textTheme.headlineMedium),
+        ),
+        body: BlocBuilder<InputCubit, InputState>(
+          builder: (context, state) {
+            if (state is InputInitial) {
+              return const CircularProgressIndicator();
+            } else if (state is InputLoading) {
+              return const CircularProgressIndicator();
+            } else if (state is InputLoaded) {
+              return InputContainer(widget.dateString);
+            } else {
+              throw Error();
+            }
+          },
+        ),
       ),
     );
   }

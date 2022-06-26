@@ -1,3 +1,4 @@
+import 'package:body_temperature_note/data/repository/repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/memo/cubit/memo_cubit.dart';
 import 'package:body_temperature_note/views/memo/cubit/memo_state.dart';
@@ -24,10 +25,6 @@ class _MemoPageState extends State<MemoPage> {
     super.initState();
     myFocusNode = FocusNode();
     myFocusNode.requestFocus();
-    context.read<MemoCubit>().load(widget.dateString);
-    textEditingController.addListener(() {
-      context.read<MemoCubit>().updateText(textEditingController.text);
-    });
   }
 
   @override
@@ -39,28 +36,38 @@ class _MemoPageState extends State<MemoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MemoCubit, MemoState>(
-      builder: (buildContext, state) {
-        if (state is MemoLoadedState) {
-          return AlertDialog(
-            title: Text(state.formattedDateString),
-            content: TextField(
-                focusNode: myFocusNode,
-                controller: textEditingController..text = state.memo.memo),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Save'),
-                onPressed: () async {
-                  await context.read<MemoCubit>().save();
-                  Navigator.of(context).pop(true);
-                },
-              ),
-            ],
-          );
-        } else {
-          return const AlertDialog(content: CircularProgressIndicator());
-        }
+    return BlocProvider(
+      create: (providerContext) {
+        final cubit = MemoCubit(recordRepository: context.read<Repository>());
+        textEditingController.addListener(() {
+          cubit.updateText(textEditingController.text);
+        });
+        cubit.load(widget.dateString);
+        return cubit;
       },
+      child: BlocBuilder<MemoCubit, MemoState>(
+        builder: (buildContext, state) {
+          if (state is MemoLoadedState) {
+            return AlertDialog(
+              title: Text(state.formattedDateString),
+              content: TextField(
+                  focusNode: myFocusNode,
+                  controller: textEditingController..text = state.memo.memo),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Save'),
+                  onPressed: () async {
+                    await buildContext.read<MemoCubit>().save();
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            );
+          } else {
+            return const AlertDialog(content: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }
