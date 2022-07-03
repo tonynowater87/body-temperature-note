@@ -105,7 +105,7 @@ class MyApp extends StatelessWidget {
           builder: (context, state) {
             return MaterialApp.router(
               theme: AppTheme.light.getThemeData(),
-              darkTheme: AppTheme.dark.getThemeData(),
+              darkTheme: AppTheme.nord.getThemeData(),
               themeMode: state.appThemeMode,
               locale: state.appLocale,
               localizationsDelegates: const [

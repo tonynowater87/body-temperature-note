@@ -48,7 +48,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   body: SettingsList(
                       lightTheme: AppTheme.light.getSettingsThemeData(),
-                      darkTheme: AppTheme.dark.getSettingsThemeData(),
+                      darkTheme: AppTheme.nord.getSettingsThemeData(),
                       sections: [
                         SettingsSection(title: Text('Common'), tiles: [
                           SettingsTile.switchTile(

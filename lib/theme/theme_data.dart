@@ -1,7 +1,8 @@
+import 'package:body_temperature_note/theme/nord_color.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
-enum AppTheme { light, dark }
+enum AppTheme { light, dark, nord }
 
 extension AppThemeExtension on AppTheme {
   ThemeData getThemeData() {
@@ -13,7 +14,8 @@ extension AppThemeExtension on AppTheme {
             appBarTheme: AppBarTheme(backgroundColor: Colors.green.shade100),
             primaryColor: Colors.green,
             dividerColor: Colors.black45,
-            iconTheme: IconThemeData(color: Colors.black),
+            errorColor: nord11,
+            iconTheme: const IconThemeData(color: Colors.black),
             colorScheme: themeData.colorScheme.copyWith(
                 onSurface: Colors.green.shade50,
                 secondary: Colors.greenAccent.shade700,
@@ -65,6 +67,34 @@ extension AppThemeExtension on AppTheme {
                     color: Colors.white, fontSize: 16, letterSpacing: 0.5),
                 bodySmall: const TextStyle().copyWith(
                     color: Colors.white, fontSize: 14, letterSpacing: 0.25)));
+      case AppTheme.nord:
+        return themeData.copyWith(
+            brightness: Brightness.dark,
+            appBarTheme: const AppBarTheme(backgroundColor: nord0),
+            primaryColor: nord10,
+            dividerColor: nord5,
+            errorColor: nord11,
+            iconTheme: const IconThemeData(color: nord5),
+            cardColor: nord3,
+            colorScheme: themeData.colorScheme.copyWith(
+                onSurface: nord8, secondary: nord8, background: nord1),
+            dialogTheme: const DialogTheme(backgroundColor: nord0),
+            textTheme: TextTheme(
+                headlineMedium:
+                    const TextStyle().copyWith(color: nord6, fontSize: 24),
+                headlineSmall:
+                    const TextStyle().copyWith(color: nord6, fontSize: 20),
+                headlineLarge:
+                    const TextStyle().copyWith(color: nord6, fontSize: 34),
+                bodyLarge: const TextStyle().copyWith(
+                    color: nord6,
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    letterSpacing: 1.25),
+                bodyMedium: const TextStyle()
+                    .copyWith(color: nord6, fontSize: 16, letterSpacing: 0.5),
+                bodySmall: const TextStyle().copyWith(
+                    color: nord6, fontSize: 14, letterSpacing: 0.25)));
     }
   }
 
@@ -89,6 +119,15 @@ extension AppThemeExtension on AppTheme {
             tileDescriptionTextColor: Colors.white,
             settingsListBackground: Colors.teal.shade700,
             settingsSectionBackground: Colors.teal.shade600);
+      case AppTheme.nord:
+        return settingsThemeData.copyWith(
+            dividerColor: nord4,
+            settingsTileTextColor: nord6,
+            titleTextColor: nord6,
+            trailingTextColor: nord7,
+            tileDescriptionTextColor: nord7,
+            settingsListBackground: nord0,
+            settingsSectionBackground: nord1);
     }
   }
 }
