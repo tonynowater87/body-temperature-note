@@ -74,6 +74,14 @@ extension AppThemeExtension on AppTheme {
             primaryColor: nord10,
             dividerColor: nord5,
             errorColor: nord11,
+            chipTheme: ChipThemeData(
+                backgroundColor: nord0,
+                labelStyle: const TextStyle()
+                    .copyWith(color: nord6, fontSize: 12, letterSpacing: 0.25),
+                secondaryLabelStyle: const TextStyle().copyWith(
+                    color: nord6, fontSize: 16, fontWeight: FontWeight.w900),
+                secondarySelectedColor: nord0,
+                disabledColor: nord0),
             iconTheme: const IconThemeData(color: nord5),
             cardColor: nord3,
             colorScheme: themeData.colorScheme.copyWith(

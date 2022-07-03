@@ -62,8 +62,9 @@ class _InputPageState extends State<InputPage> {
 
 class InputContainer extends StatelessWidget {
   final String _dateString;
+  final _logger = getIt<Logger>();
 
-  const InputContainer(this._dateString, {Key? key}) : super(key: key);
+  InputContainer(this._dateString, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -91,11 +92,40 @@ class InputContainer extends StatelessWidget {
                       )
                     ]),
               ),
-              const Expanded(
-                child: Center(
-                  child: TemperaturePicker(),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [
+                    TemperaturePicker(),
+                  ],
                 ),
               ),
+              Wrap(
+                direction: Axis.horizontal,
+                children: [
+                  ChoiceChip(
+                      label: Text('修改溫度'),
+                      selected: true,
+                      onSelected: (selected) {
+                        _logger.d("onSelected 1 ${selected}");
+                      }),
+                  SizedBox(width: 10),
+                  ChoiceChip(
+                      label: Text('修改註記'),
+                      selected: false,
+                      onSelected: (selected) {
+                        _logger.d("onSelected 2 ${selected}");
+                      }),
+                  SizedBox(width: 10),
+                  ChoiceChip(
+                      label: Text('修改日期'),
+                      selected: false,
+                      onSelected: (selected) {
+                        _logger.d("onSelected 3 ${selected}");
+                      }),
+                ],
+              ),
+              SizedBox(height: 20),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
