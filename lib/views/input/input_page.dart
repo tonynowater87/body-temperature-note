@@ -48,10 +48,8 @@ class _InputPageState extends State<InputPage> {
               return const CircularProgressIndicator();
             } else if (state is InputLoading) {
               return const CircularProgressIndicator();
-            } else if (state is InputLoaded) {
-              return InputContainer(widget.dateString);
             } else {
-              throw Error();
+              return InputContainer(widget.dateString);
             }
           },
         ),
@@ -93,34 +91,55 @@ class InputContainer extends StatelessWidget {
                     ]),
               ),
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    TemperaturePicker(),
-                  ],
-                ),
+                child: Builder(builder: (context) {
+                  if (state is InputLoaded) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [TemperaturePicker()],
+                    );
+                  } else if (state is InputMemoLoaded) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [Text("MEMO")],
+                    );
+                  } else {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [Text("DATETIME")],
+                    );
+                  }
+                }),
               ),
               Wrap(
                 direction: Axis.horizontal,
                 children: [
                   ChoiceChip(
                       label: Text('修改溫度'),
-                      selected: true,
+                      selected: state is InputLoaded,
                       onSelected: (selected) {
+                        if (selected) {
+                          context.read<InputCubit>().setTemperature();
+                        }
                         _logger.d("onSelected 1 ${selected}");
                       }),
                   SizedBox(width: 10),
                   ChoiceChip(
                       label: Text('修改註記'),
-                      selected: false,
+                      selected: state is InputMemoLoaded,
                       onSelected: (selected) {
+                        if (selected) {
+                          context.read<InputCubit>().setMemo();
+                        }
                         _logger.d("onSelected 2 ${selected}");
                       }),
                   SizedBox(width: 10),
                   ChoiceChip(
                       label: Text('修改日期'),
-                      selected: false,
+                      selected: state is InputDateTimeSetting,
                       onSelected: (selected) {
+                        if (selected) {
+                          context.read<InputCubit>().setDateTime();
+                        }
                         _logger.d("onSelected 3 ${selected}");
                       }),
                 ],

@@ -14,6 +14,24 @@ class InputLoading extends InputState {
   List<Object?> get props => [];
 }
 
+class InputMemoLoaded extends InputState {
+  final MemoModel memo;
+
+  const InputMemoLoaded(this.memo);
+
+  @override
+  List<Object?> get props => [memo];
+}
+
+class InputDateTimeSetting extends InputState {
+  final DateTime dateTime;
+
+  InputDateTimeSetting(this.dateTime);
+
+  @override
+  List<Object?> get props => [dateTime];
+}
+
 class InputLoaded extends InputState {
   final RecordModel record;
   final bool isCelsius;

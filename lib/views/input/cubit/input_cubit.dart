@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:body_temperature_note/data/model/memo_ui_model.dart';
 import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
 import 'package:body_temperature_note/data/repository/repository.dart';
@@ -15,101 +16,116 @@ class InputCubit extends Cubit<InputState> {
 
   final Repository repository;
   final SettingsProvider settingsProvider;
-  late RecordModel currentRecord;
+  late RecordModel modifiedRecord;
+  late DateTime modifiedDateTime;
   bool isCelsius = false;
 
   InputCubit({required this.repository, required this.settingsProvider})
       : super(InputInitial());
 
   void initState(String dateString) {
-    final dateTime = DateTime.parse(dateString);
+    modifiedDateTime = DateTime.parse(dateString);
     isCelsius = settingsProvider.getIsCelsius();
     emit(InputLoading());
-    final record = repository.queryRecordByDate(dateTime);
+    final record = repository.queryRecordByDate(modifiedDateTime);
 
     if (record != null) {
       if (isCelsius) {
-        currentRecord = record;
+        modifiedRecord = record;
       } else {
-        currentRecord = record..temperature = record.temperature.toFahrenheit();
+        modifiedRecord = record
+          ..temperature = record.temperature.toFahrenheit();
       }
     } else {
       if (isCelsius) {
-        currentRecord =
-            RecordModel(temperature: defaultTemperature, dateTime: dateTime);
+        modifiedRecord = RecordModel(
+            temperature: defaultTemperature, dateTime: modifiedDateTime);
       } else {
-        currentRecord = RecordModel(
-            temperature: defaultTemperature.toFahrenheit(), dateTime: dateTime);
+        modifiedRecord = RecordModel(
+            temperature: defaultTemperature.toFahrenheit(),
+            dateTime: modifiedDateTime);
       }
     }
-    emit(InputLoaded(currentRecord, isCelsius));
+    emit(InputLoaded(modifiedRecord, isCelsius));
+  }
+
+  void setTemperature() {
+    initState(modifiedDateTime.toIso8601String());
+  }
+
+  void setMemo() {
+    emit(InputMemoLoaded(MemoModel(memo: "XD", dateTime: modifiedDateTime)));
+  }
+
+  void setDateTime() {
+    emit(InputDateTimeSetting(modifiedDateTime));
   }
 
   void updateTensDigit(int tensDigit) {
-    final temperatureString = "%.2f".format([currentRecord.temperature]);
+    final temperatureString = "%.2f".format([modifiedRecord.temperature]);
     var updateToMaximum = tensDigit == 45.0 || tensDigit == 113.0;
 
     if (temperatureString.split('.')[0].length >= 3) {
-      currentRecord.temperature = double.parse("%d.%s".format([
+      modifiedRecord.temperature = double.parse("%d.%s".format([
         tensDigit,
         updateToMaximum ? "00" : temperatureString.substring(4, 6)
       ]));
     } else {
-      currentRecord.temperature = double.parse("%d.%s".format([
+      modifiedRecord.temperature = double.parse("%d.%s".format([
         tensDigit,
         updateToMaximum ? "00" : temperatureString.substring(3, 5)
       ]));
     }
 
-    emit(InputLoaded(currentRecord, isCelsius));
+    emit(InputLoaded(modifiedRecord, isCelsius));
   }
 
   void updateFloatOneDigit(int floatOneDigit) {
-    final temperatureString = "%.2f".format([currentRecord.temperature]);
+    final temperatureString = "%.2f".format([modifiedRecord.temperature]);
     if (temperatureString.split('.')[0].length >= 3) {
-      currentRecord.temperature = double.parse("%s.%d%s".format([
+      modifiedRecord.temperature = double.parse("%s.%d%s".format([
         temperatureString.substring(0, 3),
         floatOneDigit,
         temperatureString.substring(5, 6)
       ]));
     } else {
-      currentRecord.temperature = double.parse("%s.%d%s".format([
+      modifiedRecord.temperature = double.parse("%s.%d%s".format([
         temperatureString.substring(0, 2),
         floatOneDigit,
         temperatureString.substring(4, 5)
       ]));
     }
-    emit(InputLoaded(currentRecord, isCelsius));
+    emit(InputLoaded(modifiedRecord, isCelsius));
   }
 
   void updateFloatTwoDigit(int floatTwoDigit) {
-    final temperatureString = "%.2f".format([currentRecord.temperature]);
+    final temperatureString = "%.2f".format([modifiedRecord.temperature]);
     if (temperatureString.split('.')[0].length >= 3) {
-      currentRecord.temperature = double.parse("%s.%s%d".format([
+      modifiedRecord.temperature = double.parse("%s.%s%d".format([
         temperatureString.substring(0, 3),
         temperatureString.substring(4, 5),
         floatTwoDigit,
       ]));
     } else {
-      currentRecord.temperature = double.parse("%s.%s%d".format([
+      modifiedRecord.temperature = double.parse("%s.%s%d".format([
         temperatureString.substring(0, 2),
         temperatureString.substring(3, 4),
         floatTwoDigit,
       ]));
     }
-    emit(InputLoaded(currentRecord, isCelsius));
+    emit(InputLoaded(modifiedRecord, isCelsius));
   }
 
   void saveRecord() async {
     if (isCelsius) {
-      await repository.addOrUpdateRecord(currentRecord);
+      await repository.addOrUpdateRecord(modifiedRecord);
     } else {
       await repository.addOrUpdateRecord(
-          currentRecord..temperature = currentRecord.temperature.toCelsius());
+          modifiedRecord..temperature = modifiedRecord.temperature.toCelsius());
     }
   }
 
   void deleteRecord() async {
-    await repository.deleteRecord(currentRecord);
+    await repository.deleteRecord(modifiedRecord);
   }
 }
