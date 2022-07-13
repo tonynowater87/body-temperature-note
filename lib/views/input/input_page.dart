@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
+import 'view/edit_memo_widget.dart';
+
 class InputPage extends StatefulWidget {
   late String dateString;
 
@@ -100,7 +102,7 @@ class InputContainer extends StatelessWidget {
                   } else if (state is InputMemoLoaded) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [Text("MEMO")],
+                      children: [EditMemoWidget()],
                     );
                   } else {
                     return Column(
@@ -160,8 +162,8 @@ class InputContainer extends StatelessWidget {
                             // remove the button build-in padding bottom
                             padding:
                                 MaterialStateProperty.all(EdgeInsets.zero)),
-                        onPressed: () {
-                          context.read<InputCubit>().saveRecord();
+                        onPressed: () async {
+                          await context.read<InputCubit>().saveRecord();
                           context.router.pop<bool>(true);
                         },
                         child: const Text('Save')),
@@ -177,8 +179,8 @@ class InputContainer extends StatelessWidget {
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             padding:
                                 MaterialStateProperty.all(EdgeInsets.zero)),
-                        onPressed: () {
-                          context.read<InputCubit>().deleteRecord();
+                        onPressed: () async {
+                          await context.read<InputCubit>().deleteRecord();
                           context.router.pop<bool>(true);
                         },
                         child: const Text('Delete')),

@@ -17,6 +17,7 @@ class InputCubit extends Cubit<InputState> {
   final Repository repository;
   final SettingsProvider settingsProvider;
   late RecordModel modifiedRecord;
+  late MemoModel modifiedMemoModel;
   late DateTime modifiedDateTime;
   bool isCelsius = false;
 
@@ -27,8 +28,16 @@ class InputCubit extends Cubit<InputState> {
     modifiedDateTime = DateTime.parse(dateString);
     isCelsius = settingsProvider.getIsCelsius();
     emit(InputLoading());
-    final record = repository.queryRecordByDate(modifiedDateTime);
 
+    final memo = repository.queryMemo(DateTime(
+        modifiedDateTime.year, modifiedDateTime.month, modifiedDateTime.day));
+    if (memo != null) {
+      modifiedMemoModel = memo;
+    } else {
+      modifiedMemoModel = MemoModel(memo: "", dateTime: modifiedDateTime);
+    }
+
+    final record = repository.queryRecordByDate(modifiedDateTime);
     if (record != null) {
       if (isCelsius) {
         modifiedRecord = record;
@@ -54,7 +63,7 @@ class InputCubit extends Cubit<InputState> {
   }
 
   void setMemo() {
-    emit(InputMemoLoaded(MemoModel(memo: "XD", dateTime: modifiedDateTime)));
+    emit(InputMemoLoaded(modifiedMemoModel));
   }
 
   void setDateTime() {
@@ -116,16 +125,23 @@ class InputCubit extends Cubit<InputState> {
     emit(InputLoaded(modifiedRecord, isCelsius));
   }
 
-  void saveRecord() async {
+  void updateMemo(String memo) {
+    modifiedMemoModel.memo = memo;
+  }
+
+  saveRecord() async {
     if (isCelsius) {
       await repository.addOrUpdateRecord(modifiedRecord);
     } else {
       await repository.addOrUpdateRecord(
           modifiedRecord..temperature = modifiedRecord.temperature.toCelsius());
     }
+
+    await repository.addOrUpdateMemo(modifiedMemoModel);
   }
 
-  void deleteRecord() async {
+  deleteRecord() async {
     await repository.deleteRecord(modifiedRecord);
+    await repository.deleteMemo(modifiedMemoModel.dateTime);
   }
 }
