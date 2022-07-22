@@ -119,20 +119,15 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
               }
 
               var memo = state.dateListModel.outputMemos[index];
+
               if (memo != null && memo.memo.isNotEmpty) {
-                temperatureViews.add(Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: InkWell(
-                      child: Text(memo.memo),
-                      onTap: () {
-                        onTapMemo(state, index);
-                      }),
+                temperatureViews.add(SizedBox(
+                  width: 2,
                 ));
-              } else {
                 temperatureViews.add(Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: InkWell(
-                      child: Icon(Icons.note_add_outlined,
+                      child: Icon(Icons.note_alt_outlined,
                           color: Theme.of(context).iconTheme.color),
                       onTap: () {
                         onTapMemo(state, index);
@@ -140,8 +135,23 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                 ));
               }
 
+              temperatureViews.add(SizedBox(
+                width: 2,
+              ));
+              temperatureViews.add(Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: InkWell(
+                    child: Icon(Icons.add_box_outlined,
+                        color: Theme.of(context).iconTheme.color),
+                    onTap: () {
+                      onTapDay(context, index);
+                    }),
+              ));
+
               return ListTile(
                 onTap: () => onTapDay(context, index),
+                dense: true,
+                visualDensity: const VisualDensity(vertical: 4, horizontal: 4),
                 trailing: Wrap(children: temperatureViews),
                 title: Text((index + 1).toString(),
                     style: _getWeekDaysTextStyle(DateTime(

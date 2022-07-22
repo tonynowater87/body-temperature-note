@@ -38,6 +38,8 @@ class _EditMemoWidgetState extends State<EditMemoWidget> {
         }
         return Container(
           child: TextField(
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
             controller: textEditingController,
           ),
         );

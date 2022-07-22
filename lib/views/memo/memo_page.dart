@@ -51,6 +51,8 @@ class _MemoPageState extends State<MemoPage> {
             return AlertDialog(
               title: Text(state.formattedDateString),
               content: TextField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
                   focusNode: myFocusNode,
                   controller: textEditingController..text = state.memo.memo),
               actions: <Widget>[
