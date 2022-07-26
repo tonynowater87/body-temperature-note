@@ -120,22 +120,27 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
 
               var memo = state.dateListModel.outputMemos[index];
 
-              if (memo != null && memo.memo.isNotEmpty) {
-                temperatureViews.add(SizedBox(
-                  width: 2,
-                ));
-                temperatureViews.add(Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: InkWell(
-                      child: Icon(Icons.note_alt_outlined,
-                          color: Theme.of(context).iconTheme.color),
-                      onTap: () {
-                        onTapMemo(state, index);
-                      }),
-                ));
+              temperatureViews.add(const SizedBox(
+                width: 2,
+              ));
+
+              IconData icon;
+              if (memo?.memo.isNotEmpty == true) {
+                icon = Icons.note_alt;
+              } else {
+                icon = Icons.note_alt_outlined;
               }
 
-              temperatureViews.add(SizedBox(
+              temperatureViews.add(Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: InkWell(
+                    child: Icon(icon, color: Theme.of(context).iconTheme.color),
+                    onTap: () {
+                      onTapMemo(state, index);
+                    }),
+              ));
+
+              temperatureViews.add(const SizedBox(
                 width: 2,
               ));
               temperatureViews.add(Padding(

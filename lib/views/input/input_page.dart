@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
-import 'view/edit_memo_widget.dart';
-
 class InputPage extends StatefulWidget {
   late String dateString;
 
@@ -99,11 +97,6 @@ class InputContainer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [TemperaturePicker()],
                     );
-                  } else if (state is InputMemoLoaded) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [EditMemoWidget()],
-                    );
                   } else {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -126,16 +119,6 @@ class InputContainer extends StatelessWidget {
                       }),
                   SizedBox(width: 10),
                   ChoiceChip(
-                      label: Text('修改註記'),
-                      selected: state is InputMemoLoaded,
-                      onSelected: (selected) {
-                        if (selected) {
-                          context.read<InputCubit>().setMemo();
-                        }
-                        _logger.d("onSelected 2 ${selected}");
-                      }),
-                  SizedBox(width: 10),
-                  ChoiceChip(
                       label: Text('修改日期'),
                       selected: state is InputDateTimeSetting,
                       onSelected: (selected) {
@@ -146,10 +129,27 @@ class InputContainer extends StatelessWidget {
                       }),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  Expanded(
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).errorColor),
+                            shape: MaterialStateProperty.all(
+                                const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.zero)),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            padding:
+                                MaterialStateProperty.all(EdgeInsets.zero)),
+                        onPressed: () async {
+                          await context.read<InputCubit>().deleteRecord();
+                          context.router.pop<bool>(true);
+                        },
+                        child: const Text('Delete')),
+                  ),
                   Expanded(
                     child: ElevatedButton(
                         style: ButtonStyle(
@@ -168,23 +168,6 @@ class InputContainer extends StatelessWidget {
                         },
                         child: const Text('Save')),
                   ),
-                  Expanded(
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).errorColor),
-                            shape: MaterialStateProperty.all(
-                                const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.zero)),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            padding:
-                                MaterialStateProperty.all(EdgeInsets.zero)),
-                        onPressed: () async {
-                          await context.read<InputCubit>().deleteRecord();
-                          context.router.pop<bool>(true);
-                        },
-                        child: const Text('Delete')),
-                  )
                 ],
               )
             ],

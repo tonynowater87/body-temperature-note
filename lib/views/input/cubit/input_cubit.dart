@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:body_temperature_note/data/model/memo_ui_model.dart';
 import 'package:body_temperature_note/data/model/record_ui_model.dart';
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
 import 'package:body_temperature_note/data/repository/repository.dart';
@@ -17,7 +16,6 @@ class InputCubit extends Cubit<InputState> {
   final Repository repository;
   final SettingsProvider settingsProvider;
   late RecordModel modifiedRecord;
-  late MemoModel modifiedMemoModel;
   late DateTime modifiedDateTime;
   bool isCelsius = false;
 
@@ -28,14 +26,6 @@ class InputCubit extends Cubit<InputState> {
     modifiedDateTime = DateTime.parse(dateString);
     isCelsius = settingsProvider.getIsCelsius();
     emit(InputLoading());
-
-    final memo = repository.queryMemo(DateTime(
-        modifiedDateTime.year, modifiedDateTime.month, modifiedDateTime.day));
-    if (memo != null) {
-      modifiedMemoModel = memo;
-    } else {
-      modifiedMemoModel = MemoModel(memo: "", dateTime: modifiedDateTime);
-    }
 
     final record = repository.queryRecordByDate(modifiedDateTime);
     if (record != null) {
@@ -60,10 +50,6 @@ class InputCubit extends Cubit<InputState> {
 
   void setTemperature() {
     initState(modifiedDateTime.toIso8601String());
-  }
-
-  void setMemo() {
-    emit(InputMemoLoaded(modifiedMemoModel));
   }
 
   void setDateTime() {
@@ -125,10 +111,6 @@ class InputCubit extends Cubit<InputState> {
     emit(InputLoaded(modifiedRecord, isCelsius));
   }
 
-  void updateMemo(String memo) {
-    modifiedMemoModel.memo = memo;
-  }
-
   saveRecord() async {
     if (isCelsius) {
       await repository.addOrUpdateRecord(modifiedRecord);
@@ -136,12 +118,9 @@ class InputCubit extends Cubit<InputState> {
       await repository.addOrUpdateRecord(
           modifiedRecord..temperature = modifiedRecord.temperature.toCelsius());
     }
-
-    await repository.addOrUpdateMemo(modifiedMemoModel);
   }
 
   deleteRecord() async {
     await repository.deleteRecord(modifiedRecord);
-    await repository.deleteMemo(modifiedMemoModel.dateTime);
   }
 }

@@ -8,6 +8,7 @@ import 'package:body_temperature_note/theme/theme_data.dart';
 import 'package:body_temperature_note/views/settings/cubit/settings_cubit.dart';
 import 'package:body_temperature_note/views/settings/cubit/settings_state.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -76,7 +77,10 @@ class SettingsPage extends StatelessWidget {
                           ),
                           SettingsTile.navigation(
                             onPressed: (context) {
-                              if (Platform.isAndroid) {
+                              if (kIsWeb) {
+                                // WEB
+                                showModalPopupForiOS(builderContext);
+                              } else if (Platform.isAndroid) {
                                 showModalPopupForiOS(builderContext); //TODO
                               } else if (Platform.isIOS) {
                                 showModalPopupForiOS(builderContext);
