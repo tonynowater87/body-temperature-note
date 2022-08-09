@@ -14,10 +14,19 @@ class InputLoading extends InputState {
   List<Object?> get props => [];
 }
 
-class InputDateTimeSetting extends InputState {
+class InputDateSetting extends InputState {
   final DateTime dateTime;
 
-  InputDateTimeSetting(this.dateTime);
+  InputDateSetting(this.dateTime);
+
+  @override
+  List<Object?> get props => [dateTime];
+}
+
+class InputTimeSetting extends InputState {
+  final DateTime dateTime;
+
+  InputTimeSetting(this.dateTime);
 
   @override
   List<Object?> get props => [dateTime];

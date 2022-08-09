@@ -52,8 +52,12 @@ class InputCubit extends Cubit<InputState> {
     initState(modifiedDateTime.toIso8601String());
   }
 
-  void setDateTime() {
-    emit(InputDateTimeSetting(modifiedDateTime));
+  void setDate() {
+    emit(InputDateSetting(modifiedDateTime));
+  }
+
+  void setTime() {
+    emit(InputTimeSetting(modifiedDateTime));
   }
 
   void updateTensDigit(int tensDigit) {

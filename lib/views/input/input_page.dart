@@ -6,6 +6,7 @@ import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
 import 'package:body_temperature_note/views/input/view/temperature_picker.dart';
 import 'package:date_format/date_format.dart';
+import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -22,7 +23,6 @@ class InputPage extends StatefulWidget {
 
 class _InputPageState extends State<InputPage> {
   final logger = getIt.get<Logger>();
-  late InputCubit _inputCubit;
 
   _InputPageState();
 
@@ -87,7 +87,7 @@ class InputContainer extends StatelessWidget {
                         formatDate(
                             DateTime.parse(_dateString), titleTimeFormathhnn),
                         style: Theme.of(context).textTheme.bodySmall,
-                      )
+                      ),
                     ]),
               ),
               Expanded(
@@ -97,11 +97,24 @@ class InputContainer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [TemperaturePicker()],
                     );
-                  } else {
+                  } else if (state is InputDateSetting) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [Text("DATETIME")],
                     );
+                  } else if (state is InputTimeSetting) {
+                    return createInlinePicker(
+                        value: TimeOfDay(
+                            hour: DateTime.parse(_dateString).hour,
+                            minute: DateTime.parse(_dateString).minute),
+                        minuteLabel: "",
+                        hourLabel: "",
+                        okText: "",
+                        cancelText: "",
+                        is24HrFormat: true,
+                        onChange: (TimeOfDay) {});
+                  } else {
+                    throw Exception("unexpected state : $state");
                   }
                 }),
               ),
@@ -120,10 +133,20 @@ class InputContainer extends StatelessWidget {
                   SizedBox(width: 10),
                   ChoiceChip(
                       label: Text('修改日期'),
-                      selected: state is InputDateTimeSetting,
+                      selected: state is InputDateSetting,
                       onSelected: (selected) {
                         if (selected) {
-                          context.read<InputCubit>().setDateTime();
+                          context.read<InputCubit>().setDate();
+                        }
+                        _logger.d("onSelected 3 ${selected}");
+                      }),
+                  SizedBox(width: 10),
+                  ChoiceChip(
+                      label: Text('修改時間'),
+                      selected: state is InputTimeSetting,
+                      onSelected: (selected) {
+                        if (selected) {
+                          context.read<InputCubit>().setTime();
                         }
                         _logger.d("onSelected 3 ${selected}");
                       }),
