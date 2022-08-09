@@ -65,6 +65,7 @@ dependencies:
   fl_chart: ^0.50.6
   material_segmented_control: ^4.0.0
   day_night_time_picker: ^1.1.2
+  date_picker_timeline: ^1.2.3
 
 dev_dependencies:
   flutter_test:

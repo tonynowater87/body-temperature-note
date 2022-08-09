@@ -1,11 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:body_temperature_note/constants.dart';
 import 'package:body_temperature_note/data/provider/setting_provider.dart';
 import 'package:body_temperature_note/data/repository/repository.dart';
 import 'package:body_temperature_note/main.dart';
 import 'package:body_temperature_note/views/input/cubit/input_cubit.dart';
 import 'package:body_temperature_note/views/input/view/temperature_picker.dart';
-import 'package:date_format/date_format.dart';
+import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,11 +57,31 @@ class _InputPageState extends State<InputPage> {
   }
 }
 
-class InputContainer extends StatelessWidget {
+class InputContainer extends StatefulWidget {
   final String _dateString;
-  final _logger = getIt<Logger>();
 
   InputContainer(this._dateString, {Key? key}) : super(key: key);
+
+  @override
+  State<InputContainer> createState() => _InputContainerState();
+}
+
+class _InputContainerState extends State<InputContainer> {
+  final _logger = getIt<Logger>();
+  final datePickerController = DatePickerController();
+  var isInit = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      print('[Tony] addPostFrameCallback $timeStamp');
+      if (!isInit) {
+        isInit = true;
+        datePickerController.animateToDate(DateTime.parse(widget._dateString));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,16 +97,31 @@ class InputContainer extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        formatDate(DateTime.parse(_dateString),
-                            titleDayFormatyyyymmddDD),
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      Text(
-                        formatDate(
-                            DateTime.parse(_dateString), titleTimeFormathhnn),
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
+                      DatePicker(
+                        DateTime.parse(widget._dateString)
+                            .subtract(const Duration(days: 7)),
+                        daysCount: 15,
+                        controller: datePickerController,
+                        initialSelectedDate: DateTime.parse(widget._dateString),
+                        selectionColor: Theme.of(context).primaryColor,
+                        dateTextStyle: Theme.of(context).textTheme.bodySmall!,
+                        dayTextStyle: Theme.of(context).textTheme.bodySmall!,
+                        selectedTextColor:
+                            Theme.of(context).textTheme.bodyMedium!.color!,
+                        onDateChange: (date) {
+                          print('[Tony] dateChanged $date');
+                        },
+                      )
+                      /*Text(
+                      formatDate(DateTime.parse(_dateString),
+                          titleDayFormatyyyymmddDD),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    Text(
+                      formatDate(
+                          DateTime.parse(_dateString), titleTimeFormathhnn),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),*/
                     ]),
               ),
               Expanded(
@@ -97,22 +131,19 @@ class InputContainer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [TemperaturePicker()],
                     );
-                  } else if (state is InputDateSetting) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [Text("DATETIME")],
-                    );
                   } else if (state is InputTimeSetting) {
                     return createInlinePicker(
                         value: TimeOfDay(
-                            hour: DateTime.parse(_dateString).hour,
-                            minute: DateTime.parse(_dateString).minute),
+                            hour: DateTime.parse(widget._dateString).hour,
+                            minute: DateTime.parse(widget._dateString).minute),
                         minuteLabel: "",
                         hourLabel: "",
                         okText: "",
                         cancelText: "",
                         is24HrFormat: true,
-                        onChange: (TimeOfDay) {});
+                        onChange: (timeOfDay) {
+                          print('[Tony] timeChanged $timeOfDay');
+                        });
                   } else {
                     throw Exception("unexpected state : $state");
                   }
@@ -129,16 +160,6 @@ class InputContainer extends StatelessWidget {
                           context.read<InputCubit>().setTemperature();
                         }
                         _logger.d("onSelected 1 ${selected}");
-                      }),
-                  SizedBox(width: 10),
-                  ChoiceChip(
-                      label: Text('修改日期'),
-                      selected: state is InputDateSetting,
-                      onSelected: (selected) {
-                        if (selected) {
-                          context.read<InputCubit>().setDate();
-                        }
-                        _logger.d("onSelected 3 ${selected}");
                       }),
                   SizedBox(width: 10),
                   ChoiceChip(

@@ -52,10 +52,6 @@ class InputCubit extends Cubit<InputState> {
     initState(modifiedDateTime.toIso8601String());
   }
 
-  void setDate() {
-    emit(InputDateSetting(modifiedDateTime));
-  }
-
   void setTime() {
     emit(InputTimeSetting(modifiedDateTime));
   }

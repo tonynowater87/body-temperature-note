@@ -27,67 +27,76 @@ class _TemperaturePickerState extends State<TemperaturePicker> {
     return BlocBuilder<InputCubit, InputState>(
       builder: (context, state) {
         final _state = state as InputLoaded;
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("體溫", style: Theme.of(context).textTheme.headlineMedium),
-            NumberPicker(
-              value: _state.decimalDigit,
-              minValue: _state.isCelsius ? 35 : 35.0.toFahrenheit().toInt(),
-              maxValue: _state.isCelsius ? 45 : 45.0.toFahrenheit().toInt(),
-              infiniteLoop: true,
-              textStyle: unselectedFloatTextTheme,
-              selectedTextStyle: selectedFloatTextTheme,
-              itemWidth: _state.isCelsius ? 55 : 65,
-              onChanged: (value) {
-                inputCubit.updateTensDigit(value);
-              },
+        return Container(
+          decoration: BoxDecoration(
+              border: Border.all(),
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text("體溫", style: Theme.of(context).textTheme.headlineMedium),
+                NumberPicker(
+                  value: _state.decimalDigit,
+                  minValue: _state.isCelsius ? 35 : 35.0.toFahrenheit().toInt(),
+                  maxValue: _state.isCelsius ? 45 : 45.0.toFahrenheit().toInt(),
+                  infiniteLoop: true,
+                  textStyle: unselectedFloatTextTheme,
+                  selectedTextStyle: selectedFloatTextTheme,
+                  itemWidth: _state.isCelsius ? 55 : 65,
+                  onChanged: (value) {
+                    inputCubit.updateTensDigit(value);
+                  },
+                ),
+                Text(".", style: Theme.of(context).textTheme.headlineMedium),
+                NumberPicker(
+                  value: _state.decimalDigit == 45 ||
+                          _state.decimalDigit == 45.0.toFahrenheit().toInt()
+                      ? 0
+                      : _state.floatOneDigit,
+                  minValue: 0,
+                  maxValue: _state.decimalDigit == 45 ||
+                          _state.decimalDigit == 45.0.toFahrenheit().toInt()
+                      ? 0
+                      : 9,
+                  itemWidth: 30,
+                  infiniteLoop: true,
+                  textStyle: unselectedFloatTextTheme,
+                  selectedTextStyle: selectedFloatTextTheme,
+                  onChanged: (value) {
+                    inputCubit.updateFloatOneDigit(value);
+                  },
+                ),
+                NumberPicker(
+                  value: _state.decimalDigit == 45 ||
+                          _state.decimalDigit == 45.0.toFahrenheit().toInt()
+                      ? 0
+                      : _state.floatTwoDigit,
+                  minValue: 0,
+                  maxValue: _state.decimalDigit == 45 ||
+                          _state.decimalDigit == 45.0.toFahrenheit().toInt()
+                      ? 0
+                      : 9,
+                  itemWidth: 30,
+                  infiniteLoop: true,
+                  textStyle: unselectedFloatTextTheme,
+                  selectedTextStyle: selectedFloatTextTheme,
+                  onChanged: (value) {
+                    inputCubit.updateFloatTwoDigit(value);
+                  },
+                ),
+                Text(
+                  _state.isCelsius ? "°C" : "°F",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(
+                  width: 10,
+                )
+              ],
             ),
-            Text(".", style: Theme.of(context).textTheme.headlineMedium),
-            NumberPicker(
-              value: _state.decimalDigit == 45 ||
-                      _state.decimalDigit == 45.0.toFahrenheit().toInt()
-                  ? 0
-                  : _state.floatOneDigit,
-              minValue: 0,
-              maxValue: _state.decimalDigit == 45 ||
-                      _state.decimalDigit == 45.0.toFahrenheit().toInt()
-                  ? 0
-                  : 9,
-              itemWidth: 30,
-              infiniteLoop: true,
-              textStyle: unselectedFloatTextTheme,
-              selectedTextStyle: selectedFloatTextTheme,
-              onChanged: (value) {
-                inputCubit.updateFloatOneDigit(value);
-              },
-            ),
-            NumberPicker(
-              value: _state.decimalDigit == 45 ||
-                      _state.decimalDigit == 45.0.toFahrenheit().toInt()
-                  ? 0
-                  : _state.floatTwoDigit,
-              minValue: 0,
-              maxValue: _state.decimalDigit == 45 ||
-                      _state.decimalDigit == 45.0.toFahrenheit().toInt()
-                  ? 0
-                  : 9,
-              itemWidth: 30,
-              infiniteLoop: true,
-              textStyle: unselectedFloatTextTheme,
-              selectedTextStyle: selectedFloatTextTheme,
-              onChanged: (value) {
-                inputCubit.updateFloatTwoDigit(value);
-              },
-            ),
-            Text(
-              _state.isCelsius ? "°C" : "°F",
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(
-              width: 10,
-            )
-          ],
+          ),
         );
       },
     );
