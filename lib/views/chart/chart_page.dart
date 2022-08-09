@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:material_segmented_control/material_segmented_control.dart';
 
 class ChartPage extends StatefulWidget {
   late String dateString;
@@ -186,36 +187,45 @@ class _ChartPageState extends State<ChartPage> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
-                        width: double.maxFinite,
-                        child: CupertinoSegmentedControl(
-                            children: const {
-                              1: Text('週'),
-                              2: Text('月'),
-                              3: Text('季'),
+                      SizedBox(
+                          width: double.maxFinite,
+                          child: MaterialSegmentedControl(
+                            borderColor: Theme.of(context).dividerColor,
+                            selectedColor: Theme.of(context).primaryColor,
+                            unselectedColor: Theme.of(context).disabledColor,
+                            children: {
+                              0: Text('週',
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
+                              1: Text('月',
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
+                              2: Text('季',
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
                             },
-                            groupValue: _state.chartDuration.index + 1,
-                            onValueChanged: (value) {
-                              switch (value) {
-                                case 1:
+                            selectionIndex: _state.chartDuration.index,
+                            onSegmentChosen: (index) {
+                              switch (index) {
+                                case 0:
                                   context
                                       .read<ChartCubit>()
                                       .updateChartDuration(ChartDuration.week);
                                   break;
-                                case 2:
+                                case 1:
                                   context
                                       .read<ChartCubit>()
                                       .updateChartDuration(ChartDuration.month);
                                   break;
-                                case 3:
+                                case 2:
                                   context
                                       .read<ChartCubit>()
                                       .updateChartDuration(
                                           ChartDuration.season);
                                   break;
                               }
-                            }),
-                      ),
+                            },
+                          )),
                       const SizedBox(
                         height: 10,
                       )
