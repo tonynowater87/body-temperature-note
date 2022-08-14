@@ -102,10 +102,18 @@ class ChartCubit extends Cubit<ChartPageState> {
         minX: minX.toDouble(),
         maxY: records
             .map((e) => isCelsius ? e.valueY : e.valueY.toFahrenheit())
-            .fold(50, (value, element) => value > element ? value : element),
+            .fold(
+                isCelsius
+                    ? defaultMaxTempInCelsius
+                    : defaultMaxTempInCelsius.toFahrenheit(),
+                (value, element) => value > element ? value : element),
         minY: records
             .map((e) => isCelsius ? e.valueY : e.valueY.toFahrenheit())
-            .fold(30, (value, element) => value < element ? value : element),
+            .fold(
+                isCelsius
+                    ? defaultMinTempInCelsius
+                    : defaultMinTempInCelsius.toFahrenheit(),
+                (value, element) => value < element ? value : element),
         chartDuration: chartDuration,
         records: records,
         memos: memos,

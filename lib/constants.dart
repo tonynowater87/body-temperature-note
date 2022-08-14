@@ -8,6 +8,9 @@ const titleMonthFormatyyyymm = [yyyy, "/", mm];
 const titleDateFormatChartTouchData = [mm, "/", dd, " ", DD];
 const titleDateFormatChartXAxis = [m, "/", dd];
 
-const defaultBaselineInCelsius = 37.7;
+const defaultBaselineInCelsius = 37.0;
 const defaultIsCelsius = true;
 const defaultIsDisplayBaseline = false;
+
+const defaultMaxTempInCelsius = 37.5;
+const defaultMinTempInCelsius = 35.5;
