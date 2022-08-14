@@ -26,6 +26,8 @@ class ChartPage extends StatefulWidget {
 }
 
 class _ChartPageState extends State<ChartPage> {
+  var isShownReturnToNowButton = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -57,17 +59,23 @@ class _ChartPageState extends State<ChartPage> {
                   return Column(
                     children: [
                       DateToolbarWidget(
-                          height: 100,
-                          title: loadedState.title,
-                          onClickNext: () {
-                            context.read<ChartCubit>().changeToNext();
-                          },
-                          onClickPrevious: () {
-                            context.read<ChartCubit>().changeToPrevious();
-                          },
-                          onClickTitle: () {
-                            context.read<ChartCubit>().changeToToday();
-                          }),
+                        height: 100,
+                        title: loadedState.title,
+                        onClickNext: () {
+                          isShownReturnToNowButton = true;
+                          context.read<ChartCubit>().changeToNext();
+                        },
+                        onClickPrevious: () {
+                          isShownReturnToNowButton = true;
+                          context.read<ChartCubit>().changeToPrevious();
+                        },
+                        onClickTitle: () {},
+                        isShownReturnToNowButton: isShownReturnToNowButton,
+                        onClickReturn: () {
+                          isShownReturnToNowButton = false;
+                          context.read<ChartCubit>().changeToToday();
+                        },
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -80,23 +88,23 @@ class _ChartPageState extends State<ChartPage> {
                               maxX: _state.maxX,
                               minX: _state.minX,
                               gridData:
-                                  FlGridData(getDrawingHorizontalLine: (value) {
+                              FlGridData(getDrawingHorizontalLine: (value) {
                                 return FlLine(
                                     color:
-                                        Theme.of(context).colorScheme.secondary,
+                                    Theme.of(context).colorScheme.secondary,
                                     strokeWidth: 0.25,
                                     dashArray: [15, 5]);
                               }, getDrawingVerticalLine: (value) {
                                 return FlLine(
                                     color:
-                                        Theme.of(context).colorScheme.secondary,
+                                    Theme.of(context).colorScheme.secondary,
                                     strokeWidth: 0.25,
                                     dashArray: [15, 5]);
                               }),
                               lineTouchData: LineTouchData(
                                   touchTooltipData: LineTouchTooltipData(
                                       maxContentWidth:
-                                          MediaQuery.of(context).size.width / 2,
+                                      MediaQuery.of(context).size.width / 2,
                                       fitInsideHorizontally: true,
                                       tooltipBgColor: Theme.of(context)
                                           .colorScheme
@@ -106,7 +114,7 @@ class _ChartPageState extends State<ChartPage> {
                                         return touchedBarSpots.map((element) {
                                           var memo = loadedState
                                               .memos[element.x.toInt() -
-                                                  loadedState.minX.toInt()]
+                                              loadedState.minX.toInt()]
                                               .memo;
                                           var temp;
                                           if (loadedState.isCelsius) {
@@ -130,8 +138,8 @@ class _ChartPageState extends State<ChartPage> {
                                       })),
                               extraLinesData: _state.baseline != null
                                   ? ExtraLinesData(horizontalLines: [
-                                      HorizontalLine(y: _state.baseline!)
-                                    ])
+                                HorizontalLine(y: _state.baseline!)
+                              ])
                                   : null,
                               borderData: FlBorderData(show: false),
                               titlesData: FlTitlesData(
@@ -144,8 +152,8 @@ class _ChartPageState extends State<ChartPage> {
                                           interval: _state.intervalsX,
                                           getTitlesWidget: (value, meta) {
                                             var dateTime =
-                                                fromDayInYearSince1970(
-                                                    value.toInt());
+                                            fromDayInYearSince1970(
+                                                value.toInt());
                                             if (_state.chartDuration ==
                                                 ChartDuration.week) {
                                               return Text(formatDate(dateTime,
@@ -196,13 +204,13 @@ class _ChartPageState extends State<ChartPage> {
                             children: {
                               0: Text('週',
                                   style:
-                                      Theme.of(context).textTheme.bodyMedium),
+                                  Theme.of(context).textTheme.bodyMedium),
                               1: Text('月',
                                   style:
-                                      Theme.of(context).textTheme.bodyMedium),
+                                  Theme.of(context).textTheme.bodyMedium),
                               2: Text('季',
                                   style:
-                                      Theme.of(context).textTheme.bodyMedium),
+                                  Theme.of(context).textTheme.bodyMedium),
                             },
                             selectionIndex: _state.chartDuration.index,
                             onSegmentChosen: (index) {
@@ -221,7 +229,7 @@ class _ChartPageState extends State<ChartPage> {
                                   context
                                       .read<ChartCubit>()
                                       .updateChartDuration(
-                                          ChartDuration.season);
+                                      ChartDuration.season);
                                   break;
                               }
                             },

@@ -6,6 +6,9 @@ class DateToolbarWidget extends StatelessWidget {
   VoidCallback onClickNext;
   VoidCallback onClickPrevious;
   VoidCallback onClickTitle;
+  VoidCallback onClickReturn;
+
+  bool isShownReturnToNowButton;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class DateToolbarWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
-            padding: EdgeInsets.zero,
+            padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
             highlightColor: Colors.transparent,
             focusColor: Colors.transparent,
             splashColor: Colors.transparent,
@@ -28,18 +31,37 @@ class DateToolbarWidget extends StatelessWidget {
             color: Theme.of(context).iconTheme.color,
           ),
           Expanded(
-            child: TextButton(
-                onPressed: () {
-                  onClickTitle.call();
-                },
-                child: Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                )),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: TextButton(
+                  onPressed: () {
+                    //TODO date picker?
+                    onClickTitle.call();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      if (isShownReturnToNowButton)
+                        IconButton(
+                          icon: Icon(
+                            Icons.keyboard_return_outlined,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                          onPressed: () {
+                            onClickReturn.call();
+                          },
+                        )
+                    ],
+                  )),
+            ),
           ),
           IconButton(
-              padding: EdgeInsets.zero,
+              padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
               highlightColor: Colors.transparent,
               focusColor: Colors.transparent,
               splashColor: Colors.transparent,
@@ -58,9 +80,11 @@ class DateToolbarWidget extends StatelessWidget {
 
   DateToolbarWidget({
     required this.title,
+    required this.isShownReturnToNowButton,
     this.height,
     required this.onClickNext,
     required this.onClickPrevious,
     required this.onClickTitle,
+    required this.onClickReturn,
   });
 }

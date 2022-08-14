@@ -31,6 +31,8 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
   final itemPositionsListener = ItemPositionsListener.create();
   final _logger = getIt.get<Logger>();
 
+  var isShownReturnToNowButton = false;
+
   @override
   void initState() {
     super.initState();
@@ -61,12 +63,20 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                       DateTime(state.currentYear, state.currentMonth),
                       titleMonthFormatyyyymm),
                   onClickNext: () {
+                    isShownReturnToNowButton = true;
                     context.read<HomeCubit>().nextMonth();
                   },
                   onClickPrevious: () {
+                    isShownReturnToNowButton = true;
                     context.read<HomeCubit>().previousMonth();
                   },
                   onClickTitle: () {
+                    isShownReturnToNowButton = false;
+                    context.read<HomeCubit>().changeToToday();
+                  },
+                  isShownReturnToNowButton: isShownReturnToNowButton,
+                  onClickReturn: () {
+                    isShownReturnToNowButton = false;
                     context.read<HomeCubit>().changeToToday();
                   },
                 );
@@ -193,6 +203,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
 
   TextStyle _getWeekDaysTextStyle(DateTime dateTime) {
     final int weekday = dateTime.weekday;
+    var now = DateTime.now();
     var textStyle = Theme.of(context).textTheme.headlineMedium!;
     if (weekday == 6) {
       textStyle = textStyle.copyWith(
@@ -202,6 +213,13 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
       textStyle = textStyle.copyWith(
           color: Theme.of(context).colorScheme.secondary,
           fontStyle: FontStyle.italic);
+    }
+
+    if (now.year == dateTime.year &&
+        now.month == dateTime.month &&
+        now.day == dateTime.day) {
+      textStyle = textStyle.copyWith(
+          decorationThickness: 2, decoration: TextDecoration.underline);
     }
     return textStyle;
   }

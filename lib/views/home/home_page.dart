@@ -19,26 +19,18 @@ class HomePage extends StatelessWidget {
           settingsProvider: context.read<SettingsProvider>()),
       child: Scaffold(
         appBar: AppBar(
-            iconTheme: Theme.of(context).iconTheme,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  constraints: const BoxConstraints(),
-                  onPressed: () {
-                    //ToDo
-                  },
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.account_circle_outlined),
-                ),
-                Center(
-                    child: Text(
-                  context.l10n.home_title,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                )),
-                Builder(builder: (builderContext) {
+          iconTheme: Theme.of(context).iconTheme,
+          title: Stack(
+            children: [
+              Center(
+                  child: Text(
+                context.l10n.home_title,
+                style: Theme.of(context).textTheme.headlineMedium,
+              )),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Builder(builder: (builderContext) {
                   return IconButton(
-                      constraints: const BoxConstraints(),
                       onPressed: () {
                         context.router.push<bool>(
                             SettingsPageRoute(onResult: (needRefresh) {
@@ -49,9 +41,11 @@ class HomePage extends StatelessWidget {
                       },
                       padding: EdgeInsets.zero,
                       icon: const Icon(Icons.settings_outlined));
-                })
-              ],
-            )),
+                }),
+              )
+            ],
+          ),
+        ),
         body: Container(
           color: Theme.of(context).colorScheme.background,
           child: const DateSelectorWidget(),
@@ -61,11 +55,6 @@ class HomePage extends StatelessWidget {
           onPressed: () async {
             context.router.push(
                 ChartPageRoute(dateString: DateTime.now().toIso8601String()));
-            /*final saved = await context.router.push<bool>(
-              InputPageRoute(dateString: DateTime.now().toIso8601String()));
-          if (saved == true) {
-            context.read<HomeCubit>().refreshRecords();
-          }*/
           },
           child: Icon(
             Icons.bar_chart,
