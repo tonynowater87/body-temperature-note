@@ -56,11 +56,13 @@ class SettingsPage extends StatelessWidget {
                             initialValue: state.isDarkMode,
                             leading: const Icon(Icons.mode_night_outlined),
                             activeSwitchColor: Theme.of(context).primaryColor,
-                            onToggle: (value) {
-                              builderContext.read<ThemeCubit>().toggle();
+                            onToggle: (isUsingDarkMode) {
+                              builderContext
+                                  .read<ThemeCubit>()
+                                  .toggle(isUsingDarkMode);
                               builderContext
                                   .read<SettingsCubit>()
-                                  .updateIsDarkMode(value);
+                                  .updateIsDarkMode(isUsingDarkMode);
                             },
                             title: Text('開啟DarkMode'),
                           ),
