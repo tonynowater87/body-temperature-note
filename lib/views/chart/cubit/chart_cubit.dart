@@ -128,7 +128,6 @@ class ChartCubit extends Cubit<ChartPageState> {
 
   void changeToToday() {
     selectedDateTime = initDateTime;
-    selectedChartDuration = ChartDuration.week;
     refreshChart(selectedDateTime, selectedChartDuration);
   }
 
