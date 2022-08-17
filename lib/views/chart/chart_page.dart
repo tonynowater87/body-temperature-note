@@ -50,204 +50,219 @@ class _ChartPageState extends State<ChartPage> {
         body: Container(
             color: Theme.of(context).colorScheme.background,
             width: double.maxFinite,
-            child: BlocBuilder<ChartCubit, ChartPageState>(
-              builder: (context, _state) {
-                if (_state is ChartLoadingState) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  ChartLoadedState loadedState = _state as ChartLoadedState;
-                  return Column(
-                    children: [
-                      DateToolbarWidget(
-                        height: 100,
-                        title: loadedState.title,
-                        onClickNext: () {
-                          isShownReturnToNowButton = true;
-                          context.read<ChartCubit>().changeToNext();
-                        },
-                        onClickPrevious: () {
-                          isShownReturnToNowButton = true;
-                          context.read<ChartCubit>().changeToPrevious();
-                        },
-                        onClickTitle: () {},
-                        isShownReturnToNowButton: isShownReturnToNowButton,
-                        onClickReturn: () {
-                          isShownReturnToNowButton = false;
-                          context.read<ChartCubit>().changeToToday();
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 12, right: 24),
-                          child: LineChart(LineChartData(
-                              minY: _state.minY,
-                              maxY: _state.maxY,
-                              maxX: _state.maxX,
-                              minX: _state.minX,
-                              gridData:
-                                  FlGridData(getDrawingHorizontalLine: (value) {
-                                return FlLine(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                    strokeWidth: 0.25,
-                                    dashArray: [15, 5]);
-                              }, getDrawingVerticalLine: (value) {
-                                return FlLine(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                    strokeWidth: 0.25,
-                                    dashArray: [15, 5]);
-                              }),
-                              lineTouchData: LineTouchData(
-                                  touchTooltipData: LineTouchTooltipData(
-                                      maxContentWidth:
-                                          MediaQuery.of(context).size.width /
-                                              1.5,
-                                      fitInsideVertically: true,
-                                      fitInsideHorizontally: true,
-                                      showOnTopOfTheChartBoxArea: true,
-                                      tooltipBgColor: Theme.of(context)
+            child: SafeArea(
+              child: BlocBuilder<ChartCubit, ChartPageState>(
+                builder: (context, _state) {
+                  if (_state is ChartLoadingState) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+                    ChartLoadedState loadedState = _state as ChartLoadedState;
+                    return Column(
+                      children: [
+                        DateToolbarWidget(
+                          height: 100,
+                          title: loadedState.title,
+                          onClickNext: () {
+                            isShownReturnToNowButton = true;
+                            context.read<ChartCubit>().changeToNext();
+                          },
+                          onClickPrevious: () {
+                            isShownReturnToNowButton = true;
+                            context.read<ChartCubit>().changeToPrevious();
+                          },
+                          onClickTitle: () {},
+                          isShownReturnToNowButton: isShownReturnToNowButton,
+                          onClickReturn: () {
+                            isShownReturnToNowButton = false;
+                            context.read<ChartCubit>().changeToToday();
+                          },
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12, right: 24),
+                            child: LineChart(LineChartData(
+                                minY: _state.minY,
+                                maxY: _state.maxY,
+                                maxX: _state.maxX,
+                                minX: _state.minX,
+                                gridData: FlGridData(
+                                    getDrawingHorizontalLine: (value) {
+                                  return FlLine(
+                                      color: Theme.of(context)
                                           .colorScheme
-                                          .onSurface
-                                          .withAlpha(76),
-                                      getTooltipItems:
-                                          (List<LineBarSpot> touchedBarSpots) {
-                                        return touchedBarSpots.map((element) {
-                                          var memo = loadedState
-                                              .memos[element.x.toInt() -
-                                                  loadedState.minX.toInt()]
-                                              .memo;
-                                          var temp;
-                                          if (loadedState.isCelsius) {
-                                            temp = "%.2f%s"
-                                                .format([element.y, "°C"]);
-                                          } else {
-                                            temp = "%.2f%s"
-                                                .format([element.y, "°F"]);
-                                          }
-                                          var dateTime = fromDayInYearSince1970(
-                                              element.x.toInt());
-                                          var formatDateString = formatDate(
-                                              dateTime,
-                                              titleDateFormatChartTouchData);
-                                          return LineTooltipItem(
-                                              "$formatDateString $temp\n$memo",
-                                              Theme.of(context)
-                                                  .textTheme
-                                                  .headlineSmall!);
-                                        }).toList();
-                                      })),
-                              extraLinesData: _state.baseline != null
-                                  ? ExtraLinesData(horizontalLines: [
-                                      HorizontalLine(y: _state.baseline!)
-                                    ])
-                                  : null,
-                              borderData: FlBorderData(show: false),
-                              titlesData: FlTitlesData(
-                                  topTitles: AxisTitles(),
-                                  rightTitles: AxisTitles(),
-                                  bottomTitles: AxisTitles(
-                                      sideTitles: SideTitles(
-                                          showTitles: true,
-                                          reservedSize: 16,
-                                          interval: _state.intervalsX,
-                                          getTitlesWidget: (value, meta) {
+                                          .secondary,
+                                      strokeWidth: 0.25,
+                                      dashArray: [15, 5]);
+                                }, getDrawingVerticalLine: (value) {
+                                  return FlLine(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      strokeWidth: 0.25,
+                                      dashArray: [15, 5]);
+                                }),
+                                lineTouchData: LineTouchData(
+                                    touchTooltipData: LineTouchTooltipData(
+                                        maxContentWidth:
+                                            MediaQuery.of(context).size.width /
+                                                1.5,
+                                        fitInsideVertically: true,
+                                        fitInsideHorizontally: true,
+                                        tooltipBgColor: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withAlpha(76),
+                                        getTooltipItems: (List<LineBarSpot>
+                                            touchedBarSpots) {
+                                          return touchedBarSpots.map((element) {
+                                            var memo = loadedState
+                                                .memos[element.x.toInt() -
+                                                    loadedState.minX.toInt()]
+                                                .memo;
+                                            var temp;
+                                            if (loadedState.isCelsius) {
+                                              temp = "%.2f%s"
+                                                  .format([element.y, "°C"]);
+                                            } else {
+                                              temp = "%.2f%s"
+                                                  .format([element.y, "°F"]);
+                                            }
                                             var dateTime =
                                                 fromDayInYearSince1970(
-                                                    value.toInt());
-                                            if (_state.chartDuration ==
-                                                ChartDuration.week) {
-                                              return Text(formatDate(dateTime,
-                                                  titleWeekDaysAbbrFormat));
-                                            }
-                                            if (_state.chartDuration ==
-                                                ChartDuration.month) {
-                                              if (value == meta.min ||
-                                                  value == meta.max) {
-                                                return const Text('');
-                                              } else {
+                                                    element.x.toInt());
+                                            var formatDateString = formatDate(
+                                                dateTime,
+                                                titleDateFormatChartTouchData);
+                                            return LineTooltipItem(
+                                                "$formatDateString $temp\n$memo",
+                                                Theme.of(context)
+                                                    .textTheme
+                                                    .headlineSmall!);
+                                          }).toList();
+                                        })),
+                                extraLinesData: _state.baseline != null
+                                    ? ExtraLinesData(horizontalLines: [
+                                        HorizontalLine(y: _state.baseline!)
+                                      ])
+                                    : null,
+                                borderData: FlBorderData(show: false),
+                                titlesData: FlTitlesData(
+                                    leftTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        reservedSize: 50,
+                                        showTitles: true,
+                                      ),
+                                    ),
+                                    topTitles: AxisTitles(),
+                                    rightTitles: AxisTitles(),
+                                    bottomTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                            showTitles: true,
+                                            reservedSize: 16,
+                                            interval: _state.intervalsX,
+                                            getTitlesWidget: (value, meta) {
+                                              var dateTime =
+                                                  fromDayInYearSince1970(
+                                                      value.toInt());
+                                              if (_state.chartDuration ==
+                                                  ChartDuration.week) {
                                                 return Text(formatDate(dateTime,
-                                                    titleDateFormatChartXAxis));
+                                                    titleWeekDaysAbbrFormat));
                                               }
-                                            } else {
-                                              // season
-                                              if (value == meta.min ||
-                                                  value == meta.max) {
-                                                return const Text('');
+                                              if (_state.chartDuration ==
+                                                  ChartDuration.month) {
+                                                if (value == meta.min ||
+                                                    value == meta.max) {
+                                                  return const Text('');
+                                                } else {
+                                                  return Text(formatDate(
+                                                      dateTime,
+                                                      titleDateFormatChartXAxis));
+                                                }
                                               } else {
-                                                return Text(formatDate(dateTime,
-                                                    titleDateFormatChartXAxis));
+                                                // season
+                                                if (value == meta.min ||
+                                                    value == meta.max) {
+                                                  return const Text('');
+                                                } else {
+                                                  return Text(formatDate(
+                                                      dateTime,
+                                                      titleDateFormatChartXAxis));
+                                                }
                                               }
-                                            }
-                                          }))),
-                              lineBarsData: [
-                                LineChartBarData(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                    isStrokeJoinRound: true,
-                                    isStrokeCapRound: true,
-                                    isStepLineChart: false,
-                                    // TODO
-                                    spots: _state.records.map((e) {
-                                      return FlSpot(
-                                          e.valueX.toDouble(), e.valueY);
-                                    }).toList())
-                              ])),
+                                            }))),
+                                lineBarsData: [
+                                  LineChartBarData(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      isStrokeJoinRound: true,
+                                      isStrokeCapRound: true,
+                                      isStepLineChart: false,
+                                      // TODO
+                                      spots: _state.records.map((e) {
+                                        return FlSpot(
+                                            e.valueX.toDouble(), e.valueY);
+                                      }).toList())
+                                ])),
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                          width: double.maxFinite,
-                          child: MaterialSegmentedControl(
-                            borderColor: Theme.of(context).dividerColor,
-                            selectedColor: Theme.of(context).primaryColor,
-                            unselectedColor:
-                                Theme.of(context).colorScheme.background,
-                            children: {
-                              0: Text('週',
-                                  style:
-                                      Theme.of(context).textTheme.bodyMedium),
-                              1: Text('月',
-                                  style:
-                                      Theme.of(context).textTheme.bodyMedium),
-                              2: Text('季',
-                                  style:
-                                      Theme.of(context).textTheme.bodyMedium),
-                            },
-                            selectionIndex: _state.chartDuration.index,
-                            onSegmentChosen: (index) {
-                              switch (index) {
-                                case 0:
-                                  context
-                                      .read<ChartCubit>()
-                                      .updateChartDuration(ChartDuration.week);
-                                  break;
-                                case 1:
-                                  context
-                                      .read<ChartCubit>()
-                                      .updateChartDuration(ChartDuration.month);
-                                  break;
-                                case 2:
-                                  context
-                                      .read<ChartCubit>()
-                                      .updateChartDuration(
-                                          ChartDuration.season);
-                                  break;
-                              }
-                            },
-                          )),
-                      const SizedBox(
-                        height: 10,
-                      )
-                    ],
-                  );
-                }
-              },
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                            width: double.maxFinite,
+                            child: MaterialSegmentedControl(
+                              borderColor: Theme.of(context).dividerColor,
+                              selectedColor: Theme.of(context).primaryColor,
+                              unselectedColor:
+                                  Theme.of(context).colorScheme.background,
+                              children: {
+                                0: Text('週',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                                1: Text('月',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                                2: Text('季',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                              },
+                              selectionIndex: _state.chartDuration.index,
+                              onSegmentChosen: (index) {
+                                switch (index) {
+                                  case 0:
+                                    context
+                                        .read<ChartCubit>()
+                                        .updateChartDuration(
+                                            ChartDuration.week);
+                                    break;
+                                  case 1:
+                                    context
+                                        .read<ChartCubit>()
+                                        .updateChartDuration(
+                                            ChartDuration.month);
+                                    break;
+                                  case 2:
+                                    context
+                                        .read<ChartCubit>()
+                                        .updateChartDuration(
+                                            ChartDuration.season);
+                                    break;
+                                }
+                              },
+                            )),
+                        const SizedBox(
+                          height: 10,
+                        )
+                      ],
+                    );
+                  }
+                },
+              ),
             )),
       ),
     );

@@ -89,132 +89,142 @@ class _InputContainerState extends State<InputContainer> {
       builder: (context, state) {
         return Container(
           color: Theme.of(context).colorScheme.background,
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(4.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DatePicker(
-                        DateTime.parse(widget._dateString)
-                            .subtract(const Duration(days: 7)),
-                        daysCount: 15,
-                        controller: datePickerController,
-                        initialSelectedDate: DateTime.parse(widget._dateString),
-                        selectionColor: Theme.of(context).primaryColor,
-                        dateTextStyle: Theme.of(context).textTheme.bodySmall!,
-                        dayTextStyle: Theme.of(context).textTheme.bodySmall!,
-                        selectedTextColor:
-                            Theme.of(context).textTheme.bodyMedium!.color!,
-                        onDateChange: (date) {
-                          print('[Tony] dateChanged $date');
-                        },
-                      )
-                      /*Text(
-                      formatDate(DateTime.parse(_dateString),
-                          titleDayFormatyyyymmddDD),
-                      style: Theme.of(context).textTheme.bodySmall,
+          child: SafeArea(
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(4.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DatePicker(
+                          DateTime.parse(widget._dateString)
+                              .subtract(const Duration(days: 7)),
+                          daysCount: 15,
+                          controller: datePickerController,
+                          initialSelectedDate:
+                              DateTime.parse(widget._dateString),
+                          selectionColor: Theme.of(context).primaryColor,
+                          dateTextStyle: Theme.of(context).textTheme.bodySmall!,
+                          dayTextStyle: Theme.of(context).textTheme.bodySmall!,
+                          selectedTextColor:
+                              Theme.of(context).textTheme.bodyMedium!.color!,
+                          onDateChange: (date) {
+                            print('[Tony] dateChanged $date');
+                          },
+                        )
+                        /*Text(
+                        formatDate(DateTime.parse(_dateString),
+                            titleDayFormatyyyymmddDD),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      Text(
+                        formatDate(
+                            DateTime.parse(_dateString), titleTimeFormathhnn),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),*/
+                      ]),
+                ),
+                Expanded(
+                  child: Builder(builder: (context) {
+                    if (state is InputLoaded) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [TemperaturePicker()],
+                      );
+                    } else if (state is InputTimeSetting) {
+                      return createInlinePicker(
+                          value: TimeOfDay(
+                              hour: DateTime.parse(widget._dateString).hour,
+                              minute:
+                                  DateTime.parse(widget._dateString).minute),
+                          minuteLabel: "",
+                          hourLabel: "",
+                          okText: "",
+                          cancelText: "",
+                          is24HrFormat: true,
+                          onChange: (timeOfDay) {
+                            print('[Tony] timeChanged $timeOfDay');
+                          });
+                    } else {
+                      throw Exception("unexpected state : $state");
+                    }
+                  }),
+                ),
+                Wrap(
+                  direction: Axis.horizontal,
+                  children: [
+                    ChoiceChip(
+                        label: Text('修改溫度'),
+                        selected: state is InputLoaded,
+                        onSelected: (selected) {
+                          if (selected) {
+                            context.read<InputCubit>().setTemperature();
+                          }
+                          _logger.d("onSelected 1 ${selected}");
+                        }),
+                    SizedBox(width: 10),
+                    ChoiceChip(
+                        label: Text('修改時間'),
+                        selected: state is InputTimeSetting,
+                        onSelected: (selected) {
+                          if (selected) {
+                            context.read<InputCubit>().setTime();
+                          }
+                          _logger.d("onSelected 3 ${selected}");
+                        }),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).errorColor),
+                              shape: MaterialStateProperty.all(
+                                  const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero)),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              padding:
+                                  MaterialStateProperty.all(EdgeInsets.zero)),
+                          onPressed: () async {
+                            await context.read<InputCubit>().deleteRecord();
+                            context.router.pop<bool>(true);
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: Text('Delete'),
+                          )),
                     ),
-                    Text(
-                      formatDate(
-                          DateTime.parse(_dateString), titleTimeFormathhnn),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),*/
-                    ]),
-              ),
-              Expanded(
-                child: Builder(builder: (context) {
-                  if (state is InputLoaded) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [TemperaturePicker()],
-                    );
-                  } else if (state is InputTimeSetting) {
-                    return createInlinePicker(
-                        value: TimeOfDay(
-                            hour: DateTime.parse(widget._dateString).hour,
-                            minute: DateTime.parse(widget._dateString).minute),
-                        minuteLabel: "",
-                        hourLabel: "",
-                        okText: "",
-                        cancelText: "",
-                        is24HrFormat: true,
-                        onChange: (timeOfDay) {
-                          print('[Tony] timeChanged $timeOfDay');
-                        });
-                  } else {
-                    throw Exception("unexpected state : $state");
-                  }
-                }),
-              ),
-              Wrap(
-                direction: Axis.horizontal,
-                children: [
-                  ChoiceChip(
-                      label: Text('修改溫度'),
-                      selected: state is InputLoaded,
-                      onSelected: (selected) {
-                        if (selected) {
-                          context.read<InputCubit>().setTemperature();
-                        }
-                        _logger.d("onSelected 1 ${selected}");
-                      }),
-                  SizedBox(width: 10),
-                  ChoiceChip(
-                      label: Text('修改時間'),
-                      selected: state is InputTimeSetting,
-                      onSelected: (selected) {
-                        if (selected) {
-                          context.read<InputCubit>().setTime();
-                        }
-                        _logger.d("onSelected 3 ${selected}");
-                      }),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).errorColor),
-                            shape: MaterialStateProperty.all(
-                                const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.zero)),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            padding:
-                                MaterialStateProperty.all(EdgeInsets.zero)),
-                        onPressed: () async {
-                          await context.read<InputCubit>().deleteRecord();
-                          context.router.pop<bool>(true);
-                        },
-                        child: const Text('Delete')),
-                  ),
-                  Expanded(
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).primaryColor),
-                            shape: MaterialStateProperty.all(
-                                const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.zero)),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            // remove the button build-in padding bottom
-                            padding:
-                                MaterialStateProperty.all(EdgeInsets.zero)),
-                        onPressed: () async {
-                          await context.read<InputCubit>().saveRecord();
-                          context.router.pop<bool>(true);
-                        },
-                        child: const Text('Save')),
-                  ),
-                ],
-              )
-            ],
+                    Expanded(
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).primaryColor),
+                              shape: MaterialStateProperty.all(
+                                  const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero)),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              // remove the button build-in padding bottom
+                              padding:
+                                  MaterialStateProperty.all(EdgeInsets.zero)),
+                          onPressed: () async {
+                            await context.read<InputCubit>().saveRecord();
+                            context.router.pop<bool>(true);
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: Text('Save'),
+                          )),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         );
       },

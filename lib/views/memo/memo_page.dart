@@ -51,11 +51,21 @@ class _MemoPageState extends State<MemoPage> {
             return AlertDialog(
               title: Text(state.formattedDateString),
               content: TextField(
+                  decoration:
+                      const InputDecoration.collapsed(hintText: "輸入點什麼記錄一下✏️"),
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   focusNode: myFocusNode,
                   controller: textEditingController..text = state.memo.memo),
               actions: <Widget>[
+                TextButton(
+                  child: Text('Delete'),
+                  onPressed: () async {
+                    buildContext.read<MemoCubit>().updateText("");
+                    await buildContext.read<MemoCubit>().save();
+                    Navigator.of(context).pop(true);
+                  },
+                ),
                 TextButton(
                   child: Text('Save'),
                   onPressed: () async {

@@ -131,7 +131,7 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
               var memo = state.dateListModel.outputMemos[index];
 
               temperatureViews.add(const SizedBox(
-                width: 2,
+                width: 10,
               ));
 
               IconData icon;
@@ -142,15 +142,16 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
               }
 
               temperatureViews.add(Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: InkWell(
-                    child: Icon(icon, color: Theme.of(context).iconTheme.color),
+                    child: Icon(icon,
+                        size: 30, color: Theme.of(context).iconTheme.color),
                     onTap: () {
                       onTapMemo(state, index);
                     }),
               ));
 
-              temperatureViews.add(const SizedBox(
+              /*temperatureViews.add(const SizedBox(
                 width: 2,
               ));
               temperatureViews.add(Padding(
@@ -161,23 +162,29 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
                     onTap: () {
                       onTapDay(context, index);
                     }),
-              ));
-
-              return ListTile(
-                onTap: () => onTapDay(context, index),
-                dense: true,
-                visualDensity: const VisualDensity(vertical: 4, horizontal: 4),
-                trailing: Wrap(children: temperatureViews),
-                title: Text((index + 1).toString(),
-                    style: _getWeekDaysTextStyle(DateTime(
-                        state.currentYear, state.currentMonth, index + 1))),
-                subtitle: Text(
-                    formatDate(
-                        DateTime(
-                            state.currentYear, state.currentMonth, index + 1),
-                        titleWeekDaysAbbrFormat),
-                    style: _getWeekDaysTextStyle(DateTime(
-                        state.currentYear, state.currentMonth, index + 1))),
+              ));*/
+              var itemDateTime =
+                  DateTime(state.currentYear, state.currentMonth, index + 1);
+              Color borderColor;
+              if (isToday(itemDateTime)) {
+                borderColor = Theme.of(context).primaryColor;
+              } else {
+                borderColor = Colors.transparent;
+              }
+              return Container(
+                color: borderColor,
+                child: ListTile(
+                  onTap: () => onTapDay(context, index),
+                  dense: true,
+                  visualDensity:
+                      const VisualDensity(vertical: 4, horizontal: 4),
+                  trailing: Wrap(children: temperatureViews),
+                  title: Text((index + 1).toString(),
+                      style: _getWeekDaysTextStyle(itemDateTime)),
+                  subtitle: Text(
+                      formatDate(itemDateTime, titleWeekDaysAbbrFormat),
+                      style: _getWeekDaysTextStyle(itemDateTime)),
+                ),
               );
             },
             separatorBuilder: (BuildContext context, int index) {
@@ -203,7 +210,6 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
 
   TextStyle _getWeekDaysTextStyle(DateTime dateTime) {
     final int weekday = dateTime.weekday;
-    var now = DateTime.now();
     var textStyle = Theme.of(context).textTheme.headlineMedium!;
     if (weekday == 6) {
       textStyle = textStyle.copyWith(
@@ -213,13 +219,6 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
       textStyle = textStyle.copyWith(
           color: Theme.of(context).colorScheme.secondary,
           fontStyle: FontStyle.italic);
-    }
-
-    if (now.year == dateTime.year &&
-        now.month == dateTime.month &&
-        now.day == dateTime.day) {
-      textStyle = textStyle.copyWith(
-          decorationThickness: 2, decoration: TextDecoration.underline);
     }
     return textStyle;
   }
@@ -243,5 +242,15 @@ class _DateSelectorWidgetState extends State<DateSelectorWidget> {
     if (saved == true) {
       context.read<HomeCubit>().refreshRecords();
     }
+  }
+
+  bool isToday(DateTime dateTime) {
+    final now = DateTime.now();
+    if (now.year == dateTime.year &&
+        now.month == dateTime.month &&
+        now.day == dateTime.day) {
+      return true;
+    }
+    return false;
   }
 }

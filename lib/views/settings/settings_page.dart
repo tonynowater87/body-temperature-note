@@ -23,124 +23,117 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        _logger.d("onPop");
-        onResult.call(true);
-        return true;
-      },
-      child: BlocProvider(
-        create: (context) => SettingsCubit(context.read<SettingsProvider>()),
-        child: BlocConsumer<SettingsCubit, SettingsState>(
-          listener: (consumerContext, state) {
-            _logger.d("setting state changed = $state");
-            consumerContext.read<ThemeCubit>().changeLocale(state.locale);
-          },
-          builder: (context, state) {
-            return BlocBuilder<SettingsCubit, SettingsState>(
-              builder: (builderContext, state) {
-                return Scaffold(
-                  appBar: AppBar(
-                    iconTheme: Theme.of(context).iconTheme,
-                    title: Text(
-                      context.l10n.setting_title,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
+    return BlocProvider(
+      create: (context) => SettingsCubit(context.read<SettingsProvider>()),
+      child: BlocConsumer<SettingsCubit, SettingsState>(
+        listener: (consumerContext, state) {
+          _logger.d("setting state changed = $state");
+          consumerContext.read<ThemeCubit>().changeLocale(state.locale);
+        },
+        builder: (context, state) {
+          return BlocBuilder<SettingsCubit, SettingsState>(
+            builder: (builderContext, state) {
+              return Scaffold(
+                appBar: AppBar(
+                  iconTheme: Theme.of(context).iconTheme,
+                  title: Text(
+                    context.l10n.setting_title,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  body: SettingsList(
-                      lightTheme: AppTheme.light.getSettingsThemeData(),
-                      darkTheme: AppTheme.nord.getSettingsThemeData(),
-                      sections: [
-                        SettingsSection(title: Text('Common'), tiles: [
-                          SettingsTile.switchTile(
-                            initialValue: state.isDarkMode,
-                            leading: const Icon(Icons.mode_night_outlined),
-                            activeSwitchColor: Theme.of(context).primaryColor,
-                            onToggle: (isUsingDarkMode) {
-                              builderContext
-                                  .read<ThemeCubit>()
-                                  .toggle(isUsingDarkMode);
-                              builderContext
-                                  .read<SettingsCubit>()
-                                  .updateIsDarkMode(isUsingDarkMode);
-                            },
-                            title: Text('開啟DarkMode'),
-                          ),
-                          SettingsTile.switchTile(
-                            initialValue: state.isDisplayBaseline,
-                            leading: const Icon(Icons.line_axis_outlined),
-                            activeSwitchColor: Theme.of(context).primaryColor,
-                            onToggle: (value) {
-                              builderContext
-                                  .read<SettingsCubit>()
-                                  .updateIsDisplayBaseline(value);
-                            },
-                            title: Text('是否顯示水平基準線'),
-                          ),
-                          SettingsTile.navigation(
-                            onPressed: (context) {
-                              if (kIsWeb) {
-                                // WEB
-                                showModalPopupForiOS(builderContext);
-                              } else if (Platform.isAndroid) {
-                                showModalPopupForiOS(builderContext); //TODO
-                              } else if (Platform.isIOS) {
-                                showModalPopupForiOS(builderContext);
-                              }
-                            },
-                            title: Text('Language'),
-                            leading: const Icon(Icons.language_outlined),
-                            trailing: Text(state.locale.languageCode),
-                          )
-                        ]),
-                        SettingsSection(title: Text('Others'), tiles: [
-                          SettingsTile.navigation(
-                            title: Text('攝氏/華氏'),
-                            leading: const Icon(Icons.app_settings_alt),
-                            trailing: Text(state.isCelsius ? '攝氏' : '華氏'),
-                            onPressed: (context) {
-                              showCupertinoModalPopup(
-                                  builder: (BuildContext context) {
-                                    return CupertinoActionSheet(
-                                      title: Text('Select Language'),
-                                      actions: <CupertinoActionSheetAction>[
-                                        CupertinoActionSheetAction(
-                                          child: Text('攝氏'),
-                                          onPressed: () {
-                                            builderContext
-                                                .read<SettingsCubit>()
-                                                .updateIsCelsius(true);
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                        CupertinoActionSheetAction(
-                                          child: Text('華氏'),
-                                          onPressed: () {
-                                            builderContext
-                                                .read<SettingsCubit>()
-                                                .updateIsCelsius(false);
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ],
-                                      cancelButton: CupertinoActionSheetAction(
-                                        child: Text('取消'),
+                ),
+                body: SettingsList(
+                    lightTheme: AppTheme.light.getSettingsThemeData(),
+                    darkTheme: AppTheme.nord.getSettingsThemeData(),
+                    sections: [
+                      SettingsSection(title: Text('Common'), tiles: [
+                        SettingsTile.switchTile(
+                          initialValue: state.isDarkMode,
+                          leading: const Icon(Icons.mode_night_outlined),
+                          activeSwitchColor: Theme.of(context).primaryColor,
+                          onToggle: (isUsingDarkMode) {
+                            builderContext
+                                .read<ThemeCubit>()
+                                .toggle(isUsingDarkMode);
+                            builderContext
+                                .read<SettingsCubit>()
+                                .updateIsDarkMode(isUsingDarkMode);
+                          },
+                          title: Text('開啟DarkMode'),
+                        ),
+                        /*SettingsTile.switchTile(
+                          initialValue: state.isDisplayBaseline,
+                          leading: const Icon(Icons.line_axis_outlined),
+                          activeSwitchColor: Theme.of(context).primaryColor,
+                          onToggle: (value) {
+                            builderContext
+                                .read<SettingsCubit>()
+                                .updateIsDisplayBaseline(value);
+                          },
+                          title: Text('是否顯示水平基準線'),
+                        ),*/
+                        SettingsTile.navigation(
+                          onPressed: (context) {
+                            if (kIsWeb) {
+                              // WEB
+                              showModalPopupForiOS(builderContext);
+                            } else if (Platform.isAndroid) {
+                              showModalPopupForiOS(builderContext); //TODO
+                            } else if (Platform.isIOS) {
+                              showModalPopupForiOS(builderContext);
+                            }
+                          },
+                          title: Text('Language'),
+                          leading: const Icon(Icons.language_outlined),
+                          trailing: Text(state.locale.languageCode),
+                        )
+                      ]),
+                      /*SettingsSection(title: Text('Others'), tiles: [
+                        SettingsTile.navigation(
+                          title: Text('攝氏/華氏'),
+                          leading: const Icon(Icons.app_settings_alt),
+                          trailing: Text(state.isCelsius ? '攝氏' : '華氏'),
+                          onPressed: (context) {
+                            showCupertinoModalPopup(
+                                builder: (BuildContext context) {
+                                  return CupertinoActionSheet(
+                                    title: Text('Select Language'),
+                                    actions: <CupertinoActionSheetAction>[
+                                      CupertinoActionSheetAction(
+                                        child: Text('攝氏'),
                                         onPressed: () {
+                                          builderContext
+                                              .read<SettingsCubit>()
+                                              .updateIsCelsius(true);
                                           Navigator.pop(context);
                                         },
                                       ),
-                                    );
-                                  },
-                                  context: context);
-                            },
-                          )
-                        ])
-                      ]),
-                );
-              },
-            );
-          },
-        ),
+                                      CupertinoActionSheetAction(
+                                        child: Text('華氏'),
+                                        onPressed: () {
+                                          builderContext
+                                              .read<SettingsCubit>()
+                                              .updateIsCelsius(false);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                    cancelButton: CupertinoActionSheetAction(
+                                      child: Text('取消'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  );
+                                },
+                                context: context);
+                          },
+                        )
+                      ])*/
+                    ]),
+              );
+            },
+          );
+        },
       ),
     );
   }
